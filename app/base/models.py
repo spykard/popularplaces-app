@@ -18,6 +18,14 @@ class User(db.Model, UserMixin):
     username = Column(String, unique=True)
     email = Column(String, unique=True)
     password = Column(Binary)
+    first_name = Column(String)
+    last_name = Column(String)
+    address = Column(String)
+    city = Column(String)
+    country = Column(String)
+    zip_code = Column(String)
+    about_me = Column(String)  
+    google_maps_api = Column(String)                  
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
