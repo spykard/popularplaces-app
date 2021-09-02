@@ -8,6 +8,7 @@ from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import login_manager
 from jinja2 import TemplateNotFound
+from app.base.models import Place
 
 @blueprint.route('/index')
 @login_required
@@ -20,7 +21,6 @@ def index():
 def route_template(template):
 
     try:
-
         if not template.endswith( '.html' ):
             template += '.html'
 
@@ -35,6 +35,16 @@ def route_template(template):
     
     except:
         return render_template('page-500.html'), 500
+
+@blueprint.route('/populartimes')
+@login_required
+def populartimes():
+
+    query = 1
+    # Locate user
+    user = Place.query.filter_by(id=query).first()
+
+    return render_template('populartimes.html', segment='populartimes', data=user.rating)
 
 # Helper - Extract current page name from request 
 def get_segment( request ): 
