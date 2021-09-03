@@ -15,7 +15,7 @@ from app import create_app, db
 # WARNING: Don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-# The configuration
+# The configuration, however, we will be using PostgreSQL in Debug too and not just in Production
 get_config_mode = 'Debug' if DEBUG else 'Production'
 
 try:
