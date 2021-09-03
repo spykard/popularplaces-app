@@ -47,21 +47,10 @@ def populartimes():
 
     return render_template('populartimes.html', segment='populartimes', data=user.rating)
 
-@blueprint.route('/page-user')
-@login_required
-def page_user1():
-
-    return render_template('page-user.html', segment='page-user')
-
 @blueprint.route('/page-user', methods=['GET', 'POST'])
 @login_required
-def page_user2():
-
-    #return render_template('index.html', segment='page-user')
-
+def page_user():
     profile_form = EditProfileForm(request.form)
-    print(request.form)
-    print("haha")
     if 'save' in request.form:
 
         # Read form data

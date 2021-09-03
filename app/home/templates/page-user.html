@@ -10,92 +10,97 @@
 <div class="row">
   <div class="col-md-8">
     <div class="card">
+
+      <form role="form" method="post" action="">
+
       <div class="card-header">
         <h4 class="title">Edit Profile</h4>
       </div>
       <div class="card-body">
-        <form role="form" method="post" action="/page-user.html">
-          <div class="row">
-            <div class="col-md-1 pr-md-1">
-              <div class="form-group">
-                <label>UserID</label>
-                <input type="number" class="form-control" id="user_id" name="user_id" disabled="" value="{{ current_user.id }}">
-              </div>
-            </div>
-            <div class="col-md-4 px-md-1">
-              <div class="form-group">
-                <label>Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}">
-              </div>
-            </div>
-            <div class="col-md-3 pl-md-1">
-              <div class="form-group">
-                <label>Email address</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}">
-              </div>
-            </div>            
-            <div class="col-md-3 pl-md-1">
-              <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Hidden" value="">
-              </div>
+        <div class="row">
+          <div class="col-md-1 pr-md-1">
+            <div class="form-group">
+              <label>UserID</label>
+              <input type="number" class="form-control" id="user_id" name="user_id" disabled="" value="{{ current_user.id }}">
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6 pr-md-1">
-              <div class="form-group">
-                <label>First Name</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Company" value="{{ current_user.first_name }}">
-              </div>
-            </div>
-            <div class="col-md-6 pl-md-1">
-              <div class="form-group">
-                <label>Last Name</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" value="{{ current_user.last_name }}">
-              </div>
+          <div class="col-md-4 px-md-1">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}">
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label>Address</label>
-                <input type="text" class="form-control" id="address" name="address" placeholder="Home Address" value="{{ current_user.address }}">
-              </div>
+          <div class="col-md-3 pl-md-1">
+            <div class="form-group">
+              <label>Email address</label>
+              <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}">
+            </div>
+          </div>            
+          <div class="col-md-3 pl-md-1">
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Hidden" value="">
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-4 pr-md-1">
-              <div class="form-group">
-                <label>City</label>
-                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{ current_user.city }}">
-              </div>
-            </div>
-            <div class="col-md-4 px-md-1">
-              <div class="form-group">
-                <label>Country</label>
-                <input type="text" class="form-control" id="country" name="country" placeholder="Country" value="{{ current_user.country }}">
-              </div>
-            </div>
-            <div class="col-md-4 pl-md-1">
-              <div class="form-group">
-                <label>Postal Code</label>
-                <input type="number" class="form-control" id="zipcode" name="zipcode" value="{{ current_user.zip_code }}">
-              </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 pr-md-1">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Company" value="{{ current_user.first_name }}">
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="form-group">
-                <label>About Me</label>
-                <textarea rows="4" cols="80" class="form-control" id="description" name="description" placeholder="Here is your description">{{ current_user.about_me }}</textarea>
-              </div>
+          <div class="col-md-6 pl-md-1">
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" value="{{ current_user.last_name }}">
             </div>
           </div>
-        </form>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" class="form-control" id="address" name="address" placeholder="Home Address" value="{{ current_user.address }}">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 pr-md-1">
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{ current_user.city }}">
+            </div>
+          </div>
+          <div class="col-md-4 px-md-1">
+            <div class="form-group">
+              <label>Country</label>
+              <input type="text" class="form-control" id="country" name="country" placeholder="Country" value="{{ current_user.country }}">
+            </div>
+          </div>
+          <div class="col-md-4 pl-md-1">
+            <div class="form-group">
+              <label>Postal Code</label>
+              <input type="number" class="form-control" id="zipcode" name="zipcode" value="{{ current_user.zip_code }}">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label>About Me</label>
+              <textarea rows="4" cols="80" class="form-control" id="description" name="description" placeholder="Here is your description">{{ current_user.about_me }}</textarea>
+            </div>
+          </div>
+        </div>
       </div>
+      
       <div class="card-footer">
         <button type="submit" name="save" class="btn btn-fill btn-primary">Save</button>
       </div>
+
+    </form>
+
     </div>
   </div>
   <div class="col-md-4">
