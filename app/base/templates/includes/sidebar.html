@@ -23,25 +23,26 @@
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>Populartimes</p>
             </a>
+          </li>            
           <li class="{% if 'page-user' in segment %} active {% endif %}">
             <a href="/page-user">
               <i class="tim-icons icon-single-02"></i>
               <p>User Profile</p>
             </a>
-          </li>
-          </li>          
+          </li>           
+          <li class="{% if 'maps' in segment %} active {% endif %}">
+            <a href="/ui-maps">
+              <i class="tim-icons icon-pin"></i>
+              <p>Maps</p>
+            </a>
+          </li>                   
           <li class="{% if 'icons' in segment %} active {% endif %}">
             <a href="/ui-icons">
               <i class="tim-icons icon-atom"></i>
               <p>Icons</p>
             </a>
           </li>
-          <li class="{% if 'maps' in segment %} active {% endif %}">
-            <a href="/ui-maps">
-              <i class="tim-icons icon-pin"></i>
-              <p>Maps</p>
-            </a>
-          </li>
+
           <li class="{% if 'notifications' in segment %} active {% endif %}">
             <a href="/ui-notifications">
               <i class="tim-icons icon-bell-55"></i>
@@ -61,6 +62,13 @@
             </a>
           </li>
           <li>
+          <li class="{% if 'credits' in segment %} active {% endif %}">
+            <a href="/credits">
+              <i class="tim-icons icon-support-17"></i>
+              <p>Credits</p>
+            </a>
+          </li>
+          <li>            
             <a href="{{ url_for('base_blueprint.logout') }}" >
               <i class="tim-icons icon-button-power"></i>
               <p>Logout</p>
