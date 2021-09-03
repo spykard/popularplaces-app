@@ -29,9 +29,15 @@ def login():
     login_form = LoginForm(request.form)
     if 'login' in request.form:
         
-        # read form data
+        # Read form data
         username = request.form['username']
         password = request.form['password']
+
+        # Validate form data
+        if not login_form.validate():
+            return render_template( 'accounts/login.html', 
+                                    msg='Input does not follow the Appropriate Form',
+                                    form=login_form)
 
         # Locate user
         user = User.query.filter_by(username=username).first()
@@ -46,18 +52,24 @@ def login():
         return render_template( 'accounts/login.html', msg='Wrong user or password', form=login_form)
 
     if not current_user.is_authenticated:
-        return render_template( 'accounts/login.html',
-                                form=login_form)
+        return render_template( 'accounts/login.html', form=login_form)
+        
     return redirect(url_for('home_blueprint.index'))
 
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-    login_form = LoginForm(request.form)
-    create_account_form = CreateAccountForm(request.form)
+    create_account_form = CreateAccountForm(request.form)    
     if 'register' in request.form:
 
         username  = request.form['username']
         email     = request.form['email'   ]
+
+        # Validate Form Data
+        if not create_account_form.validate():
+            return render_template( 'accounts/register.html', 
+                                    msg='Input does not follow the Appropriate Form',
+                                    success=False,
+                                    form=create_account_form)
 
         # Check usename exists
         user = User.query.filter_by(username=username).first()

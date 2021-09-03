@@ -8,7 +8,8 @@ from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import login_manager
 from jinja2 import TemplateNotFound
-from app.base.models import Place
+from app.base.forms import EditProfileForm
+from app.base.models import User, Place
 
 @blueprint.route('/index')
 @login_required
@@ -45,6 +46,33 @@ def populartimes():
     user = Place.query.filter_by(id=query).first()
 
     return render_template('populartimes.html', segment='populartimes', data=user.rating)
+
+@blueprint.route('/page-user')
+@login_required
+def page_user1():
+
+    return render_template('page-user.html', segment='page-user')
+
+@blueprint.route('/page-user', methods=['GET', 'POST'])
+@login_required
+def page_user2():
+
+    #return render_template('index.html', segment='page-user')
+
+    profile_form = EditProfileForm(request.form)
+    print(request.form)
+    print("haha")
+    if 'save' in request.form:
+
+        # Read form data
+        username = request.form['username']
+        password = request.form['password']
+
+        print(username)
+        print(password)
+
+    
+    return render_template('page-user.html', segment='page-user')
 
 # Helper - Extract current page name from request 
 def get_segment( request ): 

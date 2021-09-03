@@ -14,18 +14,21 @@ class User(db.Model, UserMixin):
 
     __tablename__ = 'User'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, unique=True)
     email = Column(String, unique=True)
     password = Column(Binary)
-    first_name = Column(String)
-    last_name = Column(String)
-    address = Column(String)
-    city = Column(String)
-    country = Column(String)
-    zip_code = Column(String)
-    about_me = Column(String)  
-    google_maps_api = Column(String)                  
+    first_name = Column(String, server_default='first_name')
+    last_name = Column(String, server_default='last_name')
+    address = Column(String, server_default='address')
+    city = Column(String, server_default='city')
+    country = Column(String, server_default='country')
+    zip_code = Column(Integer, server_default='zip_code')
+    about_me = Column(String, server_default='about_me')
+    google_api_key = Column(Integer, server_default='google_api_key') 
+    premium_enabled = Column(Integer, server_default='premium_enabled')
+    premium_notified = Column(Integer, server_default='premium_notified')
+    free_runs_remaining = Column(Integer, server_default='free_runs_remaining')                             
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

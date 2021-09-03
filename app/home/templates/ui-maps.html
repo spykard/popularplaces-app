@@ -21,7 +21,7 @@
         <div class="col-md-4 px-md-1">
           <div class="form-group">
             <label>API Key</label>
-            <input type="text" class="form-control" disabled="" placeholder="API Key" value="{{ current_user.google_maps_api }}">
+            <input type="text" class="form-control" disabled="" placeholder="API Key" value="{{ current_user.google_api_key }}">
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@
   <script src="https://maps.googleapis.com/maps/api/js?key={{ current_user.google_maps_api }}"></script>
 
   <script>
-  demo.showNotification('top','center', 'Please make sure that you have inputted your <b>Google Maps API Key</b> correctly.')
+  demo.showNotification('top','center', 'Please make sure that the correct <b>Google API Key</b> has been inputted.')
 
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js
