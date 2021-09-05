@@ -102,10 +102,14 @@
 
         $('.light-badge').click(function() {
           $('body').addClass('white-content');
+          $('.navbar-wrapper').removeClass('navbar-dark');  // Bug Fix
+          $('.navbar-wrapper').addClass('navbar-light');
         });
 
         $('.dark-badge').click(function() {
           $('body').removeClass('white-content');
+          $('.navbar-wrapper').removeClass('navbar-light');  // Bug Fix
+          $('.navbar-wrapper').addClass('navbar-dark');          
         });
       });
     });
