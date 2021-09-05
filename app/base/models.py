@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     address = Column(String, server_default='address')
     city = Column(String, server_default='city')
     country = Column(String, server_default='country')
-    zip_code = Column(Integer, server_default='zip_code')
+    zipcode = Column(Integer, server_default='zipcode')
     about_me = Column(String, server_default='about_me')
     google_api_key = Column(Integer, server_default='google_api_key') 
     premium_enabled = Column(Integer, server_default='premium_enabled')

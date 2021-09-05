@@ -29,4 +29,4 @@ class EditProfileForm(FlaskForm):
     city = TextField('City'             , id='city'            , validators=[DataRequired()])
     country = TextField('Country'       , id='country'         , validators=[DataRequired()])
     zipcode = IntegerField('Postal Code', id='zipcode'         , validators=[DataRequired()])
-    description = TextField('About Me'  , id='description'     , validators=[DataRequired()])
+    about_me = TextField('About Me'     , id='about_me'        , validators=[DataRequired()])

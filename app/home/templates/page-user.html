@@ -15,6 +15,12 @@
 
       <div class="card-header">
         <h4 class="title">Edit Profile</h4>
+
+        <h6 class="card-category">
+          {% if msg %}
+            <span class="text-danger">{{ msg | safe }}</span>
+          {% endif %}  
+        </h6>      
       </div>
       <div class="card-body">
         <div class="row">
@@ -81,7 +87,7 @@
           <div class="col-md-4 pl-md-1">
             <div class="form-group">
               <label>Postal Code</label>
-              <input type="number" class="form-control" id="zipcode" name="zipcode" value="{{ current_user.zip_code }}">
+              <input type="number" class="form-control" id="zipcode" name="zipcode" value="{{ current_user.zipcode }}">
             </div>
           </div>
         </div>
@@ -89,7 +95,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label>About Me</label>
-              <textarea rows="4" cols="80" class="form-control" id="description" name="description" placeholder="Here is your description">{{ current_user.about_me }}</textarea>
+              <textarea rows="4" cols="80" class="form-control" id="about_me" name="about_me" placeholder="Here is your description">{{ current_user.about_me }}</textarea>
             </div>
           </div>
         </div>

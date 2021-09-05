@@ -6,10 +6,11 @@ Copyright (c) 2019 - present AppSeed.us
 from app.home import blueprint
 from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
-from app import login_manager
+from app import db, login_manager
 from jinja2 import TemplateNotFound
 from app.base.forms import EditProfileForm
 from app.base.models import User, Place
+from app.base.util import hash_pass
 
 @blueprint.route('/index')
 @login_required
@@ -55,13 +56,51 @@ def page_user():
 
         # Read form data
         username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        address = request.form['address']
+        city = request.form['city']
+        country = request.form['country']
+        zipcode = request.form['zipcode']
+        about_me = request.form['about_me']
 
-        print(username)
-        print(password)
+        # Check usename exists
+        user = User.query.filter_by(username=username).first()
+        if current_user.username != username and user:
+            return render_template( 'page-user.html',
+                                    segment='page-user',
+                                    msg='Username already registered',
+                                    success=False)
 
-    
-    return render_template('page-user.html', segment='page-user')
+        # Check email exists
+        user = User.query.filter_by(email=email).first()
+        if current_user.email != email and user:
+            return render_template( 'page-user.html', 
+                                    segment='page-user',
+                                    msg='Email already registered', 
+                                    success=False)
+
+        current_user.username = username
+        if password:
+            current_user.password = hash_pass( password ) # we need bytes here (not plain str)
+        current_user.first_name = first_name
+        current_user.last_name = last_name
+        current_user.address = address
+        current_user.city = city
+        current_user.country = country
+        current_user.zipcode = zipcode
+        current_user.about_me = about_me
+        db.session.commit()
+
+        return render_template( 'page-user.html', 
+                        segment='page-user',
+                        msg='Changes saved successfully!', 
+                        success=False)
+
+    return render_template( 'page-user.html', 
+                            segment='page-user')
 
 # Helper - Extract current page name from request 
 def get_segment( request ): 
