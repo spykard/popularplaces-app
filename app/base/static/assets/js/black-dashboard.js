@@ -181,7 +181,7 @@ $(window).resize(function() {
     if ($navbar.hasClass('bg-white') && $(window).width() > 991) {
       $navbar.removeClass('bg-white').addClass('navbar-transparent');
     } else if ($navbar.hasClass('navbar-transparent') && $(window).width() < 991 && isExpanded != "false") {
-      $navbar.addClass('bg-white').removeClass('navbar-transparent');
+      //$navbar.addClass('bg-white').removeClass('navbar-transparent');
     }
   }
 });
