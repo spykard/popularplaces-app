@@ -14,13 +14,15 @@
               Popular Places
             </a>
           </div>
+          {% if current_user.is_authenticated %}
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-bar navbar-kebab"></span>
             <span class="navbar-toggler-bar navbar-kebab"></span>
             <span class="navbar-toggler-bar navbar-kebab"></span>
           </button>
+          {% endif %}
           <div class="collapse navbar-collapse" id="navigation">
-
+          
             <ul class="navbar-nav ml-auto">
             {% if current_user.is_authenticated %}
 
@@ -53,7 +55,7 @@
                   </div>
                   <b class="caret d-none d-lg-block d-xl-block"></b>
                   <p class="d-lg-none">
-                    Logout
+                    {{ current_user.username }}
                   </p>
                 </a>
                 <ul class="dropdown-menu dropdown-navbar">

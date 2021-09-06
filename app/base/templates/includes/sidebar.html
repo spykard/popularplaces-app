@@ -12,12 +12,12 @@
         <ul class="nav">
         {% if current_user.is_authenticated %}
 
-          <!-- <li class="{% if 'index' in segment %} active {% endif %}">
+          <li class="{% if 'index' in segment %} active {% endif %}">
             <a href="/">
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>Dashboard</p>
             </a>
-          </li> -->
+          </li>
           <li class="{% if 'populartimes' in segment %} active {% endif %}">
             <a href="/populartimes">
               <i class="tim-icons icon-chart-pie-36"></i>
