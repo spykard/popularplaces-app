@@ -61,6 +61,7 @@ def register():
     create_account_form = CreateAccountForm(request.form)    
     if 'register' in request.form:
 
+        # Read form data
         username  = request.form['username']
         email     = request.form['email'   ]
 

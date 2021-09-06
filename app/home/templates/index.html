@@ -17,6 +17,9 @@
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
           </blockquote>
+          <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+            Secondary Button
+          </button>
         </div>
       </div>
     </div>
@@ -398,7 +401,7 @@
 {% block javascripts %}
 
   <script>
-    demo.showNotification('top','center', '{{ to_notify }}', 'Your <b>Premium Subscription</b> has been Enabled')
+    demo.showNotification('top','center', '{{ to_notify }}', 'Your <b>Premium Subscription</b> has been Enabled!')
 
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js

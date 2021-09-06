@@ -28,7 +28,13 @@ class User(db.Model, UserMixin):
     google_api_key = Column(Integer, server_default='google_api_key') 
     premium_enabled = Column(Integer, server_default='premium_enabled')
     premium_notified = Column(Integer, server_default='premium_notified')
-    free_runs_remaining = Column(Integer, server_default='free_runs_remaining')                             
+    free_runs_remaining = Column(Integer, server_default='free_runs_remaining')   
+    settings_p1 = Column(String, server_default='settings_p1')
+    settings_p2 = Column(String, server_default='settings_p2')
+    settings_radius = Column(Integer, server_default='settings_radius')  
+    settings_type1 = Column(String, server_default='settings_type1')
+    settings_type2 = Column(String, server_default='settings_type2')    
+    settings_all_places = Column(Integer, server_default='settings_all_places')       
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

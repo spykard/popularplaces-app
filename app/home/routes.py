@@ -55,6 +55,12 @@ def populartimes():
 
     return render_template('populartimes.html', segment='populartimes', data=user.rating)
 
+@blueprint.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+
+    return render_template('search.html', segment='search')    
+
 @blueprint.route('/page-user', methods=['GET', 'POST'])
 @login_required
 def page_user():
@@ -72,6 +78,13 @@ def page_user():
         country = request.form['country']
         zipcode = request.form['zipcode']
         about_me = request.form['about_me']
+
+        # Validate Form Data
+        if not profile_form.validate():
+            return render_template( 'page-user.html', 
+                                     segment='page-user',
+                                     msg='Input does not follow the Appropriate Form',
+                                     success=False)
 
         # Check usename exists
         user = User.query.filter_by(username=username).first()

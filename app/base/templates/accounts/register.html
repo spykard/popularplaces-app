@@ -33,7 +33,14 @@
                 <div class="col-md-3 px-md-1">
                   <div class="form-group">
                     <label>&nbsp;Username</label>
-                    {{ form.username(class="form-control") }}
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-user"></i>
+                        </div>      
+                      </div>                    
+                      {{ form.username(class="form-control") }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -42,7 +49,14 @@
                 <div class="col-md-3 px-md-1">
                   <div class="form-group">
                     <label>&nbsp;Email</label>
-                    {{ form.email(class="form-control", type="email") }}
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-envelope"></i>
+                        </div>      
+                      </div>                    
+                      {{ form.email(class="form-control", type="email") }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -51,7 +65,14 @@
                 <div class="col-md-3 px-md-1">
                   <div class="form-group">
                     <label>&nbsp;Password</label>
-                    {{ form.password(class="form-control", type="password") }}
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-key"></i>
+                        </div>      
+                      </div>                    
+                      {{ form.password(class="form-control", type="password") }}
+                    </div>
                   </div>
                 </div>
               </div>
