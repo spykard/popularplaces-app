@@ -23,19 +23,19 @@
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>Populartimes</p>
             </a>
+          </li>
+          <li class="{% if 'search' in segment %} active {% endif %}">
+            <a href="/search">
+              <i class="tim-icons icon-zoom-split"></i>
+              <p>Search</p>
+            </a>
           </li>            
           <li class="{% if 'page-user' in segment %} active {% endif %}">
             <a href="/page-user">
               <i class="tim-icons icon-single-02"></i>
               <p>User Profile</p>
             </a>
-          </li>   
-          <li class="{% if 'settings' in segment %} active {% endif %}">
-            <a href="/settings">
-              <i class="tim-icons icon-settings-gear-63"></i>
-              <p>Settings</p>
-            </a>
-          </li>                    
+          </li>
           <li class="{% if 'maps' in segment %} active {% endif %}">
             <a href="/ui-maps">
               <i class="tim-icons icon-pin"></i>

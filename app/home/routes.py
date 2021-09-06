@@ -16,7 +16,14 @@ from app.base.util import hash_pass
 @login_required
 def index():
 
-    return render_template('index.html', segment='index')
+    if current_user.premium_enabled == 1 and current_user.premium_notified == 0:
+        to_notify = "true"
+        current_user.premium_notified = 1
+        db.session.commit()        
+    else:
+        to_notify = "false"
+    
+    return render_template('index.html', segment='index', to_notify=to_notify)
 
 @blueprint.route('/<template>')
 @login_required

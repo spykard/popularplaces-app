@@ -8,6 +8,20 @@
 {% block content %}
 
     <div class="row">
+      <div class="card card-nav-tabs">
+        <div class="card-header card-header-success">
+          Quote
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+            <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
 
       <div class="col-12">
         <div class="card card-chart">
@@ -384,6 +398,8 @@
 {% block javascripts %}
 
   <script>
+    demo.showNotification('top','center', '{{ to_notify }}', 'Your <b>Premium Subscription</b> has been Enabled')
+
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js
       demo.initDashboardPageCharts();

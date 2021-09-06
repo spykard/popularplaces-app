@@ -722,21 +722,23 @@ demo = {
     marker.setMap(map);
   },
 
-  showNotification: function(from, align, msg) {
-    color = Math.floor((Math.random() * 4) + 1);
+  showNotification: function(from, align, enable, msg) {
+    if (enable == "true") {
+      color = Math.floor((Math.random() * 4) + 1);
 
-    $.notify({
-      icon: "tim-icons icon-bell-55",
-      message: msg
+      $.notify({
+        icon: "tim-icons icon-bell-55",
+        message: msg
 
-    }, {
-      type: type[color],
-      timer: 8000,
-      placement: {
-        from: from,
-        align: align
-      }
-    });
+      }, {
+        type: type[color],
+        timer: 8000,
+        placement: {
+          from: from,
+          align: align
+        }
+      });
+    }
   }
 
 };
