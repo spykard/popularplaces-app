@@ -8,7 +8,7 @@ from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import db, login_manager
 from jinja2 import TemplateNotFound
-from app.base.forms import EditProfileForm
+from app.base.forms import EditProfileForm, EditSettingsForm
 from app.base.models import User, Place
 from app.base.util import hash_pass
 
@@ -58,8 +58,47 @@ def populartimes():
 @blueprint.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
+    settings_form = EditSettingsForm(request.form)
+    if 'search' in request.form:
 
-    return render_template('search.html', segment='search')    
+        # Read form data
+        api_key = request.form['api_key']
+        p1 = request.form['p1']
+        p2 = request.form['p2']
+        radius = request.form['radius']
+        type1 = request.form['type1']
+        type2 = request.form['type2']
+
+        # Validate Form Data
+        if not settings_form.validate():
+            return render_template( 'search.html', 
+                                    segment='search',
+                                    to_notify='true',
+                                    msg='Input does not follow the Appropriate Form',
+                                    error_dict=settings_form.errors,
+                                    success=False,
+                                    form=settings_form)
+
+        # Write to DB
+        current_user.google_api_key = api_key
+        current_user.settings_p1 = p1
+        current_user.settings_p2 = p2
+        current_user.settings_radius = radius
+        current_user.settings_type1 = type1
+        current_user.settings_type2 = type2
+        db.session.commit()
+
+        return render_template( 'search.html', 
+                        segment='search',
+                        msg='Search executed successfully!', 
+                        error_dict={},
+                        success=True,
+                        form=settings_form)
+
+    return render_template( 'search.html', 
+                            segment='search',
+                            error_dict={},
+                            form=settings_form)    
 
 @blueprint.route('/page-user', methods=['GET', 'POST'])
 @login_required
@@ -84,7 +123,8 @@ def page_user():
             return render_template( 'page-user.html', 
                                      segment='page-user',
                                      msg='Input does not follow the Appropriate Form',
-                                     success=False)
+                                     success=False,
+                                     form=profile_form)
 
         # Check usename exists
         user = User.query.filter_by(username=username).first()
@@ -92,7 +132,8 @@ def page_user():
             return render_template( 'page-user.html',
                                     segment='page-user',
                                     msg='Username already registered',
-                                    success=False)
+                                    success=False,
+                                    form=profile_form)
 
         # Check email exists
         user = User.query.filter_by(email=email).first()
@@ -100,8 +141,10 @@ def page_user():
             return render_template( 'page-user.html', 
                                     segment='page-user',
                                     msg='Email already registered', 
-                                    success=False)
+                                    success=False,
+                                    form=profile_form)
 
+        # Write to DB
         current_user.username = username
         if password:
             current_user.password = hash_pass( password ) # we need bytes here (not plain str)
@@ -117,10 +160,12 @@ def page_user():
         return render_template( 'page-user.html', 
                         segment='page-user',
                         msg='Changes saved successfully!', 
-                        success=False)
+                        success=True,
+                        form=profile_form)
 
     return render_template( 'page-user.html', 
-                            segment='page-user')
+                            segment='page-user',
+                            form=profile_form)
 
 # Helper - Extract current page name from request 
 def get_segment( request ): 

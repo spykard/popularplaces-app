@@ -4,8 +4,8 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask_wtf import FlaskForm
-from wtforms import TextField, PasswordField, IntegerField
-from wtforms.validators import InputRequired, Email, DataRequired
+from wtforms import TextField, PasswordField, IntegerField, SelectField, TextAreaField
+from wtforms.validators import InputRequired, Email, DataRequired, NumberRange, Regexp
 
 ## login and registration
 
@@ -18,28 +18,22 @@ class CreateAccountForm(FlaskForm):
     email    = TextField('Email'        , id='email_create'    , validators=[DataRequired(), Email()])
     password = PasswordField('Password' , id='pwd_create'      , validators=[DataRequired()])
 
-class EditProfileForm(FlaskForm):
-    user_id = IntegerField('UserID'     , id='user_id'         , validators=[DataRequired()])    
+class EditProfileForm(FlaskForm):   
     username = TextField('Username'     , id='username'        , validators=[DataRequired()])
     email    = TextField('Email'        , id='email'           , validators=[DataRequired(), Email()])
-    password = PasswordField('Password' , id='password'        , validators=[DataRequired()])
+    password = PasswordField('Password' , id='password')
     first_name = TextField('First Name' , id='first_name'      , validators=[DataRequired()])
-    last_name = TextField('Last Name'   , id='last_name'       , validators=[DataRequired()])
+    last_name = TextField('Last Name'   , id='last_name')
     address = TextField('Address'       , id='address'         , validators=[DataRequired()])
     city = TextField('City'             , id='city'            , validators=[DataRequired()])
     country = TextField('Country'       , id='country'         , validators=[DataRequired()])
-    zipcode = IntegerField('Postal Code', id='zipcode'         , validators=[DataRequired()])
-    about_me = TextField('About Me'     , id='about_me'        , validators=[DataRequired()])
+    zipcode = IntegerField('Postal Code', id='zipcode'         , validators=[NumberRange(0, 99999)])
+    about_me = TextAreaField('About Me' , id='about_me'        , validators=[DataRequired()])
 
 class EditSettingsForm(FlaskForm):
-    user_id = IntegerField('UserID'     , id='user_id'         , validators=[DataRequired()])    
-    username = TextField('Username'     , id='username'        , validators=[DataRequired()])
-    email    = TextField('Email'        , id='email'           , validators=[DataRequired(), Email()])
-    password = PasswordField('Password' , id='password'        , validators=[DataRequired()])
-    first_name = TextField('First Name' , id='first_name'      , validators=[DataRequired()])
-    last_name = TextField('Last Name'   , id='last_name'       , validators=[DataRequired()])
-    address = TextField('Address'       , id='address'         , validators=[DataRequired()])
-    city = TextField('City'             , id='city'            , validators=[DataRequired()])
-    country = TextField('Country'       , id='country'         , validators=[DataRequired()])
-    zipcode = IntegerField('Postal Code', id='zipcode'         , validators=[DataRequired()])
-    about_me = TextField('About Me'     , id='about_me'        , validators=[DataRequired()])    
+    api_key = TextField('API Key'         , id='api_key'       , validators=[DataRequired()])    
+    p1 = TextField('Location Point 1'     , id='p1'            , validators=[DataRequired(), Regexp("^([1-8]?\d(\.\d+)?|90(\.0+)?),\s*(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$")])
+    p2 = TextField('Location Point 2'     , id='p2'            , validators=[DataRequired(), Regexp("^([1-8]?\d(\.\d+)?|90(\.0+)?),\s*(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$")])
+    radius = IntegerField('Density Radius', id='radius'        , validators=[NumberRange(1, 99999)])
+    type1 = SelectField('Type 1'          , id='type1'         , validators=[DataRequired()], choices=[("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store")])
+    type2 = SelectField('Type 2'          , id='type2'         , choices=[("Choose..."), ("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store")])

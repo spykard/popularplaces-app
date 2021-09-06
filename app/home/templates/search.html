@@ -39,6 +39,9 @@
       {% else %}
       <form role="form" method="post" action="">
 
+      <!-- Bug Fix: https://stackoverflow.com/a/42874365 -->
+      {{ form.hidden_tag() }} 
+
       <div class="card-header">
         <h4 class="title">Search Settings</h4>
 
@@ -53,7 +56,7 @@
           <div class="col-md-4 pr-md-1">
             <div class="form-group" data-toggle="tooltip" data-placement="top" title="The API Key is provided automatically for now">
               <label>API Key</label>
-              <input type="text" class="form-control" disabled="" placeholder="API Key" value="{{ current_user.google_api_key }}">
+              <input type="text" class="form-control" id="api_key" name="api_key" readonly="" placeholder="API Key" value="{{ current_user.google_api_key }}">
             </div>
           </div>
         </div>
@@ -61,15 +64,17 @@
           <div class="col-md-6 pr-md-1">
             <div class="form-group">
               <label>Location Point 1 (South-West Limiter)</label>
-              <input type="text" class="form-control" id="p1" name="p1" placeholder="37.97167348129716, 23.725863560047166" value="{{ current_user.settings_p1 }}">
+              <div class="form-group {{'has-danger' if error_dict['p1'] }}">
+                <input type="text" class="form-control {{'form-control-danger' if error_dict['p1'] }}" id="p1" name="p1" placeholder="37.97167348129716, 23.725863560047166" value="{{ current_user.settings_p1 }}">
+              </div>
             </div>
           </div>
           <div class="col-md-6 pl-md-1">
             <div class="form-group">
               <label>Location Point 2 (North-East Limiter)</label>
-              <div class="form-group has-danger">
-              <input type="text" class="form-control form-control-danger" id="p2" name="p2" placeholder="37.99046797819195, 23.755371160365122" value="{{ current_user.settings_p2 }}">
-            </div>
+              <div class="form-group {{'has-danger' if error_dict['p2'] }}">
+                <input type="text" class="form-control {{'form-control-danger' if error_dict['p2'] }}" id="p2" name="p2" placeholder="37.99046797819195, 23.755371160365122" value="{{ current_user.settings_p2 }}">
+              </div>
             </div>
           </div>
         </div>        
@@ -77,7 +82,9 @@
           <div class="col-md-4 pr-md-1">
             <div class="form-group">
               <label>Density Radius (Meters)</label>
-              <input type="number" class="form-control" id="radius" name="radius" placeholder="180" value="{{ current_user.settings_radius }}">
+              <div class="form-group {{'has-danger' if error_dict['radius'] }}">
+                <input type="number" class="form-control {{'form-control-danger' if error_dict['radius'] }}" id="radius" name="radius" placeholder="180" value="{{ current_user.settings_radius }}">
+              </div>
             </div>
           </div>
         </div>
@@ -85,59 +92,63 @@
           <div class="col-md-4 pr-md-1">
             <div class="form-group">
               <label>Type 1</label>
-              <select type="text" class="form-control" id="type1" name="type1">
-                <option selected>Choose...</option>
-                <option>Bar</option>
-                <option>Night Club</option>
-                <option>Restaurant</option>
-                <option>Cafe</option>
-                <option>Bakery</option>
-                <option>Food</option>
-                <option>Subway Station</option>
-                <option>Gas Station</option>
-                <option>Bank</option>
-                <option>Pharmacy</option>
-                <option>Health</option>
-                <option>Place of Worship</option>
-                <option>Department Store</option>
-                <option>Establishment</option>
-                <option>University</option>
-                <option>Library</option>
-                <option>Book Store</option>
-                <option>Gym</option>
-                <option>Clothing Store</option>
-                <option>Casino</option>
-                <option>Liquor Store</option>
-              </select>
+              <div class="form-group {{'has-danger' if error_dict['type1'] }}">
+                <select type="text" class="form-control" id="type1" name="type1">
+                  <option>Choose...</option>
+                  <option>Bar</option>
+                  <option>Night Club</option>
+                  <option>Restaurant</option>
+                  <option>Cafe</option>
+                  <option>Bakery</option>
+                  <option>Food</option>
+                  <option>Subway Station</option>
+                  <option>Gas Station</option>
+                  <option>Bank</option>
+                  <option>Pharmacy</option>
+                  <option>Health</option>
+                  <option>Place of Worship</option>
+                  <option>Department Store</option>
+                  <option>Establishment</option>
+                  <option>University</option>
+                  <option>Library</option>
+                  <option>Book Store</option>
+                  <option>Gym</option>
+                  <option>Clothing Store</option>
+                  <option>Casino</option>
+                  <option>Liquor Store</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="col-md-4 pr-md-1">
             <div class="form-group">
               <label>Type 2</label>
-              <select type="text" class="form-control" id="type2" name="type2">
-                <option selected>Choose...</option>
-                <option>Bar</option>
-                <option>Night Club</option>
-                <option>Restaurant</option>
-                <option>Cafe</option>
-                <option>Bakery</option>
-                <option>Food</option>
-                <option>Subway Station</option>
-                <option>Gas Station</option>
-                <option>Bank</option>
-                <option>Pharmacy</option>
-                <option>Health</option>
-                <option>Place of Worship</option>
-                <option>Department Store</option>
-                <option>Establishment</option>
-                <option>University</option>
-                <option>Library</option>
-                <option>Book Store</option>
-                <option>Gym</option>
-                <option>Clothing Store</option>
-                <option>Casino</option>
-                <option>Liquor Store</option>
-              </select>
+              <div class="form-group {{'has-danger' if error_dict['type2'] }}">            
+                <select type="text" class="form-control" id="type2" name="type2">
+                  <option>Choose...</option>
+                  <option>Bar</option>
+                  <option>Night Club</option>
+                  <option>Restaurant</option>
+                  <option>Cafe</option>
+                  <option>Bakery</option>
+                  <option>Food</option>
+                  <option>Subway Station</option>
+                  <option>Gas Station</option>
+                  <option>Bank</option>
+                  <option>Pharmacy</option>
+                  <option>Health</option>
+                  <option>Place of Worship</option>
+                  <option>Department Store</option>
+                  <option>Establishment</option>
+                  <option>University</option>
+                  <option>Library</option>
+                  <option>Book Store</option>
+                  <option>Gym</option>
+                  <option>Clothing Store</option>
+                  <option>Casino</option>
+                  <option>Liquor Store</option>
+                </select>
+              </div>  
             </div>
           </div>          
         </div>        
@@ -320,9 +331,12 @@
       })
     
       $('[data-toggle="tooltip"]').tooltip()
+
+      $('#type1').val('{{ current_user.settings_type1 }}');
+      $('#type2').val('{{ current_user.settings_type2 }}');
     });
 
-    demo.showNotification('top','center', '{{ to_notify }}', 'Input Error: Re-type the values in red.')
+    demo.showNotification('top','center', '{{ to_notify }}', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')
   </script>
 
 {% endblock javascripts %}

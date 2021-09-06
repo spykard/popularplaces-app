@@ -3,7 +3,18 @@
 {% block title %} Credits {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+
+<style>
+  .btn.btn-icon {
+    height: 2.0rem;
+    min-width: 2.0rem;
+    width: 2.0rem;
+  }
+
+</style>
+
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -14,30 +25,38 @@
         <h4 class="title">Credits</h4>
       </div>
       <div class="card-body">
-        <div class="card-title">
+        <!-- <div class="card-title"></div> -->
           <h5>For providing the <span class="text-primary">UI template</span>, I would like to thank:</h5>
-          <ul>
-            <li>
-              <a class="text-white" 
-              target="_blank" rel="noopener noreferrer" 
-              href="https://bit.ly/3fKQZaL">CreativeTim</a>   
-            </li>  
-            <li>
-              <a class="text-white" 
-              target="_blank" rel="noopener noreferrer" 
-              href="https://appseed.us">AppSeed</a>   
-            </li>            
-          </ul>
+          <div>
+            <button class="btn btn-primary btn-fab btn-icon btn-round" onclick="window.open('https://bit.ly/3fKQZaL');">
+              <i class="tim-icons icon-heart-2"></i>
+            </button>
+            <a class="text-white" 
+            target="_blank" rel="noopener noreferrer" 
+            href="https://bit.ly/3fKQZaL">CreativeTim</a>  
+          </div>
+
+          <div>
+            <button class="btn btn-primary btn-fab btn-icon btn-round" onclick="window.open('https://appseed.us');">
+              <i class="tim-icons icon-heart-2"></i>
+            </button>
+            <a class="text-white" 
+            target="_blank" rel="noopener noreferrer" 
+            href="https://appseed.us">AppSeed</a>   
+          </div>
+
+          <hr>
 
           <h5>For providing the <span class="text-primary">API Library</span>, I would like to thank:</h5>
-          <ul>
-            <li>
-              <a class="text-white" 
-              target="_blank" rel="noopener noreferrer" 
-              href="https://github.com/m-wrzr">m-wrzr</a>   
-            </li>            
-          </ul>
-          </h5>
+          
+          <div>
+            <button class="btn btn-primary btn-fab btn-icon btn-round" onclick="window.open('https://github.com/m-wrzr');">
+              <i class="tim-icons icon-heart-2"></i>
+            </button>
+            <a class="text-white" 
+            target="_blank" rel="noopener noreferrer" 
+            href="https://github.com/m-wrzr">m-wrzr</a>   
+          </div>          
       </div>
     </div>
   </div>
