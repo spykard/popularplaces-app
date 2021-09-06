@@ -10,7 +10,9 @@
     background: rgba(39, 41, 61, 1);
     color: rgb(255, 255, 255);
   }
-
+  code {
+    word-break: normal
+  }
 </style>
 
 {% endblock stylesheets %}
@@ -47,7 +49,11 @@
 
         <h6 class="card-category">
           {% if msg %}
+            {% if success %}
+            <span class="text-success">{{ msg | safe }}</span>
+            {% else %} 
             <span class="text-danger">{{ msg | safe }}</span>
+            {% endif %} 
           {% endif %}  
         </h6>      
       </div>
@@ -151,7 +157,20 @@
               </div>  
             </div>
           </div>          
-        </div>        
+        </div> 
+        <div class="row">
+          <div class="col-md-4 pr-md-1">
+            <div class="form-check">           
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" id="all_places" name="all_places" value="" {{'checked' if current_user.settings_all_places }}>
+                All Places
+                <span class="form-check-sign">
+                    <span class="check"></span>
+                </span>
+              </label>
+            </div> 
+          </div>
+        </div>  
       </div>
       
       <div class="card-footer">
@@ -160,6 +179,7 @@
         {% else %}
         <button type="submit" name="search" class="btn btn-fill btn-primary">Search</button>
         {% endif %}
+
         <!-- Modal -->
         <button class="btn btn-primary btn-simple" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>
         <div class="modal modal-black fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
@@ -172,7 +192,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <p>This application lets you search for place information, particularly <b>popularity</b> and <b>traffic</b> data, based on proximity while using a variety of categories, including shops, establishments and prominent points of interest.</p>
+                <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on proximity to a given location, while additionally providing options for a variety of categories, including shops, establishments and prominent points of interest.</p>
                 <hr>
                 <div class="card card-plain">
                   <div class="card-header">
@@ -184,116 +204,116 @@
                         <thead class=" text-primary">
                           <tr>
                             <th>
-                              Name
+                              Parameter
                             </th>
                             <th>
-                              Country
+                              Type
                             </th>
                             <th>
-                              City
+                              Explanation
                             </th>
                             <th class="text-center">
-                              Salary
+                              Suggested Value
                             </th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
                             <td>
-                              Dakota Rice
+                              API Key
                             </td>
                             <td>
-                              Niger
+                              <code>string</code>
                             </td>
                             <td>
-                              Oud-Turnhout
+                              A general API key for Google's Web Service. All the required services have been enabled. The user could easily utilize his own key but for now the API key is provided automatically.
                             </td>
                             <td class="text-center">
-                              $36,738
+                              <code>Default</code>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Minerva Hooper
+                              Location Point 1
                             </td>
                             <td>
-                              Curaçao
+                              <code>latitude, longtitude</code>
                             </td>
                             <td>
-                              Sinaai-Waas
+                              Two numeric values in the form of <code>(latitude, longtitude)</code> which represent the first point delimiting the search area; e.g. (37.971673, 23.725863). In particular, this is the <b>South-West/Bottom-Left</b> delimiting point of the area that the user wants to search in.
                             </td>
                             <td class="text-center">
-                              $23,789
+                              <code>37.971673, 23.725863</code>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Sage Rodriguez
+                              Location Point 2
                             </td>
                             <td>
-                              Netherlands
+                              <code>latitude, longtitude</code>
                             </td>
                             <td>
-                              Baileux
+                              Identical to the previous parameter. It is effectively the <b>North-East/Top-Right</b> delimiting point of the area that the user wants to search in.
                             </td>
                             <td class="text-center">
-                              $56,142
+                              <code>37.990467, 23.755371</code>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Philip Chaney
+                              Density Radius
                             </td>
                             <td>
-                              Korea, South
+                              <code>numeric</code>
                             </td>
                             <td>
-                              Overland Park
+                              A numeric value in the form of <b>meters</b> refering to the density that the Radar will use while searching. It does <b>not</b> represent the size of the circle that the user wants to search in. With a maximum (and default) value of up to 50,000 for radar search, a value of 180 has been chosen and adapted to very dense city areas.
                             </td>
                             <td class="text-center">
-                              $38,735
+                              <code>180(m) for Cities</code>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Doris Greene
+                              Type 1
                             </td>
                             <td>
-                              Malawi
+                              <code>dropdown option</code>
                             </td>
                             <td>
-                              Feldkirchen in Kärnten
+                              Simply put, the type of Place the User wants to Search for, whether that is a bar or a clothing store.
                             </td>
                             <td class="text-center">
-                              $63,542
+                              <code>Bar</code>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Mason Porter
+                              Type 2
                             </td>
                             <td>
-                              Chile
+                              <code>dropdown option</code>
                             </td>
                             <td>
-                              Gloucester
+                              Additional Place type to include in the search; fully optional.
                             </td>
                             <td class="text-center">
-                              $78,615
+                              <code>None</code>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              Jon Porter
+                              All Places
                             </td>
                             <td>
-                              Portugal
+                              <code>boolean</code>
                             </td>
                             <td>
-                              Gloucester
+                              An option to include Places in the results that do not feature any popular times information.
                             </td>
                             <td class="text-center">
-                              $98,615
+                              <code>Off</code>
                             </td>
                           </tr>
                         </tbody>
@@ -325,6 +345,9 @@
 {% block javascripts %}
 
   <script>
+    $('#type1').val('{{ current_user.settings_type1 }}');
+    $('#type2').val('{{ current_user.settings_type2 }}');
+
     $(document).ready(function () {    
       $('.navbar-sidenav [data-toggle="tooltip"]').tooltip({
         template: '<div class="tooltip navbar-sidenav-tooltip" role="tooltip" style="pointer-events: none;"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
@@ -332,8 +355,6 @@
     
       $('[data-toggle="tooltip"]').tooltip()
 
-      $('#type1').val('{{ current_user.settings_type1 }}');
-      $('#type2').val('{{ current_user.settings_type2 }}');
     });
 
     demo.showNotification('top','center', '{{ to_notify }}', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')

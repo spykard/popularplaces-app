@@ -15,6 +15,7 @@ from app import db, login_manager
 from app.base import blueprint
 from app.base.forms import LoginForm, CreateAccountForm
 from app.base.models import User
+from datetime import date
 
 from app.base.util import verify_pass
 
@@ -37,6 +38,7 @@ def login():
         if not login_form.validate():
             return render_template( 'accounts/login.html', 
                                     msg='Input does not follow the Appropriate Form',
+                                    success=False,
                                     form=login_form)
 
         # Locate user
@@ -46,14 +48,21 @@ def login():
         if user and verify_pass( password, user.password):
 
             login_user(user)
+            current_user.last_login = date.today()
+            db.session.commit()
+            
             return redirect(url_for('base_blueprint.route_default'))
 
         # Something (user or pass) is not ok
-        return render_template( 'accounts/login.html', msg='Wrong user or password', form=login_form)
+        logout_user()  # Bug Fix: current_user.is_authenticated turns True
+        return render_template( 'accounts/login.html', 
+                                msg='Wrong user or password', 
+                                success=False,
+                                form=login_form)
 
     if not current_user.is_authenticated:
         return render_template( 'accounts/login.html', form=login_form)
-        
+
     return redirect(url_for('home_blueprint.index'))
 
 @blueprint.route('/register', methods=['GET', 'POST'])
@@ -93,8 +102,10 @@ def register():
         db.session.add(user)
         db.session.commit()
 
+        logout_user()  # Bug Fix: current_user.is_authenticated turns True
+
         return render_template( 'accounts/register.html', 
-                                msg='User created please <a href="/login">login</a>', 
+                                msg='User created, please <a href="/login">Login</a>', 
                                 success=True,
                                 form=create_account_form)
 

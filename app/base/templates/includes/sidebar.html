@@ -12,12 +12,12 @@
         <ul class="nav">
         {% if current_user.is_authenticated %}
 
-          <li class="{% if 'index' in segment %} active {% endif %}">
+          <!-- <li class="{% if 'index' in segment %} active {% endif %}">
             <a href="/">
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>Dashboard</p>
             </a>
-          </li>
+          </li> -->
           <li class="{% if 'populartimes' in segment %} active {% endif %}">
             <a href="/populartimes">
               <i class="tim-icons icon-chart-pie-36"></i>
@@ -45,26 +45,26 @@
           <li class="{% if 'icons' in segment %} active {% endif %}">
             <a href="/ui-icons">
               <i class="tim-icons icon-atom"></i>
-              <p>Icons</p>
+              <p>Icons &nbsp;<code>DEV</code></p>
             </a>
           </li>
 
           <li class="{% if 'notifications' in segment %} active {% endif %}">
             <a href="/ui-notifications">
               <i class="tim-icons icon-bell-55"></i>
-              <p>Notifications</p>
+              <p>Notifications &nbsp;<code>DEV</code></p>
             </a>
           </li>
           <li class="{% if 'tables' in segment %} active {% endif %}">
             <a href="/ui-tables">
               <i class="tim-icons icon-puzzle-10"></i>
-              <p>Table List</p>
+              <p>Table List &nbsp;<code>DEV</code></p>
             </a>
           </li>
           <li class="{% if 'typography' in segment %} active {% endif %}">
             <a href="/ui-typography">
               <i class="tim-icons icon-align-center"></i>
-              <p>Typography</p>
+              <p>Typography &nbsp;<code>DEV</code></p>
             </a>
           </li>
           <li>

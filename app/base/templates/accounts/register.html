@@ -20,8 +20,12 @@
 
             <h6 class="card-category">
                 {% if msg %}
+                  {% if success %}
+                  <span class="text-success">{{ msg | safe }}</span>
+                  {% else %} 
                   <span class="text-danger">{{ msg | safe }}</span>
-                {% else %}
+                  {% endif %} 
+                {% else %}  
                   Submit your credentials
                 {% endif %}  
             </h6>

@@ -68,6 +68,10 @@ def search():
         radius = request.form['radius']
         type1 = request.form['type1']
         type2 = request.form['type2']
+        if request.form.get('all_places') == None:  # If checkboxed not checked, no POST data are sent
+            all_places = 0
+        else:
+            all_places = 1
 
         # Validate Form Data
         if not settings_form.validate():
@@ -86,7 +90,9 @@ def search():
         current_user.settings_radius = radius
         current_user.settings_type1 = type1
         current_user.settings_type2 = type2
-        db.session.commit()
+        current_user.settings_all_places = all_places
+        if current_user.premium_enabled == 0: current_user.free_runs_remaining = current_user.free_runs_remaining-1
+        db.session.commit()            
 
         return render_template( 'search.html', 
                         segment='search',
