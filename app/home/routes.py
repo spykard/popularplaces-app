@@ -13,19 +13,6 @@ from app.base.models import User, Place, Search
 from app.base.util import hash_pass
 from datetime import datetime
 
-@blueprint.route('/index')
-@login_required
-def index():
-
-    if current_user.premium_enabled == 1 and current_user.premium_notified == 0:
-        to_notify = "true"
-        current_user.premium_notified = 1
-        db.session.commit()        
-    else:
-        to_notify = "false"
-    
-    return render_template('index.html', segment='index', to_notify=to_notify)
-
 @blueprint.route('/<template>')
 @login_required
 def route_template(template):
@@ -46,15 +33,15 @@ def route_template(template):
     except:
         return render_template('page-500.html'), 500
 
-@blueprint.route('/populartimes')
-@login_required
-def populartimes():
+# @blueprint.route('/populartimes')
+# @login_required
+# def populartimes():
 
-    query = 1
-    # Locate user
-    user = Place.query.filter_by(id=query).first()
+#     query = 1
+#     # Locate user
+#     user = Place.query.filter_by(id=query).first()
 
-    return render_template('populartimes.html', segment='populartimes', data=user.rating)
+#     return render_template('populartimes.html', segment='populartimes', data=None)
 
 @blueprint.route('/search', methods=['GET', 'POST'])
 @login_required
@@ -116,7 +103,8 @@ def search():
     return render_template( 'search.html', 
                             segment='search',
                             error_dict={},
-                            form=settings_form)    
+                            form=settings_form,
+                            to_notify_premium=notify_premium())    
 
 @blueprint.route('/page-user', methods=['GET', 'POST'])
 @login_required
@@ -240,6 +228,17 @@ def debug_data_printer( data ):
         print()
     print(len(data))
 
+# Helper - Check whether user must be notified for Premium subscription Enabling
+def notify_premium():
+    if current_user.premium_enabled == 1 and current_user.premium_notified == 0:
+        to_notify = "true"
+        current_user.premium_notified = 1
+        db.session.commit()        
+    else:
+        to_notify = "false"
+    
+    return to_notify
+
 # Helper - Maps a string we receive from a Form to a string that can be used as a parameter inside the code, e.g. "Night Club" -> "night_club"
 def type_mapper( type1, type2 ): 
     places_map = {"Bar": "bar", "Night Club": "night_club", "Restaurant": "restaurant", "Cafe": "cafe", "Bakery": "bakery", "Food": "food", "Subway Station": "subway_station", "Gas Station": "gas_station", "Bank": "bank", "Pharmacy": "pharmacy", "Health": "health", "Place of Worship": "place_of_worship", "Department Store": "department_store", "Establishment": "establishment", "University": "university", "Library": "library", "Book Store": "book_store", "Gym": "gym", "Clothing Store": "clothing_store", "Casino": "casino", "Liquor Store": "liquor_store"}
@@ -254,9 +253,7 @@ def type_mapper( type1, type2 ):
         
 # Helper - Extract current page name from request 
 def get_segment( request ): 
-
     try:
-
         segment = request.path.split('/')[-1]
 
         if segment == '':

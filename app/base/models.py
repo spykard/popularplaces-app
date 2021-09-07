@@ -60,8 +60,7 @@ class Place(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    username = Column(String, unique=True)
-    email = Column(String, unique=True)
+    name = Column(String)
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

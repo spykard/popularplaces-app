@@ -1,11 +1,36 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Populartimes {% endblock %} 
+{% block title %} Dashboard {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
+    <div class="row">
+      <div class="card card-nav-tabs">
+        <div class="card-header card-header-success">
+          Quote
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+            <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+          </blockquote>
+          <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+            Secondary Button
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card card-nav-tabs">
+        <div class="card-header card-header-success">
+          Graph of Google API Queries (Count)
+        </div>
+      </div>
+    </div>
 
     <div class="row">
 
@@ -14,7 +39,7 @@
           <div class="card-header ">
             <div class="row">
               <div class="col-sm-6 text-left">
-                <h5 class="card-category">{{ data }}</h5>
+                <h5 class="card-category">Total Shipments</h5>
                 <h2 class="card-title">Performance</h2>
               </div>
               <div class="col-sm-6">
