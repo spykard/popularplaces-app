@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask_login import UserMixin
-from sqlalchemy import Binary, Column, Integer, String, Numeric, Date
+from sqlalchemy import Binary, Column, Integer, String, Date, DateTime, ForeignKey
 
 from app import db, login_manager
 
@@ -25,7 +25,7 @@ class User(db.Model, UserMixin):
     country = Column(String, server_default='country')
     zipcode = Column(Integer, server_default='zipcode')
     about_me = Column(String, server_default='about_me')
-    google_api_key = Column(Integer, server_default='google_api_key') 
+    google_api_key = Column(String, server_default='google_api_key') 
     premium_enabled = Column(Integer, server_default='premium_enabled')
     premium_notified = Column(Integer, server_default='premium_notified')
     free_runs_remaining = Column(Integer, server_default='free_runs_remaining')   
@@ -58,8 +58,10 @@ class Place(db.Model):
 
     __tablename__ = 'Place'
 
-    id = Column(Integer, primary_key=True)
-    rating = Column(Numeric)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    username = Column(String, unique=True)
+    email = Column(String, unique=True)
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -74,6 +76,36 @@ class Place(db.Model):
 
     def __repr__(self):
         return str(self.id)
+
+class Search(db.Model):
+
+    __tablename__ = 'Search'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    time = Column(DateTime, server_default='time')     
+    google_api_key = Column(String, server_default='google_api_key') 
+    settings_p1 = Column(String, server_default='settings_p1')
+    settings_p2 = Column(String, server_default='settings_p2')
+    settings_radius = Column(Integer, server_default='settings_radius')  
+    settings_type1 = Column(String, server_default='settings_type1')
+    settings_type2 = Column(String, server_default='settings_type2')    
+    settings_all_places = Column(Integer, server_default='settings_all_places')    
+    user_id = Column(Integer, ForeignKey('User.id'))
+    name = Column(String, server_default='name')  
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+                
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.id)        
 
 @login_manager.user_loader
 def user_loader(id):
