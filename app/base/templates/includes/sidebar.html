@@ -1,6 +1,7 @@
 
 
-    <div class="sidebar" data="primary">
+    <!-- <div class="sidebar" data="{{ current_user.ui_color }}"> -->
+    <div class="sidebar" data="{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">      
       <div class="sidebar-wrapper">
         <!-- <div class="logo">
           <a target="_blank" rel="sponsored noopener noreferrer" 

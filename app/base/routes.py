@@ -23,6 +23,24 @@ from app.base.util import verify_pass
 def route_default():
     return redirect(url_for('base_blueprint.login'))
 
+@blueprint.route('/update-ui-color-preference', methods=['POST'])
+def update_ui_color_preferences():
+    if current_user.is_authenticated:
+        current_user.ui_color = request.form['color']
+        db.session.commit() 
+        return "true"
+    else:
+        return "false"
+
+@blueprint.route('/update-ui-theme-preference', methods=['POST'])
+def update_ui_theme_preferences():
+    if current_user.is_authenticated:
+        current_user.ui_theme = request.form['theme']
+        db.session.commit() 
+        return "true"
+    else:
+        return "false"
+
 ## Login & Registration
 
 @blueprint.route('/login', methods=['GET', 'POST'])

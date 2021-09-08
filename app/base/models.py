@@ -35,7 +35,9 @@ class User(db.Model, UserMixin):
     settings_type1 = Column(String, server_default='settings_type1')
     settings_type2 = Column(String, server_default='settings_type2')    
     settings_all_places = Column(Integer, server_default='settings_all_places')
-    last_login = Column(Date, server_default='last_login')       
+    last_login = Column(Date, server_default='last_login')   
+    ui_color = Column(String, server_default='ui_color')
+    ui_theme = Column(String, server_default='ui_theme')        
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

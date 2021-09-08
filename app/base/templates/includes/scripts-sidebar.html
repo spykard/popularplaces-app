@@ -49,6 +49,18 @@
           if ($sidebar_responsive.length != 0) {
             $sidebar_responsive.attr('data', new_color);
           }
+
+          $.ajax({
+            type: 'POST',
+            data: {
+              color: new_color,
+            },
+            url: "/update-ui-color-preference",
+            success: function(data){  
+                     },
+            error: function(data){    
+                     },
+          });          
         });
 
         $('.switch-sidebar-mini input').on("switchChange.bootstrapSwitch", function() {
@@ -104,12 +116,36 @@
           $('body').addClass('white-content');
           $('.navbar-wrapper').removeClass('navbar-dark');  // Bug Fix
           $('.navbar-wrapper').addClass('navbar-light');
+
+          $.ajax({
+            type: 'POST',
+            data: {
+              theme: 'light',
+            },
+            url: "/update-ui-theme-preference",
+            success: function(data){  
+                     },
+            error: function(data){    
+                     },
+          });         
         });
 
         $('.dark-badge').click(function() {
           $('body').removeClass('white-content');
           $('.navbar-wrapper').removeClass('navbar-light');  // Bug Fix
-          $('.navbar-wrapper').addClass('navbar-dark');          
+          $('.navbar-wrapper').addClass('navbar-dark'); 
+
+          $.ajax({
+            type: 'POST',
+            data: {
+              theme: 'dark',
+            },
+            url: "/update-ui-theme-preference",
+            success: function(data){  
+                     },
+            error: function(data){    
+                     },
+          });          
         });
       });
     });

@@ -42,12 +42,12 @@
 
 </head>
 
-<body class="">
+<body class="{% if current_user.ui_theme == 'light' %}white-content{% endif %}">
   <div class="wrapper">
 
     {% include 'includes/sidebar.html' %}
 
-    <div class="main-panel">
+    <div class="main-panel" data="{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
 
       {% include 'includes/navigation.html' %}
 
