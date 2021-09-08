@@ -30,11 +30,11 @@
                           <label>&nbsp;Username</label>
                           <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">
+                                <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                                   <i class="fas fa-user"></i>
                               </div>      
-                            </div>                          
-                            <input class="form-control" id="username_login" name="username" required="" type="text" value="">
+                            </div>
+                            <input type="text" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="username" name="username" required="" value="">                                                      
                           </div>
                         </div>
                       </div>
@@ -47,11 +47,11 @@
                           <label>&nbsp;Password</label>
                           <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">
+                                <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                                   <i class="fas fa-key"></i>
                               </div>      
-                            </div>                          
-                            <input class="form-control" id="pwd_login" name="password" required="" type="password" value="">
+                            </div>    
+                            <input type="password" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="password" name="password" required="" value="">       
                           </div>
                         </div>
                       </div>
@@ -60,9 +60,9 @@
                     
                 </div>
                 <div class="card-footer">
-                  <button type="submit" name="login" class="btn btn-fill btn-primary">Login</button>
+                  <button type="submit" id="login" name="login" class="btn btn-fill btn-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Login</button>
                   &nbsp; &nbsp;
-                  Don't have an account? <a href="/register" class="text-primary">Create</a>
+                  Don't have an account? <a href="/register" id="pagelink" class="text-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Create</a>
                 </div>
 
               </form>

@@ -10,13 +10,13 @@ from wtforms.validators import InputRequired, Email, DataRequired, NumberRange, 
 ## login and registration
 
 class LoginForm(FlaskForm):
-    username = TextField    ('Username', id='username_login'   , validators=[DataRequired()])
-    password = PasswordField('Password', id='pwd_login'        , validators=[DataRequired()])
+    username = TextField    ('Username', id='username'         , validators=[DataRequired()])
+    password = PasswordField('Password', id='password'         , validators=[DataRequired()])
 
 class CreateAccountForm(FlaskForm):
-    username = TextField('Username'     , id='username_create' , validators=[DataRequired()])
-    email    = TextField('Email'        , id='email_create'    , validators=[DataRequired(), Email()])
-    password = PasswordField('Password' , id='pwd_create'      , validators=[DataRequired()])
+    username = TextField('Username'     , id='username'        , validators=[DataRequired()])
+    email    = TextField('Email'        , id='email'           , validators=[DataRequired(), Email()])
+    password = PasswordField('Password' , id='password'        , validators=[DataRequired()])
 
 class EditProfileForm(FlaskForm):   
     username = TextField('Username'     , id='username'        , validators=[DataRequired()])

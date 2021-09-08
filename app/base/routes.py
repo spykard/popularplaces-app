@@ -25,8 +25,15 @@ def route_default():
 
 @blueprint.route('/update-ui-color-preference', methods=['POST'])
 def update_ui_color_preferences():
+    color = request.form['color']
     if current_user.is_authenticated:
-        current_user.ui_color = request.form['color']
+        current_user.ui_color = color
+        if color == "primary":
+            current_user.ui_button = "primary"
+        elif color == "blue":
+            current_user.ui_button = "info"
+        elif color == "green":
+            current_user.ui_button = "success"            
         db.session.commit() 
         return "true"
     else:

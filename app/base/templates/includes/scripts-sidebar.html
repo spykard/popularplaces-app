@@ -34,6 +34,13 @@
 
           var new_color = $(this).data('color');
 
+          if (new_color == "primary") {
+            var new_button_color = 'primary';}
+          else if (new_color == "green") {
+            var new_button_color = 'success';} 
+          else {
+            var new_button_color = 'info';}        
+
           if ($sidebar.length != 0) {
             $sidebar.attr('data', new_color);
           }
@@ -49,6 +56,26 @@
           if ($sidebar_responsive.length != 0) {
             $sidebar_responsive.attr('data', new_color);
           }
+
+          // Specific Visual Fix just for the Login and Register Pages
+          $login_button = $('#login');
+          $register_button = $('#register');
+          $login_link = $('#pagelink');
+          if ($login_button.length != 0) {
+            $lastClass = $login_button.attr('class').split(' ').pop();
+            $login_button.removeClass($lastClass);
+            $login_button.addClass('btn-' + new_button_color);
+          }  
+          if ($register_button.length != 0) {
+            $lastClass = $register_button.attr('class').split(' ').pop();
+            $register_button.removeClass($lastClass);
+            $register_button.addClass('btn-' + new_button_color);                    
+          }           
+          if ($login_link.length != 0) {
+            $lastClass = $login_link.attr('class').split(' ').pop();
+            $login_link.removeClass($lastClass);
+            $login_link.addClass('text-' + new_button_color);                    
+          } 
 
           $.ajax({
             type: 'POST',

@@ -6,10 +6,6 @@
 {% block stylesheets %}
 
 <style>
-  select option {
-    background: rgba(39, 41, 61, 1);
-    color: rgb(255, 255, 255);
-  }
   code {
     word-break: normal
   }
@@ -79,7 +75,7 @@
             <div class="form-group">
               <label>Location Point 2 (North-East Limiter)</label>
               <div class="form-group {{'has-danger' if error_dict['p2'] }}">
-                <input type="text" class="form-control {{'form-control-danger' if error_dict['p2'] }}" id="p2" name="p2" placeholder="37.99046797819195, 23.755371160365122" value="{{ current_user.settings_p2 }}">
+                <input type="text" class="form-control form-{{current_user.ui_color}} {{'form-control-danger' if error_dict['p2'] }}" id="p2" name="p2" placeholder="37.99046797819195, 23.755371160365122" value="{{ current_user.settings_p2 }}">
               </div>
             </div>
           </div>
@@ -99,7 +95,7 @@
             <div class="form-group">
               <label>Type 1</label>
               <div class="form-group {{'has-danger' if error_dict['type1'] }}">
-                <select type="text" class="form-control" id="type1" name="type1">
+                <select type="text" class="form-control {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type1" name="type1">
                   <option>Choose...</option>
                   <option>Bar</option>
                   <option>Night Club</option>
@@ -130,7 +126,7 @@
             <div class="form-group">
               <label>Type 2</label>
               <div class="form-group {{'has-danger' if error_dict['type2'] }}">            
-                <select type="text" class="form-control" id="type2" name="type2">
+                <select type="text" class="form-control {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type2" name="type2">
                   <option>Choose...</option>
                   <option>Bar</option>
                   <option>Night Club</option>

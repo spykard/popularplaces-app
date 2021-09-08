@@ -21,7 +21,7 @@
             <h6 class="card-category">
                 {% if msg %}
                   {% if success %}
-                  <span class="text-success">{{ msg | safe }}</span>
+                  <span class="text-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">{{ msg | safe }}</span>
                   {% else %} 
                   <span class="text-danger">{{ msg | safe }}</span>
                   {% endif %} 
@@ -39,11 +39,11 @@
                     <label>&nbsp;Username</label>
                     <div class="input-group">
                       <div class="input-group-prepend">
-                          <div class="input-group-text">
+                          <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                             <i class="fas fa-user"></i>
                         </div>      
                       </div>                    
-                      {{ form.username(class="form-control") }}
+                      <input type="text" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="username" name="username" required="" value="{{ form.username.data }}">                     
                     </div>
                   </div>
                 </div>
@@ -55,11 +55,11 @@
                     <label>&nbsp;Email</label>
                     <div class="input-group">
                       <div class="input-group-prepend">
-                          <div class="input-group-text">
+                          <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                             <i class="fas fa-envelope"></i>
                         </div>      
                       </div>                    
-                      {{ form.email(class="form-control", type="email") }}
+                      <input type="email" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="email" name="email" required="" value="{{ form.email.data }}"> 
                     </div>
                   </div>
                 </div>
@@ -71,11 +71,11 @@
                     <label>&nbsp;Password</label>
                     <div class="input-group">
                       <div class="input-group-prepend">
-                          <div class="input-group-text">
+                          <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                             <i class="fas fa-key"></i>
                         </div>      
                       </div>                    
-                      {{ form.password(class="form-control", type="password") }}
+                      <input type="password" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="password" name="password" required="" value="">
                     </div>
                   </div>
                 </div>
@@ -83,9 +83,9 @@
               
           </div>
           <div class="card-footer">
-            <button type="submit" name="register" class="btn btn-fill btn-primary">Register</button>
+            <button type="submit" id="register" name="register" class="btn btn-fill btn-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Register</button>
             &nbsp; &nbsp;
-            Have an account? <a href="{{ url_for('base_blueprint.login') }}" class="text-primary">Login</a>
+            Have an account? <a href="{{ url_for('base_blueprint.login') }}" id="pagelink" class="text-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Login</a>
           </div>
 
         </form>

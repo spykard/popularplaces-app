@@ -1,0 +1,38 @@
+/* Form border for rectangle - Blue */
+.form-blue:focus {
+  border-color: #1d8cf8;
+}
+
+/* Form border for icon - Blue */
+.input-group-focus .input-group-prepend .input-group-text.form-blue,
+.input-group-focus .input-group-append .input-group-text.form-blue {
+  border-color: #1d8cf8;
+}
+ 
+/* Form border for rectangle - Primary */
+.form-primary:focus {
+  border-color: #e14eca;
+}
+
+/* Form border for icon - Primary */
+.input-group-focus .input-group-prepend .input-group-text.form-primary,
+.input-group-focus .input-group-append .input-group-text.form-primary {
+  border-color: #e14eca;
+}
+
+/* Form border for rectangle - Green */
+.form-green:focus {
+  border-color: #00f2c3;
+}
+
+/* Form border for icon - Green */
+.input-group-focus .input-group-prepend .input-group-text.form-green,
+.input-group-focus .input-group-append .input-group-text.form-green {
+  border-color: #00f2c3;
+}
+
+/* Dropdown colors just for the Black Theme */
+select.dark-content option {
+  background: rgba(39, 41, 61, 1);
+  color: rgb(255, 255, 255);
+}  

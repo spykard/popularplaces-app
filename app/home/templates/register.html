@@ -29,11 +29,11 @@
                           <label>&nbsp;Username</label>
                           <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">
+                                <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                                   <i class="fas fa-user"></i>
                               </div>      
                             </div> 
-                            <input class="form-control" id="username_create" name="username" required="" type="text" value="">
+                            <input type="text" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="username" name="username" required="" value="{{ form.username.data }}"> 
                           </div>
                         </div>
                       </div>
@@ -45,11 +45,11 @@
                           <label>&nbsp;Email</label>
                           <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">
+                                <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                                   <i class="fas fa-envelope"></i>
                               </div>      
                             </div>                          
-                            <input class="form-control" id="email_create" name="email" required="" type="email" value="">
+                            <input type="email" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="email" name="email" required="" value="{{ form.email.data }}">
                           </div>
                         </div>
                       </div>
@@ -60,12 +60,12 @@
                         <div class="form-group">
                           <label>&nbsp;Password</label>
                           <div class="input-group">
-                            <div class="input-group-prepend">
+                            <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                                 <div class="input-group-text">
                                   <i class="fas fa-key"></i>
                               </div>      
                             </div>                          
-                            <input class="form-control" id="pwd_create" name="password" required="" type="password" value="">
+                            <input type="password" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="password" name="password" required="" value="">
                           </div>
                         </div>
                       </div>
@@ -73,9 +73,9 @@
                     
                 </div>
                 <div class="card-footer">
-                  <button type="submit" name="register" class="btn btn-fill btn-primary">Register</button>
+                  <button type="submit" id="register" name="register" class="btn btn-fill btn-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Register</button>
                   &nbsp; &nbsp;
-                  Have an account? <a href="/login" class="text-primary">Login</a>
+                  Have an account? <a href="/login" id="pagelink" class="text-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Login</a>
                 </div>
 
               </form>
