@@ -64,7 +64,9 @@
     
   </div>
 
-  {% include 'includes/fixed-plugin.html' %}
+  {% if session['colors'] %}
+    {% include 'includes/fixed-plugin.html' %}
+  {% endif %}
 
   {% include 'includes/scripts.html' %}
 

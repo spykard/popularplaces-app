@@ -3,7 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from flask import jsonify, render_template, redirect, request, url_for
+from flask import jsonify, render_template, redirect, request, url_for, session
 from flask_login import (
     current_user,
     login_required,
@@ -21,7 +21,13 @@ from app.base.util import verify_pass
 
 @blueprint.route('/')
 def route_default():
+    session['colors'] = True 
     return redirect(url_for('base_blueprint.login'))
+
+@blueprint.route('/hide-colors', methods=['POST'])
+def hide_colors():
+    session['colors'] = False
+    return "true" 
 
 @blueprint.route('/update-ui-color-preference', methods=['POST'])
 def update_ui_color_preferences():
@@ -51,7 +57,7 @@ def update_ui_theme_preferences():
 ## Login & Registration
 
 @blueprint.route('/login', methods=['GET', 'POST'])
-def login():    
+def login():   
     login_form = LoginForm(request.form)
     if 'login' in request.form:
         

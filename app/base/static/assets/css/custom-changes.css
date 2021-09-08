@@ -1,19 +1,19 @@
 /* Form border for rectangle - Blue */
-.form-blue:focus {
+.form-blue:focus,
+.white-content .form-blue:focus {
   border-color: #1d8cf8;
 }
-
 /* Form border for icon - Blue */
 .input-group-focus .input-group-prepend .input-group-text.form-blue,
 .input-group-focus .input-group-append .input-group-text.form-blue {
   border-color: #1d8cf8;
 }
- 
+
 /* Form border for rectangle - Primary */
-.form-primary:focus {
+.form-primary:focus,
+.white-content .form-primary:focus {
   border-color: #e14eca;
 }
-
 /* Form border for icon - Primary */
 .input-group-focus .input-group-prepend .input-group-text.form-primary,
 .input-group-focus .input-group-append .input-group-text.form-primary {
@@ -21,10 +21,10 @@
 }
 
 /* Form border for rectangle - Green */
-.form-green:focus {
+.form-green:focus,
+.white-content .form-green:focus {
   border-color: #00f2c3;
 }
-
 /* Form border for icon - Green */
 .input-group-focus .input-group-prepend .input-group-text.form-green,
 .input-group-focus .input-group-append .input-group-text.form-green {
@@ -36,3 +36,10 @@ select.dark-content option {
   background: rgba(39, 41, 61, 1);
   color: rgb(255, 255, 255);
 }  
+
+/* Variation to the Primary Button, colorful at first, yet pink when hovered */
+.btn-primary.btn-primary-alt {
+  color: #ecdcea;
+  border-color: #ecdcea;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
