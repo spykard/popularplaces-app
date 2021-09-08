@@ -61,6 +61,12 @@
           $login_button = $('#login');
           $register_button = $('#register');
           $login_link = $('#pagelink');
+          $save_button = $('#save');
+          $search_button = $('#search');  
+          $help_button = $('#help');                   
+          $graph_button0 = $('#0');
+          $graph_button1 = $('#1');
+          $graph_button2 = $('#2');                    
           if ($login_button.length != 0) {
             $lastClass = $login_button.attr('class').split(' ').pop();
             $login_button.removeClass($lastClass);
@@ -75,7 +81,37 @@
             $lastClass = $login_link.attr('class').split(' ').pop();
             $login_link.removeClass($lastClass);
             $login_link.addClass('text-' + new_button_color);                    
+          }
+          if ($save_button.length != 0) {
+            $lastClass = $save_button.attr('class').split(' ').pop();
+            $save_button.removeClass($lastClass);
+            $save_button.addClass('btn-' + new_button_color);                    
+          }  
+          if ($search_button.length != 0) {
+            $lastClass = $search_button.attr('class').split(' ').pop();
+            $search_button.removeClass($lastClass);
+            $search_button.addClass('btn-' + new_button_color);                    
+          }   
+          if ($help_button.length != 0) {
+            $lastClass = $help_button.attr('class').split(' ').pop();
+            $help_button.removeClass($lastClass);
+            $help_button.addClass('btn-' + new_button_color);                    
+          }                    
+          if ($graph_button0.length != 0) {
+            $firstClass = $graph_button0.attr('class').split(' ')[0];
+            $graph_button0.removeClass($firstClass);
+            $graph_button0.attr('class', 'btn-' + new_button_color + ' ' + $graph_button0.attr('class'));                  
           } 
+          if ($graph_button1.length != 0) {
+            $firstClass = $graph_button1.attr('class').split(' ')[0];
+            $graph_button1.removeClass($firstClass);
+            $graph_button1.attr('class', 'btn-' + new_button_color + ' ' + $graph_button1.attr('class'));                  
+          } 
+          if ($graph_button2.length != 0) {
+            $firstClass = $graph_button2.attr('class').split(' ')[0];
+            $graph_button2.removeClass($firstClass);
+            $graph_button2.attr('class', 'btn-' + new_button_color + ' ' + $graph_button2.attr('class'));                  
+          }                                        
 
           $.ajax({
             type: 'POST',

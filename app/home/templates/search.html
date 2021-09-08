@@ -58,7 +58,7 @@
           <div class="col-md-4 pr-md-1">
             <div class="form-group" data-toggle="tooltip" data-placement="top" title="The API Key is provided automatically for now">
               <label>API Key</label>
-              <input type="text" class="form-control" id="api_key" name="api_key" readonly="" placeholder="API Key" value="{{ current_user.google_api_key }}">
+              <input type="text" class="form-control form-{{ current_user.ui_color }}" id="api_key" name="api_key" readonly="" placeholder="API Key" value="{{ current_user.google_api_key }}">
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@
             <div class="form-group">
               <label>Location Point 1 (South-West Limiter)</label>
               <div class="form-group {{'has-danger' if error_dict['p1'] }}">
-                <input type="text" class="form-control {{'form-control-danger' if error_dict['p1'] }}" id="p1" name="p1" placeholder="37.97167348129716, 23.725863560047166" value="{{ current_user.settings_p1 }}">
+                <input type="text" class="form-control form-{{ current_user.ui_color }} {{'form-control-danger' if error_dict['p1'] }}" id="p1" name="p1" placeholder="37.97167348129716, 23.725863560047166" value="{{ current_user.settings_p1 }}">
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@
             <div class="form-group">
               <label>Location Point 2 (North-East Limiter)</label>
               <div class="form-group {{'has-danger' if error_dict['p2'] }}">
-                <input type="text" class="form-control form-{{current_user.ui_color}} {{'form-control-danger' if error_dict['p2'] }}" id="p2" name="p2" placeholder="37.99046797819195, 23.755371160365122" value="{{ current_user.settings_p2 }}">
+                <input type="text" class="form-control form-{{ current_user.ui_color }} form-{{current_user.ui_color}} {{'form-control-danger' if error_dict['p2'] }}" id="p2" name="p2" placeholder="37.99046797819195, 23.755371160365122" value="{{ current_user.settings_p2 }}">
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@
             <div class="form-group">
               <label>Density Radius (Meters)</label>
               <div class="form-group {{'has-danger' if error_dict['radius'] }}">
-                <input type="number" class="form-control {{'form-control-danger' if error_dict['radius'] }}" id="radius" name="radius" placeholder="180" value="{{ current_user.settings_radius }}">
+                <input type="number" class="form-control form-{{ current_user.ui_color }} {{'form-control-danger' if error_dict['radius'] }}" id="radius" name="radius" placeholder="180" value="{{ current_user.settings_radius }}">
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@
             <div class="form-group">
               <label>Type 1</label>
               <div class="form-group {{'has-danger' if error_dict['type1'] }}">
-                <select type="text" class="form-control {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type1" name="type1">
+                <select type="text" class="form-control form-{{ current_user.ui_color }} {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type1" name="type1">
                   <option>Choose...</option>
                   <option>Bar</option>
                   <option>Night Club</option>
@@ -126,7 +126,7 @@
             <div class="form-group">
               <label>Type 2</label>
               <div class="form-group {{'has-danger' if error_dict['type2'] }}">            
-                <select type="text" class="form-control {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type2" name="type2">
+                <select type="text" class="form-control form-{{ current_user.ui_color }} {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type2" name="type2">
                   <option>Choose...</option>
                   <option>Bar</option>
                   <option>Night Club</option>
@@ -171,11 +171,11 @@
       
       <div class="card-footer">
         {% if current_user.premium_enabled == 0 %}
-        <button type="submit" name="search" class="btn btn-fill btn-primary">Search<span class="badge badge-default">Free: {{ current_user.free_runs_remaining }}</span></button>
+        <button type="submit" id="search" name="search" class="btn btn-fill btn-{{ current_user.ui_button }}">Search<span class="badge badge-default">Free: {{ current_user.free_runs_remaining }}</span></button>
         {% else %}
-        <button type="submit" name="search" class="btn btn-fill btn-primary">Search</button>
+        <button type="submit" id="search" name="search" class="btn btn-fill btn-{{ current_user.ui_button }}">Search</button>
         {% endif %}
-        <button class="btn btn-primary btn-simple" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->
+        <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->
       </div>
 
       <!-- Modal -->        

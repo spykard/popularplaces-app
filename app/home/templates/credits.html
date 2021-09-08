@@ -26,9 +26,9 @@
       </div>
       <div class="card-body">
         <!-- <div class="card-title"></div> -->
-          <h5>For providing the <span class="text-primary">UI template</span>, I would like to thank:</h5>
+          <h5>For providing the <span class="text-{{ current_user.ui_button }}">UI template</span>, I would like to thank:</h5>
           <div>
-            <button class="btn btn-primary btn-fab btn-icon btn-round" onclick="window.open('https://bit.ly/3fKQZaL');">
+            <button class="btn btn-{{ current_user.ui_button }} btn-fab btn-icon btn-round" onclick="window.open('https://bit.ly/3fKQZaL');">
               <i class="tim-icons icon-heart-2"></i>
             </button>
             <a class="text-white" 
@@ -37,7 +37,7 @@
           </div>
 
           <div>
-            <button class="btn btn-primary btn-fab btn-icon btn-round" onclick="window.open('https://appseed.us');">
+            <button class="btn btn-{{ current_user.ui_button }} btn-fab btn-icon btn-round" onclick="window.open('https://appseed.us');">
               <i class="tim-icons icon-heart-2"></i>
             </button>
             <a class="text-white" 
@@ -47,10 +47,10 @@
 
           <hr>
 
-          <h5>For providing the <span class="text-primary">API Library</span>, I would like to thank:</h5>
+          <h5>For providing the <span class="text-{{ current_user.ui_button }}">API Library</span>, I would like to thank:</h5>
           
           <div>
-            <button class="btn btn-primary btn-fab btn-icon btn-round" onclick="window.open('https://github.com/m-wrzr');">
+            <button class="btn btn-{{ current_user.ui_button }} btn-fab btn-icon btn-round" onclick="window.open('https://github.com/m-wrzr');">
               <i class="tim-icons icon-heart-2"></i>
             </button>
             <a class="text-white" 
