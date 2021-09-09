@@ -8,5 +8,5 @@ email_validator==1.1.2
 python-decouple==3.4
 gunicorn==20.0.4
 jinja2==2.11.3
-psycopg2
+psycopg2==2.9.1
 git+git://github.com/m-wrzr/populartimes@master
