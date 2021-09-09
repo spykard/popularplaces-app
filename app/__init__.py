@@ -23,7 +23,6 @@ def register_blueprints(app):
         app.register_blueprint(module.blueprint)
 
 def configure_database(app):
-
     @app.before_first_request
     def initialize_database():
         db.create_all()

@@ -11,7 +11,7 @@ class Config(object):
     basedir    = os.path.abspath(os.path.dirname(__file__))
 
     # Set up the App SECRET_KEY
-    SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_007')
+    SECRET_KEY = config('SECRET_KEY', default='gE2c!HRRP3avx2^a')
 
     # This will create a file in <app> FOLDER
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
@@ -28,11 +28,11 @@ class ProductionConfig(Config):
     # PostgreSQL database
     SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
         config( 'DB_ENGINE'   , default='postgresql'    ),
-        config( 'DB_USERNAME' , default='appseed'       ),
+        config( 'DB_USERNAME' , default='unreal '       ),
         config( 'DB_PASS'     , default='pass'          ),
         config( 'DB_HOST'     , default='localhost'     ),
         config( 'DB_PORT'     , default=5432            ),
-        config( 'DB_NAME'     , default='appseed-flask' )
+        config( 'DB_NAME'     , default='unreal-flask'  )
     )
 
 class DebugConfig(Config):
@@ -41,11 +41,11 @@ class DebugConfig(Config):
     # PostgreSQL database
     SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
         config( 'DB_ENGINE'   , default='postgresql'    ),
-        config( 'DB_USERNAME' , default='appseed'       ),
+        config( 'DB_USERNAME' , default='unreal'       ),
         config( 'DB_PASS'     , default='pass'          ),
         config( 'DB_HOST'     , default='localhost'     ),
         config( 'DB_PORT'     , default=5432            ),
-        config( 'DB_NAME'     , default='appseed-flask' )
+        config( 'DB_NAME'     , default='unreal-flask'  )
     )    
 
 # Load all possible configurations
