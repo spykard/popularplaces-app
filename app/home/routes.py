@@ -12,6 +12,7 @@ from app.base.forms import EditProfileForm, EditSettingsForm
 from app.base.models import User, Place, Search
 from app.base.util import hash_pass
 from datetime import datetime
+import populartimes
 
 @blueprint.route('/<template>')
 @login_required
@@ -32,16 +33,6 @@ def route_template(template):
     
     except:
         return render_template('page-500.html'), 500
-
-# @blueprint.route('/populartimes')
-# @login_required
-# def populartimes():
-
-#     query = 1
-#     # Locate user
-#     user = Place.query.filter_by(id=query).first()
-
-#     return render_template('populartimes.html', segment='populartimes', data=None)
 
 @blueprint.route('/search', methods=['GET', 'POST'])
 @login_required
@@ -83,7 +74,7 @@ def search():
         db.session.commit()            
 
         # Main
-        search_success, search_msg = search_populartimes(api_key, p1, p2, radius, type1, type2, all_places)
+        search_success, search_msg = search_populartimes_advanced(api_key, p1, p2, radius, type1, type2, all_places)
 
         if search_success:
             return render_template( 'search.html', 
@@ -175,10 +166,9 @@ def page_user():
 
 # --//----//----//----//----//----//----//----//--
 
-import populartimes
 @login_required
-# Helper - Run the populartimes Implementation
-def search_populartimes(api_key, p1, p2, radius, type1, type2, all_places):
+# Helper - Run the populartimes Implementation using mode #2
+def search_populartimes_advanced(api_key, p1, p2, radius, type1, type2, all_places):
     ''' Query Google's PopularTimes in circles, given latitute and longtitude positions and retrieve data for places/stores '''
 
     #try:
@@ -188,45 +178,25 @@ def search_populartimes(api_key, p1, p2, radius, type1, type2, all_places):
     types_conv = type_mapper(type1, type2)  # In general, only one type may be specified (if more than one type is provided, all types following the first entry are ignored)
     all_places_conv = bool(all_places)
 
-    # print(p1_conv)
-    # print(p2_conv)
-    # print(radius_conv)
-    print(types_conv)
-
     for place_type in types_conv:
-        data = populartimes.get(api_key=api_key, types=place_type, p1=p1_conv, p2=p2_conv, n_threads=20, radius=radius_conv, all_places=all_places_conv)
-        debug_data_printer(data)
-    #except Exception as e:
-        #return False, str(e)
+        # TODO
+        print()
+
+    # Test for future implem.
+    search_name = "Avli By Vouz"
+    search_address = "Pantanassis 17-29"
+    data = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)
+    name_temp = ("temp" , str(data[2]))
 
     # Write Search Object to DB
-    user_id = ("user_id" , current_user.id)
-    name = ("name" , datetime.now().strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
+    user_id = ("user_id", current_user.id)
+    name = ("name", datetime.now().strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
     insert_dict = dict([("google_api_key" , api_key), ("settings_p1" , p1), ("settings_p2" , p2), ("settings_radius" , radius), ("settings_type1" , type1), ("settings_type2" , type2), ("settings_all_places" , all_places), user_id, name])
     search = Search(**insert_dict)
     db.session.add(search)
     db.session.commit()    
 
-    return True, name[1]
-
-# Debug - Print the output Data on Console
-def debug_data_printer( data ):
-    for place in data:
-        print(place['name'])
-        print(place['address'])
-        print(place['types'])
-        print(str(place['rating']) + " (" + str(place['rating_n']) + ")")
-        if "current_popularity" in place:
-            print(place['current_popularity'])
-        else:
-            print("N/A")
-        print(place['populartimes'])
-        if "time_spent" in place:
-            print(place['time_spent'])
-        else:
-            print("N/A")
-        print()
-    print(len(data))
+    return True, name_temp[1]
 
 # Helper - Check whether user must be notified for Premium subscription Enabling
 def notify_premium():
