@@ -1,0 +1,142 @@
+repo populartimes: 
+
+[{'name': 'Monday', 'data': [0, 0, 0, 0, 0, 0, 0, 0, 13, 25, 37, 46, 50, 47, 39, 31, 25, 22, 24, 26, 27, 25, 19, 12]}, 
+{'name': 'Tuesday', 'data': [0, 0, 0, 0, 0, 0, 0, 0, 8, 19, 32, 41, 45, 44, 41, 38, 38, 40, 43, 44, 43, 40, 35, 28]}, 
+{'name': 'Wednesday', 'data': [0, 0, 0, 0, 0, 0, 0, 0, 9, 27, 47, 66, 74, 70, 57, 44, 36, 33, 33, 33, 29, 22, 15, 7]}, 
+{'name': 'Thursday', 'data': [0, 0, 0, 0, 0, 0, 0, 0, 
+9, 23, 40, 56, 65, 62, 52, 43, 39, 40, 43, 43, 40, 34, 26, 17]}, 
+{'name': 'Friday', 'data': [0, 0, 0, 0, 0, 0, 0, 0, 16, 28, 40, 51, 58, 59, 55, 47, 41, 37, 37, 41, 46, 49, 48, 42]}, 
+{'name': 'Saturday', 'data': [0, 0, 0, 0, 0, 0, 0, 0, 6, 17, 37, 66, 91, 100, 89, 70, 54, 44, 39, 35, 29, 24, 17, 12]}, {'name': 'Sunday', 'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 58, 68, 62, 46, 32, 25, 24, 24, 21, 15, 8, 2]}]
+
+Current: 65
+
+
+repo gmaps_popular_times_scraper
+
+Sunday	6		
+Sunday	7		
+Sunday	8		
+Sunday	9		
+Sunday	10		
+Sunday	11	37	
+Sunday	12	58	
+Sunday	13	68	
+Sunday	14	62	
+Sunday	15	46	
+Sunday	16	32	
+Sunday	17	25	
+Sunday	18	24	
+Sunday	19	24	
+Sunday	20	21	
+Sunday	21	15	
+Sunday	22	8	
+Sunday	23	2	
+Monday	6		
+Monday	7		
+Monday	8	13	
+Monday	9	25	
+Monday	10	37	
+Monday	11	46	
+Monday	12	50	
+Monday	13	47	
+Monday	14	39	
+Monday	15	31	
+Monday	16	25	
+Monday	17	22	
+Monday	18	24	
+Monday	19	26	
+Monday	20	27	
+Monday	21	25	
+Monday	22	19	
+Monday	23	12	
+Tuesday	6		
+Tuesday	7		
+Tuesday	8	8	
+Tuesday	9	19	
+Tuesday	10	32	
+Tuesday	11	41	
+Tuesday	12	45	
+Tuesday	13	44	
+Tuesday	14	41	
+Tuesday	15	38	
+Tuesday	16	38	
+Tuesday	17	40	
+Tuesday	18	43	
+Tuesday	19	44	
+Tuesday	20	43	
+Tuesday	21	40	
+Tuesday	22	35	
+Tuesday	23	28	
+Wednesday	6		
+Wednesday	7		
+Wednesday	8	9	
+Wednesday	9	27	
+Wednesday	10	47	
+Wednesday	11	66	
+Wednesday	12	74	
+Wednesday	13	70	
+Wednesday	14	57	
+Wednesday	15	44	
+Wednesday	16	36	
+Wednesday	17	33	
+Wednesday	18	33	
+Wednesday	19	33	
+Wednesday	20	29	
+Wednesday	21	22	
+Wednesday	22	15	
+Wednesday	23	7	
+Thursday	6		
+Thursday	7		
+Thursday	8	9	
+Thursday	9	23	
+Thursday	10	40	
+Thursday	11	56	
+Thursday	12	65	
+Thursday	13	62	
+Thursday	14	52	
+Thursday	15	43	
+Thursday	16	39	
+Thursday	17	40	
+Thursday	18	43	
+Thursday	19	43	
+Thursday	20	40	
+Thursday	21	34	
+Thursday	22	26	
+Thursday	23	17	
+Friday	6		
+Friday	7		
+Friday	8	16	
+Friday	9	28	
+Friday	10	40	
+Friday	11	51	
+Friday	12	58	
+Friday	13	59	
+Friday	14	55	
+Friday	15	47	65
+Friday	16	41	
+Friday	17	37	
+Friday	18	37	
+Friday	19	41	
+Friday	20	46	
+Friday	21	49	
+Friday	22	48	
+Friday	23	42	
+Saturday	6		
+Saturday	7		
+Saturday	8	6	
+Saturday	9	17	
+Saturday	10	37	
+Saturday	11	66	
+Saturday	12	91	
+Saturday	13	100	
+Saturday	14	89	
+Saturday	15	70	
+Saturday	16	54	
+Saturday	17	44	
+Saturday	18	39	
+Saturday	19	35	
+Saturday	20	29	
+Saturday	21	24	
+Saturday	22	17	
+Saturday	23	12	
+
