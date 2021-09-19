@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page Blank {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-profile">
+                <div class="card-body">
+                    
+                    <h6 class="card-category text-gray">Manage your Favorite Places</h6>
+                    <h4 class="card-title">
+                        My Places 
+                    </h4>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Name</th>
+                                <th>Job Position</th>
+                                <th>Since</th>
+                                <th class="text-right">Salary</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">3</td>
+                                <td>Alex Mike</td>
+                                <td>Design</td>
+                                <td>2010</td>
+                                <td class="text-right">&euro; 92,144</td>
+                                <td class="td-actions text-right">
+                                    <button type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm">
+                                        <i class="tim-icons icon-single-02"></i>
+                                    </button>
+                                    <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm">
+                                        <i class="tim-icons icon-settings"></i>
+                                    </button>
+                                    <button type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <tfoot>
+                            <tr>                                 
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>                                                                
+                                <td class="text-right">
+                                <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm">
+                                    <i class="tim-icons icon-simple-add"></i>
+                                </button> 
+                                </td>                                
+                            </tr>
+                            </tfoot>                            
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

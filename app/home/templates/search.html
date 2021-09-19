@@ -77,39 +77,40 @@
 
       <div class="card-body">
         <div class="row" id="selectcity">
-          <div class="col">        
-            <div class="card" style="width: 20rem;">
-              <img class="card-img-top" src="/static/assets/img/patras.jpg" alt="City Banner">
-              <div class="card-body">
-                <h4 class="card-title">Patras</h4>
-                <p class="card-text">Greece's third-largest city and the regional capital of Western Greece, in the northern Peloponnese. Known for its carnival festivities.</p>
-                <a href="#" name="selectcitybutton" val="Patras" class="btn btn-sm btn-{{ current_user.ui_button }}">Select</a>
-              </div>
-            </div>    
-          </div>  
-          <div class="col">        
-            <div class="card" style="width: 20rem;">
-              <img class="card-img-top" src="/static/assets/img/patras.jpg" alt="City Banner">
-              <div class="card-body">
-                <h4 class="card-title">Patras</h4>
-                <p class="card-text">Greece's third-largest city and the regional capital of Western Greece, in the northern Peloponnese. Known for its carnival festivities.</p>
-                <a href="#" name="selectcitybutton" class="btn btn-sm btn-{{ current_user.ui_button }}">Select</a>
-              </div>
-            </div>    
-          </div>                                          
+
+          {% for city in cities %}
+            <div class="col">        
+              <div class="card" style="width: 20rem;">
+                <img class="card-img-top" src="{{ city['image_link'] }}" alt="City Banner">
+                <div class="card-body">
+                  <h4 class="card-title">{{ city['name'] }}</h4>
+                  <p class="card-text">{{ city['description'] }}</p>
+                  <a href="#" name="selectcitybutton" val="{{ city['name'] }}" class="btn btn-sm btn-{{ current_user.ui_button }}">Select</a>
+                </div>
+              </div>    
+            </div>  
+          {% endfor %}                                        
         </div>  
-    
-        <div class="row" id="search-row-1" style="display:none">
+
+        {% if not show_search_panel %}        
+          <div class="row" id="search-row-1" style='display:none;'>
+        {% else %}
+          <div class="row" id="search-row-1">
+        {% endif %}
           <div class="col-md-4 pr-md-1">
             <div class="form-group">
               <label>City</label>
               <div class="form-group {{'has-danger' if error_dict['city'] }}">
-                <input type="text" class="form-control form-{{ current_user.ui_color }} {{'form-control-danger' if error_dict['city'] }}" id="city" name="city" placeholder="City">
+                <input type="text" class="form-control form-{{ current_user.ui_color }} {{'form-control-danger' if error_dict['city'] }}" id="city" name="city" placeholder="City" value="{{ city }}">
               </div>
             </div>
           </div>
         </div>
-        <div class="row" id="search-row-2" style="display:none">
+        {% if not show_search_panel %}        
+          <div class="row" id="search-row-2" style='display:none;'>
+        {% else %}
+          <div class="row" id="search-row-2">
+        {% endif %}
           <div class="col-md-4 pr-md-1">
             <div class="form-group">
               <label>Type 1</label>
@@ -173,7 +174,11 @@
             </div>
           </div>          
         </div> 
-        <div class="row" id="search-row-3" style="display:none">
+        {% if not show_search_panel %}        
+          <div class="row" id="search-row-3" style='display:none;'>
+        {% else %}
+          <div class="row" id="search-row-3">
+        {% endif %}
           <div class="col-md-4 pr-md-1">
             <div class="form-check">           
               <label class="form-check-label">
@@ -191,9 +196,9 @@
       <div class="card-footer">
         <div class="btn-group">        
           {% if current_user.premium_enabled == 0 %}
-          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}">Search &nbsp;<span class="badge badge-default">Free: {{ current_user.free_runs_remaining }}</span></button>
+          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}">Search &nbsp;<span class="badge badge-default" {{'disabled' if not show_search_panel }}>Free: {{ current_user.free_runs_remaining }}</span></button>
           {% else %}
-          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}">Search</button>
+          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}" {{'disabled' if not show_search_panel }}>Search</button>
           {% endif %}
           <button type="button" id="searchdropdown" class="btn dropdown-toggle dropdown-toggle-split btn-{{ current_user.ui_button }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>
@@ -218,7 +223,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on proximity to a given location, while additionally providing options for a variety of categories, including shops, establishments and prominent points of interest.</p>
+              <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on a set of places the user has chosen in the <a target="_blank" href="/places">My Places</a> tab; any type of place can be searched including shops, establishments and prominent points of interest.</p>
               <hr>
               <div class="card card-plain">
                 <div class="card-header">
@@ -246,58 +251,16 @@
                       <tbody>
                         <tr>
                           <td>
-                            API Key
+                            City
                           </td>
                           <td>
                             <code>string</code>
                           </td>
                           <td>
-                            A general API key for Google's Web Service. All the required services have been enabled. The user could easily utilize his own key but for now the API key is provided automatically.
+                            The main selection for which City's Places to search for. Searches amongst the places that the user has entered in the "My Places" tab.
                           </td>
                           <td class="text-center">
-                            <code>Default</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Location Point 1
-                          </td>
-                          <td>
-                            <code>latitude, longtitude</code>
-                          </td>
-                          <td>
-                            Two numeric values in the form of <code>(latitude, longtitude)</code> which represent the first point delimiting the search area; e.g. (37.971673, 23.725863). In particular, this is the <b>South-West/Bottom-Left</b> delimiting point of the area that the user wants to search in.
-                          </td>
-                          <td class="text-center">
-                            <code>37.971673, 23.725863</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Location Point 2
-                          </td>
-                          <td>
-                            <code>latitude, longtitude</code>
-                          </td>
-                          <td>
-                            Identical to the previous parameter. It is effectively the <b>North-East/Top-Right</b> delimiting point of the area that the user wants to search in.
-                          </td>
-                          <td class="text-center">
-                            <code>37.990467, 23.755371</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Density Radius
-                          </td>
-                          <td>
-                            <code>numeric</code>
-                          </td>
-                          <td>
-                            A numeric value in the form of <b>meters</b> refering to the density that the Radar will use while searching. It does <b>not</b> represent the size of the circle that the user wants to search in. With a maximum (and default) value of up to 50,000 for radar search, a value of 180 has been chosen and adapted to very dense city areas.
-                          </td>
-                          <td class="text-center">
-                            <code>180(m) for Cities</code>
+                            <code>Manual Selection</code>
                           </td>
                         </tr>
                         <tr>
@@ -383,9 +346,15 @@
     });
 
     $('[name="selectcitybutton"]').click(function() {   
-      $('#selectcity').slideUp();
+      //$('#selectcity').slideUp();
+      $('#selectcity').hide();
+      $("#search").removeAttr('disabled');
       $('.category').text("Please Select your Desired Settings");
       $('#city').val($(this).attr("val")); 
+
+      // https://mdbootstrap.com/freebies/perfect-scrollbar/?utm_source=GitHub&utm_medium=PerfectScrollbar#howtouse
+      const container = document.querySelector('.main-panel');
+      container.scrollTop = 0;
 
       $('#search-row-1').slideDown(); 
       $('#search-row-2').slideDown();

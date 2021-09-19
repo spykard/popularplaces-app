@@ -24,7 +24,13 @@
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>History</p>
             </a>
-          </li>           
+          </li> 
+          <li class="{% if 'places' in segment %} active {% endif %}">
+            <a href="/places">
+              <i class="tim-icons icon-pin"></i>
+              <p>My Places</p>
+            </a>
+          </li>                     
           <li class="{% if 'page-user' in segment %} active {% endif %}">
             <a href="/page-user">
               <i class="tim-icons icon-single-02"></i>
@@ -33,7 +39,7 @@
           </li>
           <li class="{% if 'maps' in segment %} active {% endif %}">
             <a href="/ui-maps">
-              <i class="tim-icons icon-pin"></i>
+              <i class="tim-icons icon-map-big"></i>
               <p>Maps &nbsp;<code>DEV</code></p>
             </a>
           </li> 

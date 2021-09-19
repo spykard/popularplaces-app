@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 from app import db, login_manager
 from jinja2 import TemplateNotFound
 from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAdvanced
-from app.base.models import User, Place, Search
+from app.base.models import User, Place, Search, City, PlaceResult
 from app.base.util import hash_pass
 from datetime import datetime
 import populartimes
@@ -57,7 +57,9 @@ def search():
                                     msg='Input does not follow the Appropriate Form',
                                     error_dict=settings_form.errors,
                                     success=False,
-                                    form=settings_form)
+                                    form=settings_form,
+                                    city=city,
+                                    show_search_panel=True)
 
         # Write to DB
         current_user.settings_type1 = type1
@@ -81,13 +83,22 @@ def search():
                             msg='Search executed but returned the following Error: ' + search_msg, 
                             error_dict={},
                             success=False,
-                            form=settings_form)                                        
+                            form=settings_form,
+                            city=city,
+                            show_search_panel=True)                                        
+
+    # Load Cities
+    cities = db.session.query(City).join(Place).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).all() 
+    cities_dicts = []
+    for city in cities:
+        cities_dicts.append({'name': city.name, 'description': city.description, 'image_link': city.image_link})
 
     return render_template( 'search.html', 
                             segment='search',
                             error_dict={},
                             form=settings_form,
-                            to_notify_premium=notify_premium()) 
+                            to_notify_premium=notify_premium(),
+                            cities=cities_dicts)
 
 @blueprint.route('/search-advanced', methods=['GET', 'POST'])
 @login_required
@@ -241,6 +252,7 @@ def search_populartimes(city, type1, type2, all_places):
 
     # Write Search Object to DB
     user_id = ("user_id", current_user.id)
+    if len(types_conv) < 2: type2 = ""
     name = ("name", datetime.now().strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
     insert_dict = dict([("city" , city), ("settings_type1" , type1), ("settings_type2" , type2), ("settings_all_places" , all_places), user_id, name, ("type" , 2)])
     search = Search(**insert_dict)
@@ -267,6 +279,7 @@ def search_populartimes_advanced(api_key, p1, p2, radius, type1, type2, all_plac
     # Write Search Object to DB
     user_id = ("user_id", current_user.id)
     name = ("name", datetime.now().strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
+    if len(types_conv) < 2: type2 = ""
     insert_dict = dict([("google_api_key" , api_key), ("settings_p1" , p1), ("settings_p2" , p2), ("settings_radius" , radius), ("settings_type1" , type1), ("settings_type2" , type2), ("settings_all_places" , all_places), user_id, name, ("type" , 2)])
     search = Search(**insert_dict)
     db.session.add(search)

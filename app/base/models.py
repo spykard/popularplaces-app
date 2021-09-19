@@ -63,7 +63,12 @@ class Place(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    name = Column(String)
+    name = Column(String, server_default='name')
+    address = Column(String, server_default='address')
+    type = Column(String, server_default='type')
+    user_id = Column(Integer, ForeignKey('User.id'))
+    global_place = Column(Integer, server_default='global_place')   
+    city_id = Column(String, ForeignKey('City.id'))
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -93,7 +98,7 @@ class Search(db.Model):
     settings_type2 = Column(String, server_default='settings_type2')    
     settings_all_places = Column(Integer, server_default='settings_all_places')    
     user_id = Column(Integer, ForeignKey('User.id'))
-    name = Column(String, server_default='name')  
+    name = Column(String, unique=True)
     city = Column(String, server_default='city')   
     type = Column(Integer, server_default='type')       
 
@@ -109,7 +114,59 @@ class Search(db.Model):
             setattr(self, property, value)
 
     def __repr__(self):
-        return str(self.id)        
+        return str(self.id) 
+
+class City(db.Model):
+
+    __tablename__ = 'City'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, unique=True)       
+    description = Column(String, server_default='description') 
+    image_link = Column(String, server_default='image_link')    
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+                
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.id) 
+
+class PlaceResult(db.Model):
+
+    __tablename__ = 'PlaceResult'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    rating = Column(Integer, server_default='rating') 
+    rating_num = Column(Integer, server_default='rating_num') 
+    current_popularity = Column(String, server_default='current_popularity')  
+    time_spent = Column(Integer, server_default='time_spent') 
+    popular_times = Column(Integer, server_default='popular_times') 
+    user_id = Column(Integer, ForeignKey('User.id'))
+    search_id = Column(Integer, ForeignKey('Search.id'))
+    name = Column(String, server_default='name')       
+    address = Column(String, server_default='description')    
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+                
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.id)                        
 
 @login_manager.user_loader
 def user_loader(id):
