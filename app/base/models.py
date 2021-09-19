@@ -94,6 +94,8 @@ class Search(db.Model):
     settings_all_places = Column(Integer, server_default='settings_all_places')    
     user_id = Column(Integer, ForeignKey('User.id'))
     name = Column(String, server_default='name')  
+    city = Column(String, server_default='city')   
+    type = Column(Integer, server_default='type')       
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

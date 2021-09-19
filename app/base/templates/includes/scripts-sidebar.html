@@ -62,11 +62,13 @@
           $register_button = $('#register');
           $login_link = $('#pagelink');
           $save_button = $('#save');
-          $search_button = $('#search');  
+          $search_button = $('#search');
+          $search_button_dropdown = $('#searchdropdown');            
           $help_button = $('#help');                   
           $graph_button0 = $('#0');
           $graph_button1 = $('#1');
           $graph_button2 = $('#2');                    
+          $select_city_button = $('[name="selectcitybutton"]');           
           if ($login_button.length != 0) {
             $lastClass = $login_button.attr('class').split(' ').pop();
             $login_button.removeClass($lastClass);
@@ -91,7 +93,12 @@
             $lastClass = $search_button.attr('class').split(' ').pop();
             $search_button.removeClass($lastClass);
             $search_button.addClass('btn-' + new_button_color);                    
-          }   
+          }
+          if ($search_button_dropdown.length != 0) {
+            $lastClass = $search_button_dropdown.attr('class').split(' ').pop();
+            $search_button_dropdown.removeClass($lastClass);
+            $search_button_dropdown.addClass('btn-' + new_button_color);                    
+          }               
           if ($help_button.length != 0) {
             $lastClass = $help_button.attr('class').split(' ').pop();
             $help_button.removeClass($lastClass);
@@ -111,7 +118,12 @@
             $firstClass = $graph_button2.attr('class').split(' ')[0];
             $graph_button2.removeClass($firstClass);
             $graph_button2.attr('class', 'btn-' + new_button_color + ' ' + $graph_button2.attr('class'));                  
-          }                                        
+          } 
+          if ($select_city_button.length != 0) {
+            $lastClass = $select_city_button.attr('class').split(' ').pop();
+            $select_city_button.removeClass($lastClass);
+            $select_city_button.addClass('btn-' + new_button_color);                    
+          }                                                 
 
           $.ajax({
             type: 'POST',
@@ -180,6 +192,14 @@
           $('.navbar-wrapper').removeClass('navbar-dark');  // Bug Fix
           $('.navbar-wrapper').addClass('navbar-light');
 
+          // Specific Visual Fix just for some Special Buttons
+          $search_button_dropdown = $('#dropdownmenu');                    
+          if ($search_button_dropdown.length != 0) {
+            $lastClass = $search_button_dropdown.attr('class').split(' ').pop();
+            $search_button_dropdown.removeClass($lastClass);
+            //$search_button_dropdown.addClass('btn-' + new_button_color);
+          }  
+
           $.ajax({
             type: 'POST',
             data: {
@@ -197,6 +217,12 @@
           $('body').removeClass('white-content');
           $('.navbar-wrapper').removeClass('navbar-light');  // Bug Fix
           $('.navbar-wrapper').addClass('navbar-dark'); 
+
+          // Specific Visual Fix just for some Special Buttons
+          $search_button_dropdown = $('#dropdownmenu');                    
+          if ($search_button_dropdown.length != 0) {
+            $search_button_dropdown.addClass('dropdown-black');
+          }  
 
           $.ajax({
             type: 'POST',

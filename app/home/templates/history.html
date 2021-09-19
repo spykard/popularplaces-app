@@ -6,6 +6,21 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+    <div class="card">
+      <div class="card-header">
+        <h4 class="title">History</h4>
+
+        <h6 class="card-category">
+          {% if msg %}
+            {% if success %}
+            <span class="text-success">{{ msg | safe }}</span>
+            {% else %} 
+            <span class="text-danger">{{ msg | safe }}</span>
+            {% endif %}
+          {% endif %}  
+        </h6>      
+      </div>
+    </div>
 
     <div class="row">
       <div class="card card-nav-tabs">

@@ -68,48 +68,50 @@
             <span class="text-success">{{ msg | safe }}</span>
             {% else %} 
             <span class="text-danger">{{ msg | safe }}</span>
-            {% endif %}
-          {% else %}  
-          <p class="category">Please Select a City</p>
+            {% endif %} 
           {% endif %}  
         </h6>      
       </div>
-
       <div class="card-body">
-        <div class="row" id="selectcity">
-          <div class="col">        
-            <div class="card" style="width: 20rem;">
-              <img class="card-img-top" src="/static/assets/img/patras.jpg" alt="City Banner">
-              <div class="card-body">
-                <h4 class="card-title">Patras</h4>
-                <p class="card-text">Greece's third-largest city and the regional capital of Western Greece, in the northern Peloponnese. Known for its carnival festivities.</p>
-                <a href="#" name="selectcitybutton" val="Patras" class="btn btn-sm btn-{{ current_user.ui_button }}">Select</a>
+        <div class="row">
+          <div class="col-md-4 pr-md-1">
+            <div class="form-group">           
+              <label>API Key</label>            
+              <div class="form-group {{'has-danger' if error_dict['api_key'] }}" data-toggle="tooltip" data-placement="top" title="The API Key is not provided automatically for now">
+                <input type="text" class="form-control form-{{ current_user.ui_color }} {{'form-control-danger' if error_dict['api_key'] }}" id="api_key" name="api_key" placeholder="API Key" value="{{ current_user.google_api_key }}">
               </div>
-            </div>    
-          </div>  
-          <div class="col">        
-            <div class="card" style="width: 20rem;">
-              <img class="card-img-top" src="/static/assets/img/patras.jpg" alt="City Banner">
-              <div class="card-body">
-                <h4 class="card-title">Patras</h4>
-                <p class="card-text">Greece's third-largest city and the regional capital of Western Greece, in the northern Peloponnese. Known for its carnival festivities.</p>
-                <a href="#" name="selectcitybutton" class="btn btn-sm btn-{{ current_user.ui_button }}">Select</a>
+            </div> 
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 pr-md-1">
+            <div class="form-group">
+              <label>Location Point 1 (South-West Limiter)</label>
+              <div class="form-group {{'has-danger' if error_dict['p1'] }}">
+                <input type="text" class="form-control form-{{ current_user.ui_color }} {{'form-control-danger' if error_dict['p1'] }}" id="p1" name="p1" placeholder="37.97167348129716, 23.725863560047166" value="{{ current_user.settings_p1 }}">
               </div>
-            </div>    
-          </div>                                          
-        </div>  
-    
-        <div class="row" id="search-row-1" style="display:none">
+            </div>
+          </div>
+          <div class="col-md-6 pl-md-1">
+            <div class="form-group">
+              <label>Location Point 2 (North-East Limiter)</label>
+              <div class="form-group {{'has-danger' if error_dict['p2'] }}">
+                <input type="text" class="form-control form-{{ current_user.ui_color }} form-{{current_user.ui_color}} {{'form-control-danger' if error_dict['p2'] }}" id="p2" name="p2" placeholder="37.99046797819195, 23.755371160365122" value="{{ current_user.settings_p2 }}">
+              </div>
+            </div>
+          </div>
+        </div>        
+        <div class="row">
           <div class="col-md-4 pr-md-1">
             <div class="form-group">
-              <label>City</label>
-              <div class="form-group {{'has-danger' if error_dict['city'] }}">
-                <input type="text" class="form-control form-{{ current_user.ui_color }} {{'form-control-danger' if error_dict['city'] }}" id="city" name="city" placeholder="City">
+              <label>Density Radius (Meters)</label>
+              <div class="form-group {{'has-danger' if error_dict['radius'] }}">
+                <input type="number" class="form-control form-{{ current_user.ui_color }} {{'form-control-danger' if error_dict['radius'] }}" id="radius" name="radius" placeholder="180" value="{{ current_user.settings_radius }}">
               </div>
             </div>
           </div>
         </div>
-        <div class="row" id="search-row-2" style="display:none">
+        <div class="row">
           <div class="col-md-4 pr-md-1">
             <div class="form-group">
               <label>Type 1</label>
@@ -173,7 +175,7 @@
             </div>
           </div>          
         </div> 
-        <div class="row" id="search-row-3" style="display:none">
+        <div class="row">
           <div class="col-md-4 pr-md-1">
             <div class="form-check">           
               <label class="form-check-label">
@@ -187,20 +189,20 @@
           </div>
         </div>  
       </div>
-      
+
       <div class="card-footer">
-        <div class="btn-group">        
+        <div class="btn-group" data-toggle="tooltip" data-placement="top" title="Advanced Search is disabled for now">        
           {% if current_user.premium_enabled == 0 %}
-          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}">Search &nbsp;<span class="badge badge-default">Free: {{ current_user.free_runs_remaining }}</span></button>
+          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}">Search &nbsp;<span class="badge badge-default" disabled>Free: {{ current_user.free_runs_remaining }}</span></button>
           {% else %}
-          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}">Search</button>
+          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}" disabled>Search</button>
           {% endif %}
           <button type="button" id="searchdropdown" class="btn dropdown-toggle dropdown-toggle-split btn-{{ current_user.ui_button }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div id="dropdownmenu" class="dropdown-menu {% if current_user.ui_theme == 'dark' %}dropdown-black{% endif %}">
             <a class="dropdown-item" href="/places">Add Places</a>
-            <a class="dropdown-item" href="/search-advanced">Advanced Search</a>
+            <a class="dropdown-item" href="/search">Basic Search</a>
           </div>
         </div>
 
@@ -380,16 +382,6 @@
     
       $('[data-toggle="tooltip"]').tooltip()
 
-    });
-
-    $('[name="selectcitybutton"]').click(function() {   
-      $('#selectcity').slideUp();
-      $('.category').text("Please Select your Desired Settings");
-      $('#city').val($(this).attr("val")); 
-
-      $('#search-row-1').slideDown(); 
-      $('#search-row-2').slideDown();
-      $('#search-row-3').slideDown();    
     });
 
     demo.showNotification('top','center', '{{ to_notify_premium }}', 'Your <b>Premium Subscription</b> has been Enabled!')
