@@ -28,6 +28,20 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th class="text-right">                                
+                                <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
+                                    <i class="tim-icons icon-simple-add"></i>
+                                </button>                                
+                                </th>
+                            </tr>
+                            <tr>
                                 <th class="text-center">#</th>
                                 <th>Name</th>
                                 <th>Address</th>
@@ -36,7 +50,7 @@
                                 <th class="text-center">Verification</th>                                                         
                                 <th class="text-center">Added On</th>
                                 <th class="text-right">Actions</th>
-                            </tr>
+                            </tr>                            
                         </thead>
                         <tbody>
                             {% for place in places %}

@@ -153,7 +153,6 @@ class PlaceResult(db.Model):
     search_id = Column(Integer, ForeignKey('Search.id'))
     name = Column(String, server_default='name')       
     address = Column(String, server_default='description')    
-    time_wait = Column(String, server_default='time_wait') 
     current_popularity = Column(Integer, server_default='current_popularity')         
 
     def __init__(self, **kwargs):

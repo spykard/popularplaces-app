@@ -27,7 +27,19 @@
   .btn.btn-fill.btn-less-wide {  
     padding-right: 32px;
     padding-left: 32px;
+  } 
+
+  .bg-primary {  
+    background-color: #e14eca;
+  } 
+
+  .bg-info {  
+    background-color: #007bff;
   }   
+
+  .bg-success {  
+    background-color: #28a745;
+  }       
 </style>
 
 {% endblock stylesheets %}
@@ -54,7 +66,7 @@
       </div>
 
       {% else %}
-      <form role="form" method="post" action="">
+      <form id="searchForm" role="form" method="post" action="">
 
       <!-- Bug Fix: https://stackoverflow.com/a/42874365 -->
       {{ form.hidden_tag() }} 
@@ -218,6 +230,10 @@
         <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->
       </div>
 
+      <div id="progressbar" class="progress" style="display: none; height: 7px;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ current_user.ui_button }}" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+      </div>      
+
       <!-- Modal -->        
       <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -354,7 +370,7 @@
     $('[name="selectcitybutton"]').click(function() {   
       //$('#selectcity').slideUp();
       $('#selectcity').hide();
-      $("#search").removeAttr('disabled');
+      $("#search").prop("disabled", false);
       $(".btn-group").removeAttr('data-toggle data-placement title data-original-title');
       $('.category').text("Please Select your Desired Settings");
       $('#city').val($(this).attr("val")); 
@@ -366,6 +382,10 @@
       $('#search-row-1').slideDown(); 
       $('#search-row-2').slideDown();
       $('#search-row-3').slideDown();    
+    });
+
+    $('#search').click(function() { 
+      $('#progressbar').slideDown(); 
     });
 
     demo.showNotification('top','center', '{{ to_notify_premium }}', 'Your <b>Premium Subscription</b> has been Enabled!')

@@ -347,10 +347,13 @@ def search_populartimes(city, type1, type2, all_places):
                 Place.query.filter_by(id=place[0]).update({"verification": "True"})
             else:
                 Place.query.filter_by(id=place[0]).update({"verification": "False"}) 
-            # db.session.commit()     
+            # db.session.commit() 
+             
+            # if "time_wait" not in data:
+            #     data["time_wait"] = None
 
             # Write Data to DB
-            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("current_popularity" , data["current_popularity"]), ("time_wait" , data["time_wait"])])
+            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("current_popularity" , data["current_popularity"])])
             placeresult = PlaceResult(**insert_dict)
             db.session.add(placeresult)
             db.session.commit()
