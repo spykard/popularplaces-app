@@ -210,7 +210,7 @@
       </div>
 
       <!-- Modal -->        
-      <div class="modal modal-black fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
+      <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header justify-content-center">

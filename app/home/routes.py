@@ -162,6 +162,73 @@ def search_advanced():
                             form=settings_form,
                             to_notify_premium=notify_premium())    
 
+@blueprint.route('/places', methods=['GET', 'POST'])
+@login_required
+def places():
+    settings_form = EditSettingsForm(request.form)
+    if 'search' in request.form:
+
+        # Read form data
+        city = request.form['city']
+        type1 = request.form['type1']
+        type2 = request.form['type2']
+        if request.form.get('all_places') == None:  # If checkboxed not checked, no POST data are sent
+            all_places = 0
+        else:
+            all_places = 1
+
+        # Validate Form Data
+        if not settings_form.validate():
+            return render_template( 'search.html', 
+                                    segment='search',
+                                    to_notify='true',
+                                    msg='Input does not follow the Appropriate Form',
+                                    error_dict=settings_form.errors,
+                                    success=False,
+                                    form=settings_form,
+                                    city=city,
+                                    show_search_panel=True)
+
+        # Write to DB
+        current_user.settings_type1 = type1
+        current_user.settings_type2 = type2
+        current_user.settings_all_places = all_places
+        if current_user.premium_enabled == 0: current_user.free_runs_remaining = current_user.free_runs_remaining-1
+        db.session.commit()            
+
+        # Main
+        search_success, search_msg = search_populartimes(city, type1, type2, all_places)
+
+        if search_success:
+            return render_template( 'history.html', 
+                            segment='history',
+                            msg='Search executed successfully! - ID: ' + search_msg, 
+                            error_dict={},
+                            success=True)
+        else:
+            return render_template( 'search.html', 
+                            segment='search',
+                            msg='Search executed but returned the following Error: ' + search_msg, 
+                            error_dict={},
+                            success=False,
+                            form=settings_form,
+                            city=city,
+                            show_search_panel=True)                                        
+
+    # Load Cities
+    places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).all() 
+    place_dicts = []
+    count = 1
+    for place in places:
+        place_dicts.append({'id': place[0].id, 'count': count, 'name': place[0].name, 'address': place[0].address,  'city': place[1].name, 'time': place[0].time.strftime("%Y-%m-%d")})
+        count += 1
+
+    return render_template( 'places.html', 
+                            segment='places',
+                            error_dict={},
+                            form=settings_form,
+                            places=place_dicts)
+
 @blueprint.route('/page-user', methods=['GET', 'POST'])
 @login_required
 def page_user():
@@ -229,7 +296,20 @@ def page_user():
                             segment='page-user',
                             form=profile_form)
 
+@blueprint.route('/delete-place', methods=['GET', 'POST'])
+@login_required
+def delete_place():
+    id = request.form['id']
+    if current_user.is_authenticated:
+        Place.query.filter_by(id=id).delete()          
+        db.session.commit() 
+        return "true"
+    else:
+        return "false"
+
+
 # --//----//----//----//----//----//----//----//--
+
 
 @login_required
 # Helper - Run the populartimes Implementation using mode #2

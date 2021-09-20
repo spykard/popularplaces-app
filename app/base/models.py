@@ -69,6 +69,7 @@ class Place(db.Model):
     user_id = Column(Integer, ForeignKey('User.id'))
     global_place = Column(Integer, server_default='global_place')   
     city_id = Column(String, ForeignKey('City.id'))
+    time = Column(DateTime, server_default='time')     
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

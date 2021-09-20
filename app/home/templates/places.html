@@ -3,7 +3,15 @@
 {% block title %} Page Blank {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+
+<style>
+  .assistancelink {
+      font-size: 0.7rem;
+  }
+</style>
+
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -22,47 +30,77 @@
                             <tr>
                                 <th class="text-center">#</th>
                                 <th>Name</th>
-                                <th>Job Position</th>
-                                <th>Since</th>
-                                <th class="text-right">Salary</th>
+                                <th>Address</th>
+                                <th>City</th>                                
+                                <th class="text-center">Added On</th>
                                 <th class="text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-center">3</td>
-                                <td>Alex Mike</td>
-                                <td>Design</td>
-                                <td>2010</td>
-                                <td class="text-right">&euro; 92,144</td>
-                                <td class="td-actions text-right">
-                                    <button type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm">
-                                        <i class="tim-icons icon-single-02"></i>
-                                    </button>
-                                    <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm">
-                                        <i class="tim-icons icon-settings"></i>
-                                    </button>
-                                    <button type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
-                                        <i class="tim-icons icon-simple-remove"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            {% for place in places %}
+                                <tr>
+                                    <td style="display:none;">{{ place['id'] }}</td>
+                                    <td class="text-center">{{ place['count'] }}</td>
+                                    <td>{{ place['name'] }}</td>
+                                    <td>{{ place['address'] }}</td>
+                                    <td>{{ place['city'] }}</td>                                    
+                                    <td class="text-center">{{ place['time'] }}</td>
+                                    <td class="td-actions text-right">
+                                        <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open('https://maps.google.com/?q=' + '{{ place["name"] }}' + ' ' + '{{ place["address"] }}');">
+                                            <i class="tim-icons icon-pin"></i>
+                                        </button>
+                                        <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
+                                            <i class="tim-icons icon-simple-remove"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>                            
                         <tfoot>
                             <tr>                                 
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>                                                                
+                                <td></td>                                                                                                
                                 <td class="text-right">
-                                <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm">
+                                <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
                                     <i class="tim-icons icon-simple-add"></i>
                                 </button> 
                                 </td>                                
                             </tr>
                             </tfoot>                            
-                        </tbody>
                     </table>
+
+      <!-- Modal -->        
+      <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="addPlaceModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header justify-content-center">
+              <h5 class="modal-title title title-up" id="modalTitle">Add to My Places</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="tim-icons icon-simple-remove"></i>
+              </button>
+            </div>
+            <div class="modal-body">
+              <label>Name</label>
+              <div id="namediv" class="form-group">              
+                <input type="text" class="form-control form-{{ current_user.ui_color }}" id="name" name="name" placeholder="Name" value="">
+              </div>
+              <br>
+              <label>Address</label>
+              <div id="addressdiv" class="form-group">              
+                <input type="text" class="form-control form-{{ current_user.ui_color }}" id="address" name="address" placeholder="Address" value="">
+              </div>                
+              <a class="assistancelink" href="#">Automatically Find Address</a>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-{{ current_user.ui_button }}">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
                 </div>
             </div>
@@ -72,4 +110,37 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+
+<script>
+    $('[name="deletebutton"]').click(function() {       
+        $.ajax({
+        type: 'POST',
+        data: {
+            id: $(this).closest('tr').children('td').first().text(),
+        },
+        url: "/delete-place",
+        success: function(data){ 
+                location.reload(); 
+                    },
+        error: function(data){    
+                    },
+        }); 
+    });    
+
+    $('.assistancelink').click(function() {
+        var name = $('#name').val();
+        if (name) {
+            window.open('https://maps.google.com/?q=' + name + '&hl=en');
+        }
+        else {
+            $('#namediv').addClass('has-danger');
+            $('#name').addClass('form-control-danger');              
+            demo.showNotification('top','center', 'true', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')
+        }
+
+    }); 
+
+</script>
+
+{% endblock javascripts %}

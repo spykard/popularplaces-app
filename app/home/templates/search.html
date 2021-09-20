@@ -79,7 +79,7 @@
         <div class="row" id="selectcity">
 
           {% for city in cities %}
-            <div class="col">        
+            <div class="col">
               <div class="card" style="width: 20rem;">
                 <img class="card-img-top" src="{{ city['image_link'] }}" alt="City Banner">
                 <div class="card-body">
@@ -194,7 +194,7 @@
       </div>
       
       <div class="card-footer">
-        <div class="btn-group">        
+        <div class="btn-group" data-toggle="tooltip" data-placement="top" title="Please Select a City">        
           {% if current_user.premium_enabled == 0 %}
           <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}">Search &nbsp;<span class="badge badge-default" {{'disabled' if not show_search_panel }}>Free: {{ current_user.free_runs_remaining }}</span></button>
           {% else %}
@@ -213,7 +213,7 @@
       </div>
 
       <!-- Modal -->        
-      <div class="modal modal-black fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
+      <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header justify-content-center">
@@ -223,7 +223,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on a set of places the user has chosen in the <a target="_blank" href="/places">My Places</a> tab; any type of place can be searched including shops, establishments and prominent points of interest.</p>
+              <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on a set of places the user has chosen in the <a target="_blank" href="/places">My Places</a> tab; any type of place can be used including shops, establishments and prominent points of interest.</p>
               <hr>
               <div class="card card-plain">
                 <div class="card-header">
@@ -349,6 +349,7 @@
       //$('#selectcity').slideUp();
       $('#selectcity').hide();
       $("#search").removeAttr('disabled');
+      $(".btn-group").removeAttr('data-toggle data-placement title data-original-title');
       $('.category').text("Please Select your Desired Settings");
       $('#city').val($(this).attr("val")); 
 
