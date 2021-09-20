@@ -72,35 +72,56 @@
                             </tfoot>                            
                     </table>
 
-      <!-- Modal -->        
-      <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="addPlaceModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header justify-content-center">
-              <h5 class="modal-title title title-up" id="modalTitle">Add to My Places</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                <i class="tim-icons icon-simple-remove"></i>
-              </button>
-            </div>
-            <div class="modal-body">
-              <label>Name</label>
-              <div id="namediv" class="form-group">              
-                <input type="text" class="form-control form-{{ current_user.ui_color }}" id="name" name="name" placeholder="Name" value="">
-              </div>
-              <br>
-              <label>Address</label>
-              <div id="addressdiv" class="form-group">              
-                <input type="text" class="form-control form-{{ current_user.ui_color }}" id="address" name="address" placeholder="Address" value="">
-              </div>                
-              <a class="assistancelink" href="#">Automatically Find Address</a>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-{{ current_user.ui_button }}">Submit</button>
-            </div>
-          </div>
-        </div>
-      </div>
+                    <!-- Modal 1 -->        
+                    <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="addPlaceModal" tabindex="-1" role="dialog" aria-labelledby="addPlaceTitle" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-center">
+                            <h5 class="modal-title title title-up" id="addPlaceTitle">Add to My Places</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <i class="tim-icons icon-simple-remove"></i>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <label>Name</label>
+                                <div id="namediv" class="form-group">              
+                                    <input type="text" class="form-control form-{{ current_user.ui_color }}" id="name" name="name" placeholder="Name" value="">
+                                </div>
+                                <br>
+                                <label>Address</label>
+                                <div id="addressdiv" class="form-group">              
+                                    <input type="text" class="form-control form-{{ current_user.ui_color }}" id="address" name="address" placeholder="Address" value="">
+                                </div>                
+                                <a class="assistancelink" href="#">Automatically Find Address</a>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-{{ current_user.ui_button }}">Submit</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal 2 -->        
+                    <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="removePlaceModal" tabindex="-1" role="dialog" aria-labelledby="removePlaceTitle" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-center">
+                            <h5 class="modal-title title title-up" id="removePlaceTitle">Remove from My Places</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <i class="tim-icons icon-simple-remove"></i>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you certain you want to <b>Delete</b> this Place?</p>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button name="deletebuttonModal" type="button" class="btn btn-{{ current_user.ui_button }}">Delete</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>      
 
                 </div>
             </div>
@@ -113,18 +134,27 @@
 {% block javascripts %}
 
 <script>
-    $('[name="deletebutton"]').click(function() {       
-        $.ajax({
-        type: 'POST',
-        data: {
-            id: $(this).closest('tr').children('td').first().text(),
-        },
-        url: "/delete-place",
-        success: function(data){ 
-                location.reload(); 
-                    },
-        error: function(data){    
-                    },
+    $('[name="deletebutton"]').click(function() {
+        var id = $(this).closest('tr').children('td').first().text();
+
+        $("#removePlaceModal").modal({});  // Activates the content as a modal with default options.
+        $('[name="deletebuttonModal"]').attr('value', id);  // Stores an important value inside the Button
+        $("#removePlaceModal").modal('show');
+
+        $('[name="deletebuttonModal"]').click(function() {
+            $("#removePlaceModal").modal('hide');
+            $.ajax({
+                type: 'POST',
+                data: {
+                    id: $(this).val(),
+                },
+                url: "/delete-place",
+                success: function(data){ 
+                        location.reload(); 
+                            },
+                error: function(data){    
+                            },
+            });
         }); 
     });    
 
@@ -140,7 +170,6 @@
         }
 
     }); 
-
 </script>
 
 {% endblock javascripts %}

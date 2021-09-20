@@ -88,7 +88,7 @@ def search():
                             show_search_panel=True)                                        
 
     # Load Cities
-    cities = db.session.query(City).join(Place).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).all() 
+    cities = db.session.query(City).join(Place).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(City.id.asc()).all() 
     cities_dicts = []
     for city in cities:
         cities_dicts.append({'name': city.name, 'description': city.description, 'image_link': city.image_link})
@@ -216,7 +216,7 @@ def places():
                             show_search_panel=True)                                        
 
     # Load Cities
-    places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).all() 
+    places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(Place.time.asc()).all() 
     place_dicts = []
     count = 1
     for place in places:
