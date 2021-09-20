@@ -25,73 +25,75 @@
                         My Places 
                     </h3>
 
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th class="text-right">                                
-                                <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
-                                    <i class="tim-icons icon-simple-add"></i>
-                                </button>                                
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>Name</th>
-                                <th>Address</th>
-                                <th>Type</th> 
-                                <th>City</th>       
-                                <th class="text-center">Verification</th>                                                         
-                                <th class="text-center">Added On</th>
-                                <th class="text-right">Actions</th>
-                            </tr>                            
-                        </thead>
-                        <tbody>
-                            {% for place in places %}
+                    <div class="table-responsive">
+                        <table class="table tablesorter" id="">
+                            <thead>
                                 <tr>
-                                    <td style="display:none;">{{ place['id'] }}</td>
-                                    <td class="text-center">{{ place['count'] }}</td>
-                                    <td>{{ place['name'] }}</td>
-                                    <td>{{ place['address'] }}</td>
-                                    <td>{{ place['type'] }}</td>
-                                    <td>{{ place['city'] }}</td> 
-                                    <td class="text-center"><p class="{% if place['verification'] == 'True' %}text-success{% elif place['verification'] == 'False' %}text-danger{% else %}text-muted{% endif %}">{{ place['verification'] }}</p></td>                                                                       
-                                    <td class="text-center">{{ place['time'] }}</td>
-                                    <td class="td-actions text-right">
-                                        <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open('https://maps.google.com/?q=' + '{{ place["name"] }}' + ' ' + '{{ place["address"] }}');">
-                                            <i class="tim-icons icon-pin"></i>
-                                        </button>
-                                        <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
-                                            <i class="tim-icons icon-simple-remove"></i>
-                                        </button>
-                                    </td>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th class="text-right">                                
+                                    <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
+                                        <i class="tim-icons icon-simple-add"></i>
+                                    </button>                                
+                                    </th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>                            
-                        <tfoot>
-                            <tr>                                 
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>                                
-                                <td></td>                                
-                                <td></td>                                                                                                
-                                <td class="text-right">
-                                <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
-                                    <i class="tim-icons icon-simple-add"></i>
-                                </button> 
-                                </td>                                
-                            </tr>
-                            </tfoot>                            
-                    </table>
-
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Name</th>
+                                    <th>Address</th>
+                                    <th>Type</th> 
+                                    <th>City</th>       
+                                    <th class="text-center">Verification</th>                                                         
+                                    <th class="text-center">Added On</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>                            
+                            </thead>
+                            <tbody>
+                                {% for place in places %}
+                                    <tr>
+                                        <td style="display:none;">{{ place['id'] }}</td>
+                                        <td class="text-center">{{ place['count'] }}</td>
+                                        <td>{{ place['name'] }}</td>
+                                        <td>{{ place['address'] }}</td>
+                                        <td>{{ place['type'] }}</td>
+                                        <td>{{ place['city'] }}</td> 
+                                        <td class="text-center"><p class="{% if place['verification'] == 'True' %}text-success{% elif place['verification'] == 'False' %}text-danger{% else %}text-muted{% endif %}">{{ place['verification'] }}</p></td>                                                                       
+                                        <td class="text-center">{{ place['time'] }}</td>
+                                        <td class="td-actions text-right">
+                                            <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open('https://maps.google.com/?q=' + '{{ place["name"] }}' + ' ' + '{{ place["address"] }}');">
+                                                <i class="tim-icons icon-pin"></i>
+                                            </button>
+                                            <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
+                                                <i class="tim-icons icon-simple-remove"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>                            
+                            <tfoot>
+                                <tr>                                 
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>                                
+                                    <td></td>                                
+                                    <td></td>                                                                                                
+                                    <td class="text-right">
+                                    <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
+                                        <i class="tim-icons icon-simple-add"></i>
+                                    </button> 
+                                    </td>                                
+                                </tr>
+                                </tfoot>                            
+                        </table>
+                    </div>
+                    
                     <!-- Modal 1 -->        
                     <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="addPlaceModal" tabindex="-1" role="dialog" aria-labelledby="addPlaceTitle" aria-hidden="true">
                         <div class="modal-dialog" role="document">
