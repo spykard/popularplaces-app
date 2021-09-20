@@ -3,24 +3,133 @@
 {% block title %} Dashboard {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+
+<style>
+  .list-group-item-darkerer {
+    color: rgba(255, 255, 255, 0.8);
+    background: linear-gradient(to bottom, #222a42 0%, #1d253b 100%);
+    {# background: rgba(39, 41, 61, 1); #}
+    border: 1px solid #344675;
+    border-color: #101420 !important;  
+  }
+
+  .list-group-item-action {
+    line-height: 1.0;
+  }
+
+  .list-group-item-action:hover {
+    color: #e14eca;
+  }
+
+  .list-group-item-action-primary.active {
+    background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
+  }
+
+  .list-group-item-action-info.active {
+    background-image: linear-gradient(to bottom left, #1d8cf8, #3358f4, #1d8cf8);
+  }
+
+  .list-group-item-action-success.active {
+    background-image: linear-gradient(to bottom left, #00f2c3, #0098f0, #00f2c3);
+  }
+</style>
+
+{% endblock stylesheets %}
 
 {% block content %}
-    <div class="card">
-      <div class="card-header">
-        <h4 class="title">History</h4>
+    <div class="card card-profile">
+      <div class="card-body">
 
-        <h6 class="card-category">
-          {% if msg %}
-            {% if success %}
-            <span class="text-success">{{ msg | safe }}</span>
-            {% else %} 
-            <span class="text-danger">{{ msg | safe }}</span>
-            {% endif %}
-          {% endif %}  
-        </h6>      
+        <h6 class="card-category text-gray">View your Past Search History</h6>
+        <h3 class="card-title">
+            Search History 
+        </h3>
+
+        {% if msg %}
+          <h6 class="card-category">
+              {% if success %}
+              <span class="text-success">{{ msg | safe }}</span>
+              {% else %} 
+              <span class="text-danger">{{ msg | safe }}</span>
+              {% endif %}
+              <br>        
+          </h6>  
+        {% endif %}             
       </div>
     </div>
+
+    <div class="row">
+      <div id="searchHistoryList" class="col overflow-auto" style="max-height: 236px;">
+        <div class="list-group" id="list-tab" role="tablist">
+          <a class="list-group-item list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %} active" id="list-example-list" data-toggle="list" href="#list-example" role="tab" aria-controls="example">Sample Search</a>
+          
+          {% for search in searches %}
+            <a class="list-group-item list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %}" id="list-{{ search['name'] }}-list" data-toggle="list" href="#list-{{ search['name'] }}" role="tab" aria-controls="{{ search['name'] }}">{{ search['name'] }}</a>          
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+    
+    <br>
+
+    <div class="row">        
+        <div class="col">
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="list-example" role="tabpanel" aria-labelledby="list-example-list">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Name</th>
+                            <th>City</th>    
+                            <th>Type 1</th>                                                         
+                            <th>Type 2</th>
+                            <th class="text-center">Time</th>                             
+                        </tr>                            
+                    </thead>
+                    <tbody>
+                          <tr>
+                              <td class="text-center">Sample Search</td>                          
+                              <td>Athens</td>
+                              <td>Cafe</td> 
+                              <td>Restaurant</td>                                                                       
+                              <td class="text-center">2021-09-18 19:42:03</td>
+                          </tr>
+                    </tbody>                                                       
+                </table>             
+            </div>
+          
+            {% for search in searches %}
+              <div class="tab-pane fade" id="list-{{ search['name'] }}" role="tabpanel" aria-labelledby="list-{{ search['name'] }}-list">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Name</th>
+                            <th>City</th>    
+                            <th>Type 1</th>                                                         
+                            <th>Type 2</th>
+                            <th class="text-center">Time</th>                             
+                        </tr>                            
+                    </thead>
+                    <tbody>
+                          <tr>
+                              <td style="display:none;">{{ search['id'] }}</td>                          
+                              <td class="text-center">{{ search['name'] }}</td>                          
+                              <td>{{ search['city'] }}</td>
+                              <td>{{ search['settings_type1'] }}</td> 
+                              <td>{{ search['settings_type2'] }}</td>                                                                       
+                              <td class="text-center">{{ search['time'] }}</td>
+                          </tr>
+                    </tbody>                                                       
+                </table>              
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+    </div>
+
+    <br>
 
     <div class="row">
       <div class="col-12">
@@ -420,6 +529,21 @@
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js
       demo.initDashboardPageCharts();
+
+      var isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
+
+      if (isWindows) {
+        if ($('#searchHistoryList').length != 0) {
+          var ps = new PerfectScrollbar('#searchHistoryList', {
+            wheelSpeed: 2,
+            wheelPropagation: false,
+            minScrollbarLength: 20
+            //useBothWheelAxes: true,
+            //suppressScrollX: false,
+            //suppressScrollY: false
+          });
+        }
+      }
 
     });
   </script>

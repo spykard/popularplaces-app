@@ -56,7 +56,7 @@ var seq2 = 0,
         wheelPropagation: true,
         minScrollbarLength: 20
         //useBothWheelAxes: true,
-        // suppressScrollX: false,
+        //suppressScrollX: false,
         //suppressScrollY: false
       });
     }

@@ -166,6 +166,20 @@ def search_advanced():
                             form=settings_form,
                             to_notify_premium=notify_premium())    
 
+@blueprint.route('/history', methods=['GET', 'POST'])
+@login_required
+def history():
+    # Get search history data
+    searches = Search.query.filter_by(user_id=current_user.id).order_by(Search.name.desc()).all()
+    searches_dicts = []
+    
+    for search in searches:     
+        searches_dicts.append({'id': search.id, 'name': search.name[0:15], 'city': search.city, 'settings_type1': search.settings_type1, 'settings_type2': search.settings_type2, 'time': search.time})
+
+    return render_template( 'history.html', 
+                            segment='history',
+                            searches=searches_dicts)
+
 @blueprint.route('/places', methods=['GET', 'POST'])
 @login_required
 def places():
