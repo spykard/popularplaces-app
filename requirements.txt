@@ -9,4 +9,4 @@ python-decouple==3.4
 gunicorn==20.0.4
 jinja2==2.11.3
 psycopg2==2.9.1
-git+git://github.com/spykard/populartimes@master
+git+git://github.com/spykard/populartimes.git@155f9211e633222773fc7b2f56120569bbc4c0e2
