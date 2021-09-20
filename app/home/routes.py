@@ -14,6 +14,7 @@ from app.base.models import User, Place, Search, City, PlaceResult
 from app.base.util import hash_pass
 from datetime import datetime
 import populartimes
+import json
 
 @blueprint.route('/<template>')
 @login_required
@@ -42,7 +43,7 @@ def search():
     if 'search' in request.form:
 
         # Read form data
-        city = request.form['city']
+        city = request.form['city'].title()
         type1 = request.form['type1']
         type2 = request.form['type2']
         if request.form.get('all_places') == None:  # If checkboxed not checked, no POST data are sent
@@ -183,7 +184,7 @@ def places():
         name = request.form['name']
         address = request.form['address']
         type_p = request.form['type_p']
-        city = request.form['city']                
+        city = request.form['city'].title()        
 
         # Validate Form Data
         if not add_place_form.validate():
@@ -196,15 +197,14 @@ def places():
                                     places=place_dicts)
 
         # Write Place Object to DB
-        city_id = City.query.filter_by(name=city).first()
-        if not city_id:
+        city_to = City.query.filter_by(name=city).first()
+        if not city_to:
             insert_dict = dict([("name" , city)])
             city_to = City(**insert_dict)
             db.session.add(city_to)
-            db.session.commit()
-        city_id = City.query.filter_by(name=city).first()          
+            db.session.commit()         
 
-        insert_dict = dict([("name" , name), ("address" , address), ("type_p" , type_p), ("user_id" , current_user.id), ("city_id" , city_id.id)])
+        insert_dict = dict([("name" , name), ("address" , address), ("type_p" , type_p), ("user_id" , current_user.id), ("city_id" , city_to.id)])
         place_to = Place(**insert_dict)
         db.session.add(place_to)
         db.session.commit()
@@ -320,33 +320,46 @@ def delete_place():
 def search_populartimes(city, type1, type2, all_places):
     ''' Query Google's PopularTimes, using a crawler that takes name and address of a specific place as input '''
 
-    #try:
-    types_conv = type_mapper(type1, type2)  # In general, only one type may be specified (if more than one type is provided, all types following the first entry are ignored)
-    all_places_conv = bool(all_places)
-
-    for place_type in types_conv:
-        # TODO
-        print()
-
-    # Test for future implem.
-    search_name = "Avli By Vouz"
-    search_address = "Pantanassis 17-29"
-    # search_name = "Kynorodo"
-    # search_address = "Korinthou 167, Patra 262 23"    
-    data = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)
-    print(data)
-    name_temp = ("temp" , str(data[2]))
+    places = get_places_to_search(city, type1, type2, all_places)
 
     # Write Search Object to DB
     user_id = ("user_id", current_user.id)
-    if len(types_conv) < 2: type2 = ""
+    if type2 == "Choose...": type2 = ""
     name = ("name", datetime.now().strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
-    insert_dict = dict([("city" , city), ("settings_type1" , type1), ("settings_type2" , type2), ("settings_all_places" , all_places), user_id, name, ("type" , 2)])
+    insert_dict = dict([("city" , city), ("settings_type1" , type1), ("settings_type2" , type2), ("settings_all_places" , all_places), user_id, name, ("type" , 1)])
     search = Search(**insert_dict)
     db.session.add(search)
-    db.session.commit()    
+    db.session.commit()  
 
-    return True, name_temp[1]
+    try:
+        for place in places:
+            # Debug
+            # search_name = "Avli By Vouz"
+            # search_address = "Pantanassis 17-29"
+            # search_name = "Kynorodo"
+            # search_address = "Korinthou 167, Patra 262 23"    
+            search_name = place[1]
+            search_address = place[2]
+            data = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)            
+
+            # Write Verification for Places to DB
+            if data["populartimes"]:
+                Place.query.filter_by(id=place[0]).update({"verification": "True"})
+            else:
+                Place.query.filter_by(id=place[0]).update({"verification": "False"}) 
+            # db.session.commit()     
+
+            # Write Data to DB
+            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("current_popularity" , data["current_popularity"]), ("time_wait" , data["time_wait"])])
+            placeresult = PlaceResult(**insert_dict)
+            db.session.add(placeresult)
+            db.session.commit()
+
+    except Exception as e:
+        raise ValueError(str(e))
+        return False, str(e) 
+
+    return True, name[1]
 
 @login_required
 # Helper - Run the populartimes Implementation using mode #2
@@ -384,6 +397,27 @@ def notify_premium():
         to_notify = "false"
     
     return to_notify
+
+# Helper - Get the details of all the places that match the given Search Settings
+def get_places_to_search(city, type1, type2, all_places):
+    city_id = City.query.filter_by(name=city).first()
+    if type2 != "Choose...":
+        if all_places == 0:
+            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & ((Place.type_p == type1) | (Place.type_p == type2)) & (Place.verification != "False")).order_by(Place.time.asc()).all()
+        else:
+            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & ((Place.type_p == type1) | (Place.type_p == type2))).order_by(Place.time.asc()).all()
+    else:
+        if all_places == 0:
+            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & (Place.type_p == type1) & (Place.verification != "False")).order_by(Place.time.asc()).all()
+        else:
+            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & (Place.type_p == type1)).order_by(Place.time.asc()).all()            
+
+    places_list = []
+    count = 1
+    for place in places:
+        places_list.append((place.id, place.name, place.address))
+    
+    return places_list
 
 # Helper - Maps a string we receive from a Form to a string that can be used as a parameter inside the code, e.g. "Night Club" -> "night_club"
 def type_mapper( type1, type2 ): 

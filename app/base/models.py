@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask_login import UserMixin
-from sqlalchemy import Binary, Column, Integer, String, Date, DateTime, ForeignKey
+from sqlalchemy import Binary, Column, Integer, String, Date, DateTime, ForeignKey, Float
 
 from app import db, login_manager
 
@@ -145,15 +145,16 @@ class PlaceResult(db.Model):
     __tablename__ = 'PlaceResult'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    rating = Column(Integer, server_default='rating') 
+    rating = Column(Float, server_default='rating') 
     rating_num = Column(Integer, server_default='rating_num') 
-    current_popularity = Column(String, server_default='current_popularity')  
-    time_spent = Column(Integer, server_default='time_spent') 
-    popular_times = Column(Integer, server_default='popular_times') 
+    time_spent = Column(String, server_default='time_spent') 
+    popular_times = Column(String, server_default='popular_times') 
     user_id = Column(Integer, ForeignKey('User.id'))
     search_id = Column(Integer, ForeignKey('Search.id'))
     name = Column(String, server_default='name')       
     address = Column(String, server_default='description')    
+    time_wait = Column(String, server_default='time_wait') 
+    current_popularity = Column(Integer, server_default='current_popularity')         
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

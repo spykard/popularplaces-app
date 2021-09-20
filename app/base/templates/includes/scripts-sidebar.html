@@ -68,7 +68,8 @@
           $graph_button0 = $('#0');
           $graph_button1 = $('#1');
           $graph_button2 = $('#2');                    
-          $select_city_button = $('[name="selectcitybutton"]');           
+          $select_city_button = $('[name="selectcitybutton"]');
+          $contact_me_button = $('#contactmebutton');           
           if ($login_button.length != 0) {
             $lastClass = $login_button.attr('class').split(' ').pop();
             $login_button.removeClass($lastClass);
@@ -123,7 +124,12 @@
             $lastClass = $select_city_button.attr('class').split(' ').pop();
             $select_city_button.removeClass($lastClass);
             $select_city_button.addClass('btn-' + new_button_color);                    
-          }                                                 
+          }  
+          if ($contact_me_button.length != 0) {
+            $lastClass = $contact_me_button.attr('class').split(' ').pop();
+            $contact_me_button.removeClass($lastClass);
+            $contact_me_button.addClass('btn-' + new_button_color);                    
+          }                                                          
 
           $.ajax({
             type: 'POST',
