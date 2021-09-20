@@ -141,6 +141,8 @@
         $('[name="deletebuttonModal"]').attr('value', id);  // Stores an important value inside the Button
         $("#removePlaceModal").modal('show');
 
+        $('[name="deletebuttonModal"]').unbind('click');
+
         $('[name="deletebuttonModal"]').click(function() {
             $("#removePlaceModal").modal('hide');
             $.ajax({
@@ -152,8 +154,10 @@
                 success: function(data){ 
                         location.reload(); 
                             },
-                error: function(data){    
-                            },
+                error: function(data){
+                        if (data.status == 400) {
+                            demo.showNotification('top','center', 'true', 'The selected place is globally available to all Users and thus cannot be Deleted.');    
+                            }},
             });
         }); 
     });    

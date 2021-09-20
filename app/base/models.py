@@ -62,7 +62,6 @@ class Place(db.Model):
     __tablename__ = 'Place'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-
     name = Column(String, server_default='name')
     address = Column(String, server_default='address')
     type = Column(String, server_default='type')

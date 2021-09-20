@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, abort
 from flask_login import login_required, current_user
 from app import db, login_manager
 from jinja2 import TemplateNotFound
@@ -299,8 +299,11 @@ def page_user():
 @blueprint.route('/delete-place', methods=['GET', 'POST'])
 @login_required
 def delete_place():
-    id = request.form['id']
+    id = int(request.form['id'])
     if current_user.is_authenticated:
+        places = db.session.query(Place).filter((Place.id == id) & (Place.global_place == 1)).all()
+        if len(places) > 0: abort(400)
+
         Place.query.filter_by(id=id).delete()          
         db.session.commit() 
         return "true"
