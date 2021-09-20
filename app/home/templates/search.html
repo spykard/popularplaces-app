@@ -78,6 +78,7 @@
       <div class="card-body">
         <div class="row" id="selectcity">
 
+          {# <div class="card-deck"> Either use "card-deck" or "col" for 2 different UI styles #}
           {% for city in cities %}
             <div class="col">
               <div class="card" style="width: 20rem;">
@@ -87,9 +88,14 @@
                   <p class="card-text">{{ city['description'] }}</p>
                   <a href="#" name="selectcitybutton" val="{{ city['name'] }}" class="btn btn-sm btn-{{ current_user.ui_button }}">Select</a>
                 </div>
+                <div class="card-footer">
+                  <small class="text-muted">Number of Places in your Account: {{ city['count'] }}</small>
+                </div>                
               </div>    
             </div>  
-          {% endfor %}                                        
+          {% endfor %}
+          {# </div> #}
+
         </div>  
 
         {% if not show_search_panel %}        

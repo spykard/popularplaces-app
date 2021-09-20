@@ -64,11 +64,12 @@ class Place(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, server_default='name')
     address = Column(String, server_default='address')
-    type = Column(String, server_default='type')
+    type_p = Column(String, server_default='type_p')
     user_id = Column(Integer, ForeignKey('User.id'))
     global_place = Column(Integer, server_default='global_place')   
     city_id = Column(String, ForeignKey('City.id'))
-    time = Column(DateTime, server_default='time')     
+    time = Column(DateTime, server_default='time') 
+    verification = Column(String, server_default='verification')        
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

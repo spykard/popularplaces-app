@@ -31,7 +31,9 @@
                                 <th class="text-center">#</th>
                                 <th>Name</th>
                                 <th>Address</th>
-                                <th>City</th>                                
+                                <th>Type</th> 
+                                <th>City</th>       
+                                <th class="text-center">Verification</th>                                                         
                                 <th class="text-center">Added On</th>
                                 <th class="text-right">Actions</th>
                             </tr>
@@ -43,7 +45,9 @@
                                     <td class="text-center">{{ place['count'] }}</td>
                                     <td>{{ place['name'] }}</td>
                                     <td>{{ place['address'] }}</td>
-                                    <td>{{ place['city'] }}</td>                                    
+                                    <td>{{ place['type'] }}</td>
+                                    <td>{{ place['city'] }}</td> 
+                                    <td class="text-center"><p class="{% if place['verification'] == 'True' %}text-success{% elif place['verification'] == 'False' %}text-danger{% else %}text-muted{% endif %}">{{ place['verification'] }}</p></td>                                                                       
                                     <td class="text-center">{{ place['time'] }}</td>
                                     <td class="td-actions text-right">
                                         <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open('https://maps.google.com/?q=' + '{{ place["name"] }}' + ' ' + '{{ place["address"] }}');">
@@ -62,6 +66,8 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td></td>                                
+                                <td></td>                                
                                 <td></td>                                                                                                
                                 <td class="text-right">
                                 <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
@@ -82,22 +88,59 @@
                                 <i class="tim-icons icon-simple-remove"></i>
                             </button>
                             </div>
-                            <div class="modal-body">
-                                <label>Name</label>
-                                <div id="namediv" class="form-group">              
-                                    <input type="text" class="form-control form-{{ current_user.ui_color }}" id="name" name="name" placeholder="Name" value="">
+
+                            <form id="addPlaceForm" role="form" method="post" action="">
+                                <!-- Bug Fix: https://stackoverflow.com/a/42874365 -->
+                                {{ form.hidden_tag() }}
+
+                                <div class="modal-body">
+                                    <label>Name</label>
+                                    <div id="namediv" class="form-group">              
+                                        <input type="text" class="form-control form-{{ current_user.ui_color }}" id="name" name="name" placeholder="Name" value="">
+                                    </div>
+                                    <label>City</label>
+                                    <div id="citydiv" class="form-group">              
+                                        <input type="text" class="form-control form-{{ current_user.ui_color }}" id="city" name="city" placeholder="City" value="">
+                                    </div>                                     
+                                    <label>Address</label>
+                                    <div id="addressdiv" class="form-group">              
+                                        <input type="text" class="form-control form-{{ current_user.ui_color }}" id="address" name="address" placeholder="Address" value="">                                                    
+                                    <a class="assistancelink" href="#">Automatically Find Address</a>
+                                    </div>
+                                    <label>Type</label>
+                                    <div id="typediv" class="form-group">
+                                        <select type="text" class="form-control form-{{ current_user.ui_color }} {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type_p" name="type_p">
+                                        <option>Choose...</option>
+                                        <option>Bar</option>
+                                        <option>Night Club</option>
+                                        <option>Restaurant</option>
+                                        <option>Cafe</option>
+                                        <option>Bakery</option>
+                                        <option>Food</option>
+                                        <option>Subway Station</option>
+                                        <option>Gas Station</option>
+                                        <option>Bank</option>
+                                        <option>Pharmacy</option>
+                                        <option>Health</option>
+                                        <option>Place of Worship</option>
+                                        <option>Department Store</option>
+                                        <option>Establishment</option>
+                                        <option>University</option>
+                                        <option>Library</option>
+                                        <option>Book Store</option>
+                                        <option>Gym</option>
+                                        <option>Clothing Store</option>
+                                        <option>Casino</option>
+                                        <option>Liquor Store</option>
+                                        </select>
+                                    </div>                                  
                                 </div>
-                                <br>
-                                <label>Address</label>
-                                <div id="addressdiv" class="form-group">              
-                                    <input type="text" class="form-control form-{{ current_user.ui_color }}" id="address" name="address" placeholder="Address" value="">
-                                </div>                
-                                <a class="assistancelink" href="#">Automatically Find Address</a>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-{{ current_user.ui_button }}">Submit</button>
-                            </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button name="addbuttonModal" type="button" class="btn btn-{{ current_user.ui_button }}">Submit</button>
+                                </div>
+                            </form>
+
                         </div>
                         </div>
                     </div>
@@ -117,7 +160,7 @@
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button name="deletebuttonModal" type="button" class="btn btn-{{ current_user.ui_button }}">Delete</button>
+                            <button name="deletebuttonModal" type="button" class="btn btn-danger">Delete</button>
                             </div>
                         </div>
                         </div>
@@ -162,6 +205,39 @@
         }); 
     });    
 
+    $('[name="addbuttonModal"]').click(function() {
+        var submitFlag = true;
+        var name = $('#name').val();
+        var city = $('#city').val();
+        var type_p = $('#type_p').find(":selected").text();
+
+        if (!name) {
+            submitFlag = false;
+            $('#namediv').addClass('has-danger');
+            $('#name').addClass('form-control-danger');              
+        }
+
+        if (!city) {
+            submitFlag = false;
+            $('#citydiv').addClass('has-danger');
+            $('#city').addClass('form-control-danger');
+        }
+
+        if (type_p == "Choose...") {
+            submitFlag = false;
+            $('#typediv').addClass('has-danger');           
+        }
+
+        if (submitFlag == true) {
+            $("#addPlaceModal").modal('hide');
+            $("#addPlaceForm").submit();
+        }
+        else {
+            demo.showNotification('top','center', 'true', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')        
+        }
+
+    });
+
     $('.assistancelink').click(function() {
         var name = $('#name').val();
         if (name) {
@@ -172,8 +248,9 @@
             $('#name').addClass('form-control-danger');              
             demo.showNotification('top','center', 'true', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')
         }
-
     }); 
+
+    demo.showNotification('top','center', '{{ to_notify }}', 'Failed to Add Place: Input does not follow the Appropriate Form.')
 </script>
 
 {% endblock javascripts %}

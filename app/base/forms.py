@@ -43,3 +43,8 @@ class EditSettingsFormAdvanced(FlaskForm):
     type1 = SelectField('Type 1'          , id='type1'         , validators=[DataRequired()], choices=[("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store")])
     type2 = SelectField('Type 2'          , id='type2'         , choices=[("Choose..."), ("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store")])
 
+class AddPlaceForm(FlaskForm):
+    name = TextField('Name'             , id='name'            , validators=[DataRequired()]) 
+    address = TextField('Address'       , id='address')
+    type_p = SelectField('Type'         , id='type_p'          , validators=[DataRequired()], choices=[("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store")])
+    city = TextField('City'             , id='city'            , validators=[DataRequired()])

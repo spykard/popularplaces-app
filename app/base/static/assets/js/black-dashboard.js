@@ -54,8 +54,10 @@ var seq2 = 0,
       var ps = new PerfectScrollbar('.main-panel', {
         wheelSpeed: 2,
         wheelPropagation: true,
-        minScrollbarLength: 20,
-        suppressScrollX: true
+        minScrollbarLength: 20
+        //useBothWheelAxes: true,
+        // suppressScrollX: false,
+        //suppressScrollY: false
       });
     }
 

@@ -7,8 +7,9 @@ from app.home import blueprint
 from flask import render_template, redirect, url_for, request, abort
 from flask_login import login_required, current_user
 from app import db, login_manager
+from sqlalchemy import func
 from jinja2 import TemplateNotFound
-from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAdvanced
+from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAdvanced, AddPlaceForm
 from app.base.models import User, Place, Search, City, PlaceResult
 from app.base.util import hash_pass
 from datetime import datetime
@@ -90,8 +91,10 @@ def search():
     # Load Cities
     cities = db.session.query(City).join(Place).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(City.id.asc()).all() 
     cities_dicts = []
-    for city in cities:
-        cities_dicts.append({'name': city.name, 'description': city.description, 'image_link': city.image_link})
+    
+    for city in cities:    
+        cities_count = db.session.query(func.count(Place.city_id)).join(City).filter(((Place.user_id == current_user.id) | (Place.global_place == 1)) & (City.name == city.name)).first()   
+        cities_dicts.append({'name': city.name, 'description': city.description, 'image_link': city.image_link, 'count': cities_count[0]})
 
     return render_template( 'search.html', 
                             segment='search',
@@ -165,74 +168,72 @@ def search_advanced():
 @blueprint.route('/places', methods=['GET', 'POST'])
 @login_required
 def places():
-    settings_form = EditSettingsForm(request.form)
-    if 'search' in request.form:
-
-        # Read form data
-        city = request.form['city']
-        type1 = request.form['type1']
-        type2 = request.form['type2']
-        if request.form.get('all_places') == None:  # If checkboxed not checked, no POST data are sent
-            all_places = 0
-        else:
-            all_places = 1
-
-        # Validate Form Data
-        if not settings_form.validate():
-            return render_template( 'search.html', 
-                                    segment='search',
-                                    to_notify='true',
-                                    msg='Input does not follow the Appropriate Form',
-                                    error_dict=settings_form.errors,
-                                    success=False,
-                                    form=settings_form,
-                                    city=city,
-                                    show_search_panel=True)
-
-        # Write to DB
-        current_user.settings_type1 = type1
-        current_user.settings_type2 = type2
-        current_user.settings_all_places = all_places
-        if current_user.premium_enabled == 0: current_user.free_runs_remaining = current_user.free_runs_remaining-1
-        db.session.commit()            
-
-        # Main
-        search_success, search_msg = search_populartimes(city, type1, type2, all_places)
-
-        if search_success:
-            return render_template( 'history.html', 
-                            segment='history',
-                            msg='Search executed successfully! - ID: ' + search_msg, 
-                            error_dict={},
-                            success=True)
-        else:
-            return render_template( 'search.html', 
-                            segment='search',
-                            msg='Search executed but returned the following Error: ' + search_msg, 
-                            error_dict={},
-                            success=False,
-                            form=settings_form,
-                            city=city,
-                            show_search_panel=True)                                        
-
     # Load Cities
     places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(Place.time.asc()).all() 
     place_dicts = []
     count = 1
     for place in places:
-        place_dicts.append({'id': place[0].id, 'count': count, 'name': place[0].name, 'address': place[0].address,  'city': place[1].name, 'time': place[0].time.strftime("%Y-%m-%d")})
+        place_dicts.append({'id': place[0].id, 'count': count, 'name': place[0].name, 'address': place[0].address, 'type': place[0].type_p,  'city': place[1].name, 'verification': place[0].verification, 'time': place[0].time.strftime("%Y-%m-%d")})
         count += 1
+
+    add_place_form = AddPlaceForm(request.form)
+    if 'name' in request.form:  # In this scenario we have not set a submit button, thus we check one of the input boxes' id
+
+        # Read form data
+        name = request.form['name']
+        address = request.form['address']
+        type_p = request.form['type_p']
+        city = request.form['city']                
+
+        # Validate Form Data
+        if not add_place_form.validate():
+            return render_template( 'places.html', 
+                                    segment='places',
+                                    error_dict={},
+                                    to_notify='true',
+                                    success=False,
+                                    form=add_place_form,
+                                    places=place_dicts)
+
+        # Write Place Object to DB
+        city_id = City.query.filter_by(name=city).first()
+        if not city_id:
+            insert_dict = dict([("name" , city)])
+            city_to = City(**insert_dict)
+            db.session.add(city_to)
+            db.session.commit()
+        city_id = City.query.filter_by(name=city).first()          
+
+        insert_dict = dict([("name" , name), ("address" , address), ("type_p" , type_p), ("user_id" , current_user.id), ("city_id" , city_id.id)])
+        place_to = Place(**insert_dict)
+        db.session.add(place_to)
+        db.session.commit()
+
+        # Load Cities
+        places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(Place.time.asc()).all() 
+        place_dicts = []
+        count = 1
+        for place in places:
+            place_dicts.append({'id': place[0].id, 'count': count, 'name': place[0].name, 'address': place[0].address, 'type': place[0].type_p,  'city': place[1].name, 'verification': place[0].verification, 'time': place[0].time.strftime("%Y-%m-%d")})
+            count += 1
+
+        return render_template( 'places.html', 
+                        segment='places', 
+                        error_dict={},
+                        success=True,
+                        form=add_place_form,
+                        places=place_dicts)                                      
 
     return render_template( 'places.html', 
                             segment='places',
                             error_dict={},
-                            form=settings_form,
+                            form=add_place_form,
                             places=place_dicts)
 
 @blueprint.route('/page-user', methods=['GET', 'POST'])
 @login_required
 def page_user():
-    profile_form = EditProfileForm(request.form)
+    profile_form = EditProfileForm(request.form)    
     if 'save' in request.form:
 
         # Read form data
@@ -330,7 +331,10 @@ def search_populartimes(city, type1, type2, all_places):
     # Test for future implem.
     search_name = "Avli By Vouz"
     search_address = "Pantanassis 17-29"
+    # search_name = "Kynorodo"
+    # search_address = "Korinthou 167, Patra 262 23"    
     data = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)
+    print(data)
     name_temp = ("temp" , str(data[2]))
 
     # Write Search Object to DB
