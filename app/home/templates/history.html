@@ -33,6 +33,10 @@
   .list-group-item-action-success.active {
     background-image: linear-gradient(to bottom left, #00f2c3, #0098f0, #00f2c3);
   }
+
+  .places-table-scroll {
+    max-height: 507px;  
+  }
 </style>
 
 {% endblock stylesheets %}
@@ -62,10 +66,20 @@
     <div class="row">
       <div id="searchHistoryList" class="col overflow-auto" style="max-height: 236px;">
         <div class="list-group" id="list-tab" role="tablist">
-          <a class="list-group-item list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %} active" id="list-example-list" data-toggle="list" href="#list-example" role="tab" aria-controls="example">Sample Search</a>
-          
+          <a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %} active" id="list-example-list" data-toggle="list" href="#list-example" role="tab" aria-controls="example">
+            Sample Search
+            <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm" value="0" style="height: 0.35rem; width: 0.35rem;">
+                <i class="tim-icons icon-simple-remove" style="font-size: 0.9em;"></i>
+            </button>
+          </a>
+
           {% for search in searches %}
-            <a class="list-group-item list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %}" id="list-{{ search['name'] }}-list" data-toggle="list" href="#list-{{ search['name'] }}" role="tab" aria-controls="{{ search['name'] }}">{{ search['name'] }}</a>          
+            <a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %}" id="list-{{ search['name'] }}-list" data-toggle="list" href="#list-{{ search['name'] }}" role="tab" aria-controls="{{ search['name'] }}">
+              {{ search['name'] }}
+              <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm" value="{{ search['id'] }}" style="height: 0.35rem; width: 0.35rem;">
+                  <i class="tim-icons icon-simple-remove" style="font-size: 0.9em;"></i>
+              </button>            
+            </a>          
           {% endfor %}
 
         </div>
@@ -78,6 +92,7 @@
         <div class="col">
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="list-example" role="tabpanel" aria-labelledby="list-example-list">
+              <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
@@ -85,44 +100,52 @@
                             <th>City</th>    
                             <th>Type 1</th>                                                         
                             <th>Type 2</th>
+                            <th>Day</th>                            
                             <th class="text-center">Time</th>                             
                         </tr>                            
                     </thead>
                     <tbody>
                           <tr>
+                              <td style="display:none;">0</td>
                               <td class="text-center">Sample Search</td>                          
-                              <td>Athens</td>
+                              <td>New York</td>
                               <td>Cafe</td> 
-                              <td>Restaurant</td>                                                                       
+                              <td>Restaurant</td> 
+                              <td><p class="text-primary">Monday - 19 Hour</p></td>                                                                                                    
                               <td class="text-center">2021-01-18 19:42:03</td>
                           </tr>
                     </tbody>                                                       
-                </table>             
+                </table>
+              </div>             
             </div>
           
             {% for search in searches %}
               <div class="tab-pane fade" id="list-{{ search['name'] }}" role="tabpanel" aria-labelledby="list-{{ search['name'] }}-list">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Name</th>
-                            <th>City</th>    
-                            <th>Type 1</th>                                                         
-                            <th>Type 2</th>
-                            <th class="text-center">Time</th>                             
-                        </tr>                            
-                    </thead>
-                    <tbody>
+                <div class="table-responsive">              
+                  <table class="table">
+                      <thead>
                           <tr>
-                              <td style="display:none;">{{ search['id'] }}</td>                          
-                              <td class="text-center">{{ search['name'] }}</td>                          
-                              <td>{{ search['city'] }}</td>
-                              <td>{{ search['settings_type1'] }}</td> 
-                              <td>{{ search['settings_type2'] }}</td>                                                                       
-                              <td class="text-center">{{ search['time'] }}</td>
-                          </tr>
-                    </tbody>                                                       
-                </table>              
+                              <th class="text-center">Name</th>
+                              <th>City</th>    
+                              <th>Type 1</th>                                                         
+                              <th>Type 2</th>
+                              <th>Day</th>                              
+                              <th class="text-center">Time</th>                             
+                          </tr>                            
+                      </thead>
+                      <tbody>
+                            <tr>
+                                <td style="display:none;">{{ search['id'] }}</td>                          
+                                <td class="text-center">{{ search['name'] }}</td>                          
+                                <td>{{ search['city'] }}</td>
+                                <td>{{ search['settings_type1'] }}</td> 
+                                <td>{{ search['settings_type2'] }}</td>     
+                                <td><p class="text-primary">{{ search['day'] }}</p></td>
+                                <td class="text-center">{{ search['time'] }}</td>
+                            </tr>
+                      </tbody>                                                       
+                    </table>
+                </div>              
               </div>
             {% endfor %}
           </div>
@@ -131,26 +154,7 @@
 
     <br>
 
-    <div class="row">
-      <div class="col-12">
-        <div class="card card-nav-tabs">
-          <div class="card-header card-header-success">
-            Quote
-          </div>
-          <div class="card-body">
-            <blockquote class="blockquote mb-0">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-              <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
-            </blockquote>
-            <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-              Secondary Button
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
+    <div class="row" style="display: none;">
       <div class="col-12">
         <div class="card card-chart">
           <div class="card-header ">
@@ -195,7 +199,8 @@
       </div>
 
     </div>
-    <div class="row">
+
+    <div class="row" style="display: none;">
       <div class="col-lg-4">
         <div class="card card-chart">
           <div class="card-header">
@@ -236,13 +241,100 @@
         </div>
       </div>
     </div>
+    
     <div class="row">
-      <div class="col-lg-6 col-md-12">
-        <div class="card card-tasks">
-          <div class="card-header ">
-            <h6 class="title d-inline">Tasks(5)</h6>
-            <p class="card-category d-inline">today</p>
-            <div class="dropdown">
+      <div class="col-lg-6 col-md-12 h-100">
+        <div class="card h-100">
+          {# <div class="card-header">
+            <h4 class="card-title">Places</h4>
+          </div> #}
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table tablesorter" id="places_table">
+                <thead>
+                  <tr>
+                    <th>
+                      Name
+                    </th>
+                    <th>
+                      Address
+                    </th>
+                    <th class="text-center">
+                      Rating (#)
+                    </th>
+                    <th class="text-center">
+                      Current Popularity
+                    </th>   
+                    <th class="text-center">
+                      Trend
+                    </th>                                     
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      La Grande Boucherie
+                    </td>
+                    <td>
+                      145 W 53rd St, New York, NY 10019, United States
+                    </td>
+                    <td class="text-center">
+                      4.5 (578)
+                    </td>
+                    <td class="text-center">
+                      84
+                    </td>
+                    <td class="text-center">
+                      <p class="text-success">+40</p>
+                    </td>                    
+                  </tr>                
+                  <tr>
+                    <td>
+                      Petrossian Boutique & Cafe
+                    </td>
+                    <td>
+                      253 W 51st St, New York, NY 10019, United States
+                    </td>
+                    <td class="text-center">
+                      4.6 (1632)
+                    </td>
+                    <td class="text-center">
+                      52
+                    </td>
+                    <td class="text-center">
+                      <p class="text-success">+16</p>
+                    </td>                    
+                  </tr>
+                  <tr>
+                    <td>
+                      Brooklyn Diamond Coffee
+                    </td>
+                    <td>
+                      240 E 54th St, New York, NY 10022, United States
+                    </td>
+                    <td class="text-center">
+                      4.1 (81)
+                    </td>
+                    <td class="text-center">
+                      8
+                    </td>
+                    <td class="text-center">
+                      <p class="text-warning">-31</p>
+                    </td>                    
+                  </tr>                                    
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 col-md-12 h-75">
+        <div class="card card-tasks h-75">
+          <div class="card-header">
+            <h4 class="title d-inline">Advanced Actions</h4>
+            <p class="card-category d-inline">Under Development</p>
+            {# <div class="dropdown">
               <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
                 <i class="tim-icons icon-settings-gear-63"></i>
               </button>
@@ -251,7 +343,7 @@
                 <a class="dropdown-item" href="#pablo">Another action</a>
                 <a class="dropdown-item" href="#pablo">Something else</a>
               </div>
-            </div>
+            </div> #}
           </div>
           <div class="card-body ">
             <div class="table-full-width table-responsive">
@@ -269,33 +361,12 @@
                       </div>
                     </td>
                     <td>
-                      <p class="title">Update the Documentation</p>
-                      <p class="text-muted">Dwuamish Head, Seattle, WA 8:47 AM</p>
+                      <p class="title">Find Trending Places</p>
+                      <p class="text-muted">List all the hot as well as dead places that were included inthe search.</p>
                     </td>
                     <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                        <i class="tim-icons icon-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="form-check">
-                        <label class="form-check-label">
-                          <input class="form-check-input" type="checkbox" value="" checked="">
-                          <span class="form-check-sign">
-                            <span class="check"></span>
-                          </span>
-                        </label>
-                      </div>
-                    </td>
-                    <td>
-                      <p class="title">GDPR Compliance</p>
-                      <p class="text-muted">The GDPR is a regulation that requires businesses to protect the personal data and privacy of Europe citizens for transactions that occur within EU member states.</p>
-                    </td>
-                    <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                        <i class="tim-icons icon-pencil"></i>
+                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
+                        <i class="tim-icons icon-double-right"></i>
                       </button>
                     </td>
                   </tr>
@@ -311,12 +382,12 @@
                       </div>
                     </td>
                     <td>
-                      <p class="title">Solve the issues</p>
-                      <p class="text-muted">Fifty percent of all respondents said they would be more likely to shop at a company </p>
+                      <p class="title">Perform Data Analysis</p>
+                      <p class="text-muted">Execute advanced data analysis per places with the use of Statistical Methods.</p>
                     </td>
                     <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                        <i class="tim-icons icon-pencil"></i>
+                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
+                        <i class="tim-icons icon-double-right"></i>
                       </button>
                     </td>
                   </tr>
@@ -332,12 +403,12 @@
                       </div>
                     </td>
                     <td>
-                      <p class="title">Release v2.0.0</p>
-                      <p class="text-muted">Ra Ave SW, Seattle, WA 98116, SUA 11:19 AM</p>
+                      <p class="title">Map Visualization</p>
+                      <p class="text-muted">Visualize the results on a map in the form of circles.</p>
                     </td>
                     <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                        <i class="tim-icons icon-pencil"></i>
+                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
+                        <i class="tim-icons icon-double-right"></i>
                       </button>
                     </td>
                   </tr>
@@ -353,163 +424,13 @@
                       </div>
                     </td>
                     <td>
-                      <p class="title">Export the processed files</p>
-                      <p class="text-muted">The report also shows that consumers will not easily forgive a company once a breach exposing their personal data occurs. </p>
+                      <p class="title">Release v2.0</p>
+                      <p class="text-muted">Codebase Improvements.</p>
                     </td>
                     <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                        <i class="tim-icons icon-pencil"></i>
+                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
+                        <i class="tim-icons icon-double-right"></i>
                       </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="form-check">
-                        <label class="form-check-label">
-                          <input class="form-check-input" type="checkbox" value="">
-                          <span class="form-check-sign">
-                            <span class="check"></span>
-                          </span>
-                        </label>
-                      </div>
-                    </td>
-                    <td>
-                      <p class="title">Arival at export process</p>
-                      <p class="text-muted">Capitol Hill, Seattle, WA 12:34 AM</p>
-                    </td>
-                    <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task">
-                        <i class="tim-icons icon-pencil"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 col-md-12">
-        <div class="card ">
-          <div class="card-header">
-            <h4 class="card-title"> Simple Table</h4>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table tablesorter " id="">
-                <thead class=" text-{{ current_user.ui_button }}">">
-                  <tr>
-                    <th>
-                      Name
-                    </th>
-                    <th>
-                      Country
-                    </th>
-                    <th>
-                      City
-                    </th>
-                    <th class="text-center">
-                      Salary
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      Dakota Rice
-                    </td>
-                    <td>
-                      Niger
-                    </td>
-                    <td>
-                      Oud-Turnhout
-                    </td>
-                    <td class="text-center">
-                      $36,738
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      Minerva Hooper
-                    </td>
-                    <td>
-                      Curaçao
-                    </td>
-                    <td>
-                      Sinaai-Waas
-                    </td>
-                    <td class="text-center">
-                      $23,789
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      Sage Rodriguez
-                    </td>
-                    <td>
-                      Netherlands
-                    </td>
-                    <td>
-                      Baileux
-                    </td>
-                    <td class="text-center">
-                      $56,142
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      Philip Chaney
-                    </td>
-                    <td>
-                      Korea, South
-                    </td>
-                    <td>
-                      Overland Park
-                    </td>
-                    <td class="text-center">
-                      $38,735
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      Doris Greene
-                    </td>
-                    <td>
-                      Malawi
-                    </td>
-                    <td>
-                      Feldkirchen in Kärnten
-                    </td>
-                    <td class="text-center">
-                      $63,542
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      Mason Porter
-                    </td>
-                    <td>
-                      Chile
-                    </td>
-                    <td>
-                      Gloucester
-                    </td>
-                    <td class="text-center">
-                      $78,615
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      Jon Porter
-                    </td>
-                    <td>
-                      Portugal
-                    </td>
-                    <td>
-                      Gloucester
-                    </td>
-                    <td class="text-center">
-                      $98,615
                     </td>
                   </tr>
                 </tbody>
@@ -544,8 +465,79 @@
           });
         }
       }
-
     });
+
+    $('[name="deletebutton"]').click(function() {
+      $.ajax({
+          type: 'POST',
+          data: {
+              id: $(this).val(),
+          },
+          url: "/delete-search",
+          success: function(data){ 
+                  location.reload(); 
+                      },
+          error: function(data){
+                  if (data.status == 400) {
+                      demo.showNotification('top','center', 'true', 'This is a Sample Search and thus cannot be Deleted.');    
+                      }},
+      });
+    }); 
+
+    $('.list-group-item-action').click(function() {
+      var divSelector = $("#" + $(this).attr('id').slice(0, -5));
+      var id = divSelector.find("table > tbody > tr > :first-child").html();
+
+      $.ajax({
+          type: 'POST',
+          data: {
+              id: id,
+          },
+          url: "/get-place-results",
+          success: function(data){ 
+                  console.log(data);  // JSON.stringify
+
+                  // Update the Table
+                  var tableSelector = $("#places_table");
+
+                  tableSelector.find("tbody > tr").remove();  // Wipe
+
+                  for (i = 0; i < data.length; i++) {  // Rebuild 
+                    var content = "<tr>"; 
+                    
+                    content += "<td>" + data[i].name + "</td>";
+                    content += "<td>" + data[i].address + "</td>";
+                    content += "<td class='text-center'>" + data[i].rating + "</td>";
+                    content += "<td class='text-center'>" + data[i].current_popularity + "</td>";
+
+                    if (data[i].difference > 0) {content += "<td class='text-center'><p class='text-success'>" + data[i].difference + "</p></td>";}
+                    else if (data[i].difference < 0) {content += "<td class='text-center'><p class='text-danger'>" + data[i].difference + "</p></td>";}
+                    else {content += "<td class='text-center'><p>" + data[i].difference + "</p></td>";}
+
+                    content += "</tr>";
+
+                    tableSelector.children("tbody").append(content);
+                  }
+
+                  
+
+                  {# var content = "<table>"
+                  for(i=0; i<3; i++){
+                      content += '<tr><td>' + 'result ' +  i + '</td></tr>';
+                  }
+                  content += "</table>"
+
+                  $('#here_table').append(content); #}
+
+
+                      },
+          error: function(data){
+                  demo.showNotification('top','center', 'true', 'Data Request Error.');    
+                      },
+      });
+    }); 
+
+
   </script>
 
 {% endblock javascripts %}

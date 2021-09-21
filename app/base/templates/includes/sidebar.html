@@ -48,33 +48,33 @@
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>Index &nbsp;<code>DEV</code></p>
             </a>
-          </li>           
-          <li class="{% if 'icons' in segment %} active {% endif %}">
-            <a href="/ui-icons">
-              <i class="tim-icons icon-atom"></i>
-              <p>Icons &nbsp;<code>DEV</code></p>
-            </a>
-          </li>
-
-          <li class="{% if 'notifications' in segment %} active {% endif %}">
-            <a href="/ui-notifications">
-              <i class="tim-icons icon-bell-55"></i>
-              <p>Notifications &nbsp;<code>DEV</code></p>
-            </a>
-          </li>
-          <li class="{% if 'tables' in segment %} active {% endif %}">
-            <a href="/ui-tables">
-              <i class="tim-icons icon-puzzle-10"></i>
-              <p>Table List &nbsp;<code>DEV</code></p>
-            </a>
-          </li>
-          <li class="{% if 'typography' in segment %} active {% endif %}">
-            <a href="/ui-typography">
-              <i class="tim-icons icon-align-center"></i>
-              <p>Typography &nbsp;<code>DEV</code></p>
-            </a>
-          </li>
-          <li>
+          </li>    
+          {% if current_user.superadmin %}                 
+            <li class="{% if 'icons' in segment %} active {% endif %}">
+              <a href="/ui-icons">
+                <i class="tim-icons icon-atom"></i>
+                <p>Icons &nbsp;<code>DEV</code></p>
+              </a>
+            </li>
+            <li class="{% if 'notifications' in segment %} active {% endif %}">
+              <a href="/ui-notifications">
+                <i class="tim-icons icon-bell-55"></i>
+                <p>Notifications &nbsp;<code>DEV</code></p>
+              </a>
+            </li>
+            <li class="{% if 'tables' in segment %} active {% endif %}">
+              <a href="/ui-tables">
+                <i class="tim-icons icon-puzzle-10"></i>
+                <p>Table List &nbsp;<code>DEV</code></p>
+              </a>
+            </li>
+            <li class="{% if 'typography' in segment %} active {% endif %}">
+              <a href="/ui-typography">
+                <i class="tim-icons icon-align-center"></i>
+                <p>Typography &nbsp;<code>DEV</code></p>
+              </a>
+            </li>
+          {% endif %}          
           <li class="{% if 'credits' in segment %} active {% endif %}">
             <a href="/credits">
               <i class="tim-icons icon-support-17"></i>

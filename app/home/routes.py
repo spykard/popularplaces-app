@@ -4,10 +4,10 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from app.home import blueprint
-from flask import render_template, redirect, url_for, request, abort
+from flask import render_template, redirect, url_for, request, abort, jsonify
 from flask_login import login_required, current_user
 from app import db, login_manager
-from sqlalchemy import func
+from sqlalchemy import func, nullslast
 from jinja2 import TemplateNotFound
 from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAdvanced, AddPlaceForm
 from app.base.models import User, Place, Search, City, PlaceResult
@@ -74,11 +74,9 @@ def search():
         search_success, search_msg = search_populartimes(city, type1, type2, all_places)
 
         if search_success:
-            return render_template( 'history.html', 
-                            segment='history',
-                            msg='Search executed successfully! - ID: ' + search_msg, 
-                            error_dict={},
-                            success=True)
+            message = json.dumps({"message": search_msg})    
+
+            return redirect(url_for('home_blueprint.history', messages=search_msg))
         else:
             return render_template( 'search.html', 
                             segment='search',
@@ -169,16 +167,29 @@ def search_advanced():
 @blueprint.route('/history', methods=['GET', 'POST'])
 @login_required
 def history():
+    # Get message parameters
+    message = None
+    if 'messages' in request.args:
+        message = request.args['messages']
+
     # Get search history data
     searches = Search.query.filter_by(user_id=current_user.id).order_by(Search.name.desc()).all()
     searches_dicts = []
     
     for search in searches:     
-        searches_dicts.append({'id': search.id, 'name': search.name[0:15], 'city': search.city, 'settings_type1': search.settings_type1, 'settings_type2': search.settings_type2, 'time': search.time})
+        searches_dicts.append({'id': search.id, 'name': search.name[0:15], 'city': search.city, 'settings_type1': search.settings_type1, 'settings_type2': search.settings_type2, 'day': search.time.strftime("%A - %H Hour"), 'time': search.time})
 
-    return render_template( 'history.html', 
-                            segment='history',
-                            searches=searches_dicts)
+    if message:
+        return render_template( 'history.html', 
+                                segment='history',
+                                msg='Search executed successfully! - ID: ' + message, 
+                                error_dict={},
+                                success=True,                            
+                                searches=searches_dicts)
+    else:
+        return render_template( 'history.html', 
+                                segment='history',                      
+                                searches=searches_dicts)        
 
 @blueprint.route('/places', methods=['GET', 'POST'])
 @login_required
@@ -311,7 +322,34 @@ def page_user():
                             segment='page-user',
                             form=profile_form)
 
-@blueprint.route('/delete-place', methods=['GET', 'POST'])
+@blueprint.route('/get-place-results', methods=['POST'])
+@login_required
+def get_place_results():
+    id = int(request.form['id'])
+    #data = db.session.query(Place).filter((Place.id == id) & (Place.global_place == 1)).all()
+    place_results = db.session.query(PlaceResult).join(Search).filter(Search.id == id).order_by(nullslast(PlaceResult.current_popularity.desc()), nullslast(PlaceResult.rating_num.desc())).all() 
+
+    data = []
+    converter = lambda i : i or ''  # Convert None to empty string
+    for place_result in place_results:
+        data.append({'name': place_result.name, 'address': place_result.address, 'rating': str(converter(place_result.rating)) + " (" + str(converter(place_result.rating_num)) + ")", 'popular_times': converter(place_result.popular_times),  'time_spent': converter(place_result.time_spent), 'current_popularity': converter(place_result.current_popularity), 'difference': converter(place_result.difference)})   
+
+    return jsonify(data)
+
+@blueprint.route('/delete-search', methods=['POST'])
+@login_required
+def delete_search():
+    id = int(request.form['id'])
+    if id == 0: abort(400)
+
+    if current_user.is_authenticated:
+        Search.query.filter_by(id=id).delete()          
+        db.session.commit() 
+        return "true"
+    else:
+        return "false"  
+
+@blueprint.route('/delete-place', methods=['POST'])
 @login_required
 def delete_place():
     id = int(request.form['id'])
@@ -323,7 +361,7 @@ def delete_place():
         db.session.commit() 
         return "true"
     else:
-        return "false"
+        return "false"    
 
 
 # --//----//----//----//----//----//----//----//--
@@ -337,9 +375,10 @@ def search_populartimes(city, type1, type2, all_places):
     places = get_places_to_search(city, type1, type2, all_places)
 
     # Write Search Object to DB
+    current_time = datetime.now()    
     user_id = ("user_id", current_user.id)
     if type2 == "Choose...": type2 = ""
-    name = ("name", datetime.now().strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
+    name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
     insert_dict = dict([("city" , city), ("settings_type1" , type1), ("settings_type2" , type2), ("settings_all_places" , all_places), user_id, name, ("type" , 1)])
     search = Search(**insert_dict)
     db.session.add(search)
@@ -359,15 +398,23 @@ def search_populartimes(city, type1, type2, all_places):
             # Write Verification for Places to DB
             if data["populartimes"]:
                 Place.query.filter_by(id=place[0]).update({"verification": "True"})
+
+                if data["current_popularity"]:
+                    difference = ("difference", data["current_popularity"] - data["populartimes"][current_time.weekday()]["data"][current_time.hour])
+                else:
+                    difference = ("difference", None)
+
             else:
                 Place.query.filter_by(id=place[0]).update({"verification": "False"}) 
+                difference = ("difference", None)
+
             # db.session.commit() 
              
             # if "time_wait" not in data:
             #     data["time_wait"] = None
 
             # Write Data to DB
-            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("current_popularity" , data["current_popularity"])])
+            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("current_popularity" , data["current_popularity"]), difference])
             placeresult = PlaceResult(**insert_dict)
             db.session.add(placeresult)
             db.session.commit()
