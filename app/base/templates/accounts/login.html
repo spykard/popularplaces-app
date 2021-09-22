@@ -3,13 +3,73 @@
 {% block title %} Login {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+
+<style>
+  .intro-image {
+    {# overflow: hidden; #}
+    max-width: 60%;
+    border-radius: 2.85rem;  /* to scale with viewport try 5.5vmin */
+  }
+
+  @media (min-width: 576px) {
+    .intro-image {
+      max-width: 540px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .intro-image {
+      max-width: 720px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .intro-image {
+      max-width: 960px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .intro-image {
+      max-width: 1140px;
+    }
+  }
+
+
+</style>
+
+{% endblock stylesheets %}
 
 {% block content %}
 
   <div class="row">
     <div class="col-md-8">
       <div class="card">
+
+        <!-- Modal -->        
+        <div class="modal modal-black fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="removePlaceTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                <h5 class="modal-title title title-up" id="removePlaceTitle" style="text-align: center;">Searches for popular places and times<br>using live traffic data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="photo text-center">
+                      <div class="container adjust-image">
+                        <img src="/static/assets/img/populartimes.gif" class="intro-image" alt="Popular Times">
+                      </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Enter Application</button>
+                </div>
+            </div>
+            </div>
+        </div> 
 
         <form role="form" method="post" action="">
         
@@ -86,4 +146,12 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+
+<script>
+  $(window).on('load', function() {
+        $('#notificationModal').modal('show');
+    });
+</script>
+
+{% endblock javascripts %}

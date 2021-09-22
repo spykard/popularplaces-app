@@ -39,7 +39,11 @@
 
   .bg-success {  
     background-color: #28a745;
-  }       
+  }   
+
+  .modal-fix-position {
+    top: -18.3vh;
+  }
 </style>
 
 {% endblock stylesheets %}
@@ -234,113 +238,6 @@
         <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ current_user.ui_button }}" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
       </div>      
 
-      <!-- Modal -->        
-      <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header justify-content-center">
-              <h5 class="modal-title title title-up" id="modalLongTitle">Help</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                <i class="tim-icons icon-simple-remove"></i>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on a set of places the user has chosen in the <a target="_blank" href="/places">My Places</a> tab; any type of place can be used including shops, establishments and prominent points of interest.</p>
-              <hr>
-              <div class="card card-plain">
-                <div class="card-header">
-                  <h4 class="card-title"> Search Parameters</h4>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table tablesorter " id="">
-                      <thead class=" text-primary">
-                        <tr>
-                          <th>
-                            Parameter
-                          </th>
-                          <th>
-                            Type
-                          </th>
-                          <th>
-                            Explanation
-                          </th>
-                          <th class="text-center">
-                            Suggested Value
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            City
-                          </td>
-                          <td>
-                            <code>string</code>
-                          </td>
-                          <td>
-                            The main selection for which City's Places to search for. Searches amongst the places that the user has entered in the "My Places" tab.
-                          </td>
-                          <td class="text-center">
-                            <code>Manual Selection</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Type 1
-                          </td>
-                          <td>
-                            <code>dropdown option</code>
-                          </td>
-                          <td>
-                            Simply put, the type of Place the User wants to Search for, whether that is a bar or a clothing store.
-                          </td>
-                          <td class="text-center">
-                            <code>Bar</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Type 2
-                          </td>
-                          <td>
-                            <code>dropdown option</code>
-                          </td>
-                          <td>
-                            Additional Place type to include in the search; fully optional.
-                          </td>
-                          <td class="text-center">
-                            <code>None</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            All Places
-                          </td>
-                          <td>
-                            <code>boolean</code>
-                          </td>
-                          <td>
-                            An option to include Places in the results that do not feature any popular times information.
-                          </td>
-                          <td class="text-center">
-                            <code>Off</code>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </form>
       {% endif %}
       
@@ -348,6 +245,112 @@
   </div>
 </div>
 
+<!-- Modal -->        
+<div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-fix-position modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header justify-content-center">
+        <h5 class="modal-title title title-up" id="modalLongTitle">Help</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on a set of places the user has chosen in the <a target="_blank" href="/places">My Places</a> tab; any type of place can be used including shops, establishments and prominent points of interest.</p>
+        <hr>
+        <div class="card card-plain">
+          <div class="card-header">
+            <h4 class="card-title"> Search Parameters</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table tablesorter " id="">
+                <thead class=" text-primary">
+                  <tr>
+                    <th>
+                      Parameter
+                    </th>
+                    <th>
+                      Type
+                    </th>
+                    <th>
+                      Explanation
+                    </th>
+                    <th class="text-center">
+                      Suggested Value
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      City
+                    </td>
+                    <td>
+                      <code>string</code>
+                    </td>
+                    <td>
+                      The main selection for which City's Places to search for. Searches amongst the places that the user has entered in the "My Places" tab.
+                    </td>
+                    <td class="text-center">
+                      <code>Manual Selection</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Type 1
+                    </td>
+                    <td>
+                      <code>dropdown option</code>
+                    </td>
+                    <td>
+                      Simply put, the type of Place the User wants to Search for, whether that is a bar or a clothing store.
+                    </td>
+                    <td class="text-center">
+                      <code>Bar</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Type 2
+                    </td>
+                    <td>
+                      <code>dropdown option</code>
+                    </td>
+                    <td>
+                      Additional Place type to include in the search; fully optional.
+                    </td>
+                    <td class="text-center">
+                      <code>None</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      All Places
+                    </td>
+                    <td>
+                      <code>boolean</code>
+                    </td>
+                    <td>
+                      An option to include Places in the results that do not feature any popular times information.
+                    </td>
+                    <td class="text-center">
+                      <code>Off</code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}
 
@@ -389,7 +392,7 @@
     });
 
     demo.showNotification('top','center', '{{ to_notify_premium }}', 'Your <b>Premium Subscription</b> has been Enabled!')
-    demo.showNotification('top','center', '{{ to_notify }}', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')
+    demo.showNotification('top','center', '{{ to_notify }}', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')    
   </script>
 
 {% endblock javascripts %}

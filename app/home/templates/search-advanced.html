@@ -27,6 +27,10 @@
   .btn.btn-fill.btn-less-wide {  
     padding-right: 32px;
     padding-left: 32px;
+  }  
+
+  .modal-fix-position {
+  top: -30.7vh;
   }   
 </style>
 
@@ -209,155 +213,6 @@
         <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->
       </div>
 
-      <!-- Modal -->        
-      <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header justify-content-center">
-              <h5 class="modal-title title title-up" id="modalLongTitle">Help</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                <i class="tim-icons icon-simple-remove"></i>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on proximity to a given location, while additionally providing options for a variety of categories, including shops, establishments and prominent points of interest.</p>
-              <hr>
-              <div class="card card-plain">
-                <div class="card-header">
-                  <h4 class="card-title"> Search Parameters</h4>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table tablesorter " id="">
-                      <thead class=" text-primary">
-                        <tr>
-                          <th>
-                            Parameter
-                          </th>
-                          <th>
-                            Type
-                          </th>
-                          <th>
-                            Explanation
-                          </th>
-                          <th class="text-center">
-                            Suggested Value
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            API Key
-                          </td>
-                          <td>
-                            <code>string</code>
-                          </td>
-                          <td>
-                            A general API key for Google's Web Service. All the required services have been enabled. The user could easily utilize his own key but for now the API key is provided automatically.
-                          </td>
-                          <td class="text-center">
-                            <code>Default</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Location Point 1
-                          </td>
-                          <td>
-                            <code>latitude, longtitude</code>
-                          </td>
-                          <td>
-                            Two numeric values in the form of <code>(latitude, longtitude)</code> which represent the first point delimiting the search area; e.g. (37.971673, 23.725863). In particular, this is the <b>South-West/Bottom-Left</b> delimiting point of the area that the user wants to search in.
-                          </td>
-                          <td class="text-center">
-                            <code>37.971673, 23.725863</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Location Point 2
-                          </td>
-                          <td>
-                            <code>latitude, longtitude</code>
-                          </td>
-                          <td>
-                            Identical to the previous parameter. It is effectively the <b>North-East/Top-Right</b> delimiting point of the area that the user wants to search in.
-                          </td>
-                          <td class="text-center">
-                            <code>37.990467, 23.755371</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Density Radius
-                          </td>
-                          <td>
-                            <code>numeric</code>
-                          </td>
-                          <td>
-                            A numeric value in the form of <b>meters</b> refering to the density that the Radar will use while searching. It does <b>not</b> represent the size of the circle that the user wants to search in. With a maximum (and default) value of up to 50,000 for radar search, a value of 180 has been chosen and adapted to very dense city areas.
-                          </td>
-                          <td class="text-center">
-                            <code>180(m) for Cities</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Type 1
-                          </td>
-                          <td>
-                            <code>dropdown option</code>
-                          </td>
-                          <td>
-                            Simply put, the type of Place the User wants to Search for, whether that is a bar or a clothing store.
-                          </td>
-                          <td class="text-center">
-                            <code>Bar</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Type 2
-                          </td>
-                          <td>
-                            <code>dropdown option</code>
-                          </td>
-                          <td>
-                            Additional Place type to include in the search; fully optional.
-                          </td>
-                          <td class="text-center">
-                            <code>None</code>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            All Places
-                          </td>
-                          <td>
-                            <code>boolean</code>
-                          </td>
-                          <td>
-                            An option to include Places in the results that do not feature any popular times information.
-                          </td>
-                          <td class="text-center">
-                            <code>Off</code>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </form>
       {% endif %}
       
@@ -365,6 +220,154 @@
   </div>
 </div>
 
+<!-- Modal -->        
+<div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-fix-position modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header justify-content-center">
+        <h5 class="modal-title title title-up" id="modalLongTitle">Help</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. The search is executed based on proximity to a given location, while additionally providing options for a variety of categories, including shops, establishments and prominent points of interest.</p>
+        <hr>
+        <div class="card card-plain">
+          <div class="card-header">
+            <h4 class="card-title"> Search Parameters</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table tablesorter " id="">
+                <thead class=" text-primary">
+                  <tr>
+                    <th>
+                      Parameter
+                    </th>
+                    <th>
+                      Type
+                    </th>
+                    <th>
+                      Explanation
+                    </th>
+                    <th class="text-center">
+                      Suggested Value
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      API Key
+                    </td>
+                    <td>
+                      <code>string</code>
+                    </td>
+                    <td>
+                      A general API key for Google's Web Service. All the required services have been enabled. The user could easily utilize his own key but for now the API key is provided automatically.
+                    </td>
+                    <td class="text-center">
+                      <code>Default</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Location Point 1
+                    </td>
+                    <td>
+                      <code>latitude, longtitude</code>
+                    </td>
+                    <td>
+                      Two numeric values in the form of <code>(latitude, longtitude)</code> which represent the first point delimiting the search area; e.g. (37.971673, 23.725863). In particular, this is the <b>South-West/Bottom-Left</b> delimiting point of the area that the user wants to search in.
+                    </td>
+                    <td class="text-center">
+                      <code>37.971673, 23.725863</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Location Point 2
+                    </td>
+                    <td>
+                      <code>latitude, longtitude</code>
+                    </td>
+                    <td>
+                      Identical to the previous parameter. It is effectively the <b>North-East/Top-Right</b> delimiting point of the area that the user wants to search in.
+                    </td>
+                    <td class="text-center">
+                      <code>37.990467, 23.755371</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Density Radius
+                    </td>
+                    <td>
+                      <code>numeric</code>
+                    </td>
+                    <td>
+                      A numeric value in the form of <b>meters</b> refering to the density that the Radar will use while searching. It does <b>not</b> represent the size of the circle that the user wants to search in. With a maximum (and default) value of up to 50,000 for radar search, a value of 180 has been chosen and adapted to very dense city areas.
+                    </td>
+                    <td class="text-center">
+                      <code>180(m) for Cities</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Type 1
+                    </td>
+                    <td>
+                      <code>dropdown option</code>
+                    </td>
+                    <td>
+                      Simply put, the type of Place the User wants to Search for, whether that is a bar or a clothing store.
+                    </td>
+                    <td class="text-center">
+                      <code>Bar</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Type 2
+                    </td>
+                    <td>
+                      <code>dropdown option</code>
+                    </td>
+                    <td>
+                      Additional Place type to include in the search; fully optional.
+                    </td>
+                    <td class="text-center">
+                      <code>None</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      All Places
+                    </td>
+                    <td>
+                      <code>boolean</code>
+                    </td>
+                    <td>
+                      An option to include Places in the results that do not feature any popular times information.
+                    </td>
+                    <td class="text-center">
+                      <code>Off</code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}
 

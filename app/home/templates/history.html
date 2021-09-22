@@ -362,7 +362,7 @@
                     </td>
                     <td>
                       <p class="title">Find Trending Places</p>
-                      <p class="text-muted">List all the hot as well as dead places that were included inthe search.</p>
+                      <p class="text-muted">List all the hot, as well as dead places, that were included inthe search.</p>
                     </td>
                     <td class="td-actions text-right">
                       <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
@@ -473,9 +473,10 @@
           data: {
               id: $(this).val(),
           },
+          context: $(this).parent(),
           url: "/delete-search",
           success: function(data){ 
-                  location.reload(); 
+                  this.remove(); 
                       },
           error: function(data){
                   if (data.status == 400) {
