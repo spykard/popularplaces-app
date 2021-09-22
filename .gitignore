@@ -29,4 +29,4 @@ package-lock.json
 .vscode/symbols.json
 
 # photoshop
-images/.psd
+*psd
