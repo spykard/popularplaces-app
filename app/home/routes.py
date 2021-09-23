@@ -350,7 +350,15 @@ def delete_search():
     if id == 0: abort(400)
 
     if current_user.is_authenticated:
-        Search.query.filter_by(id=id).delete()          
+        is_not_empty = db.session.query(Search).join(PlaceResult).filter(Search.id == id).first() 
+
+        if is_not_empty:
+            print("LOL")
+            Search.query.filter_by(id=id).update({"user_id": None})          
+        else:
+            print("LEL")
+            Search.query.filter_by(id=id).delete()
+
         db.session.commit() 
         return "true"
     else:

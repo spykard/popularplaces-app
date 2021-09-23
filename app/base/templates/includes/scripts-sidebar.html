@@ -70,7 +70,9 @@
           $graph_button2 = $('#2');                    
           $select_city_button = $('[name="selectcitybutton"]');
           $contact_me_button = $('#contactmebutton');   
-          $progress_bar = $('#progressbar');         
+          $progress_bar = $('#progressbar');
+          $grid_view_button = $('#gridView');
+          $table_view_button = $('#tableView');                   
           if ($login_button.length != 0) {
             $lastClass = $login_button.attr('class').split(' ').pop();
             $login_button.removeClass($lastClass);
@@ -135,7 +137,17 @@
             $lastClass = $progress_bar.attr('class').split(' ').pop();
             $progress_bar.removeClass($lastClass);
             $progress_bar.addClass('bg-' + new_button_color);                    
-          }          
+          }
+          if ($grid_view_button.length != 0) {
+            $firstClass = $grid_view_button.attr('class').split(' ')[0];
+            $grid_view_button.removeClass($firstClass);
+            $grid_view_button.attr('class', 'btn-' + new_button_color + ' ' + $grid_view_button.attr('class'));                  
+          } 
+          if ($table_view_button.length != 0) {
+            $firstClass = $table_view_button.attr('class').split(' ')[0];
+            $table_view_button.removeClass($firstClass);
+            $table_view_button.attr('class', 'btn-' + new_button_color + ' ' + $table_view_button.attr('class'));                  
+          }                               
 
           $.ajax({
             type: 'POST',

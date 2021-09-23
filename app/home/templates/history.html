@@ -36,7 +36,44 @@
 
   .places-table-scroll {
     max-height: 507px;  
+  } 
+
+  .pbox:hover {
+    border-color:  rgba(82,168,236,.8);
+    box-shadow: 0 0px 0px rgba(82,168,236,.8) inset, 0 0 8px rgba(82,168,236,.8);
+    outline: 0 none;
+  } 
+  
+  .box {
+    border-radius: 5px;
+    -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
+  
+  .box::after {
+    content: "";
+    border-radius: 5px;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  
+  .box:hover {
+    -webkit-transform: scale(1.15, 1.15);
+    transform: scale(1.15, 1.15);
+  }
+  
+  .box:hover::after {
+      opacity: 1;
+  }  
+
 </style>
 
 {% endblock stylesheets %}
@@ -152,7 +189,69 @@
         </div>
     </div>
 
+    <div class="row">        
+      <div class="col">
+        <div class="col-sm-12">
+          <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+            <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" id="gridView">
+              <input type="radio" name="options" checked>
+              <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Grid View</span>
+              <span class="d-block d-sm-none">
+                <i class="fas fa-th"></i>
+              </span>
+            </label>
+            <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" id="tableView">
+              <input type="radio" class="d-none d-sm-none" name="options">
+              <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Table View</span>
+              <span class="d-block d-sm-none">
+                <i class="fas fa-table"></i>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <br>
+
+    <div class="row">
+      <div id="gridData" class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row" id="selectcity">
+
+              <!-- <div class="card" style="width: 18rem;">
+                <img class="card-img-top" alt="...">
+                <div class="card-body position-relative">
+                  <h5 class="card-title">Card with stretched link</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="stretched-link">Go somewhere</a>
+                </div>
+              </div> -->
+
+              {# <div class="card-deck"> Either use "card-deck" or "col" for 2 different UI styles #}
+              {% for city in range(1, 10) %}
+                <div class="col">
+                  <div class="card box" style="width: 20rem;">
+                    <img class="card-img-top" src="" alt="City Banner">
+                    <div class="card-body">
+                      <h4 class="card-title"></h4>
+                      <p class="card-text"></p>
+                      <a href="#" name="selectcitybutton" val="" class="stretched-link btn-{{ current_user.ui_button }}">Select</a>
+                    </div>
+                    <div class="card-footer">
+                      <small class="text-muted">Number of Places in your Account:</small>
+                    </div>                
+                  </div>    
+                </div>  
+              {% endfor %}
+              {# </div> #}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="row" style="display: none;">
       <div class="col-12">
@@ -243,7 +342,7 @@
     </div>
     
     <div class="row">
-      <div class="col-lg-6 col-md-12 h-100">
+      <div id="tableData" class="col-lg-6 col-md-12 h-100" style="display: none;">
         <div class="card h-100">
           {# <div class="card-header">
             <h4 class="card-title">Places</h4>
@@ -329,7 +428,7 @@
         </div>
       </div>
 
-      <div class="col-lg-6 col-md-12 h-75">
+      <div id="actionData" class="col-lg-6 col-md-12 h-75" style="display: none;">
         <div class="card card-tasks h-75">
           <div class="card-header">
             <h4 class="title d-inline">Advanced Actions</h4>
@@ -466,6 +565,18 @@
         }
       }
     });
+
+    $('#gridView').click(function() {
+      $('#tableData').slideUp();
+      $('#actionData').slideUp(); 
+      $('#gridData').slideDown(); 
+    });
+
+    $('#tableView').click(function() {
+      $('#gridData').slideUp();
+      $('#tableData').slideDown(); 
+      $('#actionData').slideDown();      
+    });    
 
     $('[name="deletebutton"]').click(function() {
       $.ajax({
