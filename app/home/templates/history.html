@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Dashboard {% endblock %} 
+{% block title %} History {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -266,7 +266,7 @@
                       Current Popularity
                     </th>   
                     <th class="text-center">
-                      Trend
+                      Live Trend
                     </th>                                     
                   </tr>
                 </thead>
@@ -319,7 +319,7 @@
                       8
                     </td>
                     <td class="text-center">
-                      <p class="text-warning">-31</p>
+                      <p class="text-danger">-31</p>
                     </td>                    
                   </tr>                                    
                 </tbody>
@@ -489,53 +489,54 @@
       var divSelector = $("#" + $(this).attr('id').slice(0, -5));
       var id = divSelector.find("table > tbody > tr > :first-child").html();
 
+      if (id == 0) {
+        // Update the Table
+        var tableSelector = $("#places_table");       
+        
+        tableSelector.find("tbody > tr").remove();  // Wipe        
+        
+        var content = '<tr><td> La Grande Boucherie </td><td> 145 W 53rd St, New York, NY 10019, United States </td><td class="text-center"> 4.5 (578) </td><td class="text-center"> 84 </td><td class="text-center"> <p class="text-success">+40</p></td></tr><tr> <td> Petrossian Boutique & Cafe </td><td> 253 W 51st St, New York, NY 10019, United States </td><td class="text-center"> 4.6 (1632) </td><td class="text-center"> 52 </td><td class="text-center"> <p class="text-success">+16</p></td></tr><tr> <td> Brooklyn Diamond Coffee </td><td> 240 E 54th St, New York, NY 10022, United States </td><td class="text-center"> 4.1 (81) </td><td class="text-center"> 8 </td><td class="text-center"> <p class="text-danger">-31</p></td></tr>'
+
+        tableSelector.children("tbody").append(content);
+      }
+      else {
       $.ajax({
-          type: 'POST',
-          data: {
-              id: id,
-          },
-          url: "/get-place-results",
-          success: function(data){ 
-                  console.log(data);  // JSON.stringify
+            type: 'POST',
+            data: {
+                id: id,
+            },
+            url: "/get-place-results",
+            success: function(data){ 
+                    //console.log(data);  // JSON.stringify
 
-                  // Update the Table
-                  var tableSelector = $("#places_table");
+                    // Update the Table
+                    var tableSelector = $("#places_table");
 
-                  tableSelector.find("tbody > tr").remove();  // Wipe
+                    tableSelector.find("tbody > tr").remove();  // Wipe
 
-                  for (i = 0; i < data.length; i++) {  // Rebuild 
-                    var content = "<tr>"; 
-                    
-                    content += "<td>" + data[i].name + "</td>";
-                    content += "<td>" + data[i].address + "</td>";
-                    content += "<td class='text-center'>" + data[i].rating + "</td>";
-                    content += "<td class='text-center'>" + data[i].current_popularity + "</td>";
+                    for (i = 0; i < data.length; i++) {  // Rebuild 
+                      var content = "<tr>"; 
+                      
+                      content += "<td>" + data[i].name + "</td>";
+                      content += "<td>" + data[i].address + "</td>";
+                      content += "<td class='text-center'>" + data[i].rating + "</td>";
+                      content += "<td class='text-center'>" + data[i].current_popularity + "</td>";
 
-                    if (data[i].difference > 0) {content += "<td class='text-center'><p class='text-success'>" + data[i].difference + "</p></td>";}
-                    else if (data[i].difference < 0) {content += "<td class='text-center'><p class='text-danger'>" + data[i].difference + "</p></td>";}
-                    else {content += "<td class='text-center'><p>" + data[i].difference + "</p></td>";}
+                      if (data[i].difference == "") {content += "<td class='text-center'><p class='text-muted'>N/A</p></td>";}
+                      else if (data[i].difference > 0) {content += "<td class='text-center'><p class='text-success'>" + data[i].difference + "</p></td>";}
+                      else if (data[i].difference < 0) {content += "<td class='text-center'><p class='text-danger'>" + data[i].difference + "</p></td>";}
+                      else {content += "<td class='text-center'><p>" + data[i].difference + "</p></td>";}
 
-                    content += "</tr>";
+                      content += "</tr>";
 
-                    tableSelector.children("tbody").append(content);
-                  }
-
-                  
-
-                  {# var content = "<table>"
-                  for(i=0; i<3; i++){
-                      content += '<tr><td>' + 'result ' +  i + '</td></tr>';
-                  }
-                  content += "</table>"
-
-                  $('#here_table').append(content); #}
-
-
-                      },
-          error: function(data){
-                  demo.showNotification('top','center', 'true', 'Data Request Error.');    
-                      },
-      });
+                      tableSelector.children("tbody").append(content);
+                    }
+                        },
+            error: function(data){
+                    demo.showNotification('top','center', 'true', 'Data Request Error.');    
+                        },
+        });
+      }
     }); 
 
 

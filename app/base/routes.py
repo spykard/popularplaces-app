@@ -22,12 +22,18 @@ from app.base.util import verify_pass
 @blueprint.route('/')
 def route_default():
     session['colors'] = True 
+    session['intro'] = True     
     return redirect(url_for('base_blueprint.login'))
 
 @blueprint.route('/hide-colors', methods=['POST'])
 def hide_colors():
     session['colors'] = False
-    return "true" 
+    return "true"
+
+@blueprint.route('/hide-intro', methods=['POST'])
+def hide_intro():
+    session['intro'] = False
+    return "true"
 
 @blueprint.route('/update-ui-color-preference', methods=['POST'])
 def update_ui_color_preferences():

@@ -25,10 +25,16 @@
               <p>History</p>
             </a>
           </li> 
+          <li class="{% if 'places-data' in segment %} active {% endif %}">
+            <a href="/places-data">
+              <i class="tim-icons icon-single-copy-04"></i>
+              <p>My Places - Data</p>
+            </a>
+          </li>          
           <li class="{% if 'places' in segment %} active {% endif %}">
             <a href="/places">
               <i class="tim-icons icon-pin"></i>
-              <p>My Places</p>
+              <p>My Places - Manage</p>
             </a>
           </li>                     
           <li class="{% if 'page-user' in segment %} active {% endif %}">

@@ -70,7 +70,8 @@ class Place(db.Model):
     global_place = Column(Integer, server_default='global_place')   
     city_id = Column(String, ForeignKey('City.id'))
     time = Column(DateTime, server_default='time') 
-    verification = Column(String, server_default='verification')        
+    verification = Column(String, server_default='verification')  
+    global_id = Column(Integer, ForeignKey('PlaceGlobal.id'))      
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -141,6 +142,30 @@ class City(db.Model):
     def __repr__(self):
         return str(self.id) 
 
+class PlaceGlobal(db.Model):
+
+    __tablename__ = 'PlaceGlobal'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, unique=True)       
+    address = Column(String, server_default='description') 
+    time = Column(DateTime, server_default='time') 
+    city_id = Column(String, ForeignKey('City.id'))
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+                
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.id)         
+
 class PlaceResult(db.Model):
 
     __tablename__ = 'PlaceResult'
@@ -155,7 +180,8 @@ class PlaceResult(db.Model):
     name = Column(String, server_default='name')       
     address = Column(String, server_default='description')    
     current_popularity = Column(Integer, server_default='current_popularity')
-    difference = Column(Integer, server_default='difference')             
+    difference = Column(Integer, server_default='difference')
+    global_id = Column(Integer, ForeignKey('PlaceGlobal.id'))                 
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

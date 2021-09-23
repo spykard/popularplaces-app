@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Page Blank {% endblock %} 
+{% block title %} My Places - Manage {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -36,8 +36,8 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th class="text-right">                                
-                                    <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
+                                    <th class="text-right">    
+                                    <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" data-toggle="modal" data-target="#addPlaceModal">
                                         <i class="tim-icons icon-simple-add"></i>
                                     </button>                                
                                     </th>
@@ -68,7 +68,7 @@
                                             <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open('https://maps.google.com/?q=' + '{{ place["name"] }}' + ' ' + '{{ place["address"] }}');">
                                                 <i class="tim-icons icon-pin"></i>
                                             </button>
-                                            <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm" value="{{ place['id'] }}">
+                                            <button type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm" data-toggle="modal" data-target="#removePlaceModal" data-value="{{ place['id'] }}">
                                                 <i class="tim-icons icon-simple-remove"></i>
                                             </button>
                                         </td>
@@ -85,7 +85,7 @@
                                     <td></td>                                
                                     <td></td>                                                                                                
                                     <td class="text-right">
-                                    <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" onclick="return false;" data-toggle="modal" data-target="#addPlaceModal">
+                                    <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" data-toggle="modal" data-target="#addPlaceModal">
                                         <i class="tim-icons icon-simple-add"></i>
                                     </button> 
                                     </td>                                
@@ -192,18 +192,15 @@
 {% block javascripts %}
 
 <script>
-    $('[name="deletebutton"]').click(function() {
-        var id = $(this).val();
-
-        $("#removePlaceModal").modal({});  // Activates the content as a modal with default options.
+    $('#removePlaceModal').on('show.bs.modal', function(event) {
+        var id = $(event.relatedTarget).data('value')  // Extract info from data-* attributes
+        // $("#removePlaceModal").modal({});  // Activates the content as a modal with default options.
         $('[name="deletebuttonModal"]').attr('value', id);  // Stores an important value inside the Button
-        $("#removePlaceModal").modal('show');
 
         $('[name="deletebuttonModal"]').unbind('click');
 
         $('[name="deletebuttonModal"]').click(function() {
             $("#removePlaceModal").modal('hide');
-            // $("#removePlaceModal").modal('dispose');
             $.ajax({
                 type: 'POST',
                 data: {
@@ -211,7 +208,7 @@
                 },                
                 url: "/delete-place",
                 success: function(data){ 
-                        $('.td-actions :button[value=\"' + this.data.slice(3) + '\"]').parent().parent().hide();
+                        $('.td-actions :button[data-value=\"' + this.data.slice(3) + '\"]').parent().parent().hide();
                             },
                 error: function(data){
                         if (data.status == 400) {
@@ -219,7 +216,7 @@
                             }},
             });
         }); 
-    });    
+    });   
 
     $('[name="addbuttonModal"]').click(function() {
         var submitFlag = true;

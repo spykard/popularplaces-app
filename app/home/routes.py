@@ -10,7 +10,7 @@ from app import db, login_manager
 from sqlalchemy import func, nullslast
 from jinja2 import TemplateNotFound
 from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAdvanced, AddPlaceForm
-from app.base.models import User, Place, Search, City, PlaceResult
+from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal
 from app.base.util import hash_pass
 from datetime import datetime
 import populartimes
@@ -195,7 +195,7 @@ def history():
 @login_required
 def places():
     # Load Cities
-    places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(Place.time.asc()).all() 
+    places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(Place.id.asc()).all() 
     place_dicts = []
     count = 1
     for place in places:
@@ -227,15 +227,22 @@ def places():
             insert_dict = dict([("name" , city)])
             city_to = City(**insert_dict)
             db.session.add(city_to)
-            db.session.commit()         
+            db.session.commit()     
 
-        insert_dict = dict([("name" , name), ("address" , address), ("type_p" , type_p), ("user_id" , current_user.id), ("city_id" , city_to.id)])
+        placeglobal_to = db.session.query(PlaceGlobal).filter((PlaceGlobal.name == name) & (PlaceGlobal.city_id == city_to.id)).first()
+        if not placeglobal_to:
+            insert_dict = dict([("name" , name), ("address" , address), ("city_id" , city_to.id)])
+            placeglobal_to = PlaceGlobal(**insert_dict)
+            db.session.add(placeglobal_to)
+            db.session.commit()                  
+
+        insert_dict = dict([("name" , name), ("address" , address), ("type_p" , type_p), ("user_id" , current_user.id), ("city_id" , city_to.id), ("global_id" , placeglobal_to.id)])
         place_to = Place(**insert_dict)
         db.session.add(place_to)
         db.session.commit()
 
         # Load Cities
-        places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(Place.time.asc()).all() 
+        places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(Place.id.asc()).all() 
         place_dicts = []
         count = 1
         for place in places:
@@ -414,7 +421,7 @@ def search_populartimes(city, type1, type2, all_places):
             #     data["time_wait"] = None
 
             # Write Data to DB
-            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("current_popularity" , data["current_popularity"]), difference])
+            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("current_popularity" , data["current_popularity"]), difference, ("global_id", place[3])])
             placeresult = PlaceResult(**insert_dict)
             db.session.add(placeresult)
             db.session.commit()
@@ -467,19 +474,18 @@ def get_places_to_search(city, type1, type2, all_places):
     city_id = City.query.filter_by(name=city).first()
     if type2 != "Choose...":
         if all_places == 0:
-            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & ((Place.type_p == type1) | (Place.type_p == type2)) & (Place.verification != "False")).order_by(Place.time.asc()).all()
+            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & ((Place.type_p == type1) | (Place.type_p == type2)) & (Place.verification != "False")).order_by(Place.id.asc()).all()
         else:
-            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & ((Place.type_p == type1) | (Place.type_p == type2))).order_by(Place.time.asc()).all()
+            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & ((Place.type_p == type1) | (Place.type_p == type2))).order_by(Place.id.asc()).all()
     else:
         if all_places == 0:
-            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & (Place.type_p == type1) & (Place.verification != "False")).order_by(Place.time.asc()).all()
+            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & (Place.type_p == type1) & (Place.verification != "False")).order_by(Place.id.asc()).all()
         else:
-            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & (Place.type_p == type1)).order_by(Place.time.asc()).all()            
+            places = db.session.query(Place).join(City).filter((Place.city_id == city_id.id) & ((Place.user_id == current_user.id) | (Place.global_place == 1)) & (Place.type_p == type1)).order_by(Place.id.asc()).all()            
 
     places_list = []
-    count = 1
     for place in places:
-        places_list.append((place.id, place.name, place.address))
+        places_list.append((place.id, place.name, place.address, place.global_id))
     
     return places_list
 
