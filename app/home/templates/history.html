@@ -6,14 +6,6 @@
 {% block stylesheets %}
 
 <style>
-  .list-group-item-darkerer {
-    color: rgba(255, 255, 255, 0.8);
-    background: linear-gradient(to bottom, #222a42 0%, #1d253b 100%);
-    {# background: rgba(39, 41, 61, 1); #}
-    border: 1px solid #344675;
-    border-color: #101420 !important;  
-  }
-
   .list-group-item-action {
     line-height: 1.0;
   }
@@ -37,14 +29,24 @@
   .places-table-scroll {
     max-height: 507px;  
   } 
-
-  .pbox:hover {
-    border-color:  rgba(82,168,236,.8);
-    box-shadow: 0 0px 0px rgba(82,168,236,.8) inset, 0 0 8px rgba(82,168,236,.8);
-    outline: 0 none;
-  } 
   
+  .flex-fix-margin {
+    margin: 18px 3px 18px 3px;
+  }
+
+  .card .card-body {
+    padding-bottom: 0px;
+  }
+
+  .card .card-footer {
+    padding-top: 0px;
+  }  
+
   .box {
+    width: 12rem;
+    {# max-width: 18rem;
+    padding-right: 15px;
+    padding-left: 15px;#}
     border-radius: 5px;
     -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -59,21 +61,56 @@
     left: 0;
     width: 100%;
     height: 100%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    {#box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);#}
     opacity: 0;
     -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   
   .box:hover {
-    -webkit-transform: scale(1.15, 1.15);
-    transform: scale(1.15, 1.15);
+    -webkit-transform: scale(1.12, 1.12);
+    transform: scale(1.12, 1.12);
   }
   
   .box:hover::after {
       opacity: 1;
   }  
 
+  @media (max-width: 320px) {
+    .box {
+      min-width: 84%;
+    }
+  }
+
+  @media (min-width: 320px) {
+    .box {
+      min-width: 58%;
+    }
+  }  
+
+  @media (min-width: 576px) {
+    .box {
+      min-width: 38%;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .box {
+      min-width: 28%;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .box {
+      min-width: 23%;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .box {
+      min-width: 20%;
+    }
+  }
 </style>
 
 {% endblock stylesheets %}
@@ -102,7 +139,7 @@
 
     <div class="row">
       <div id="searchHistoryList" class="col overflow-auto" style="max-height: 236px;">
-        <div class="list-group" id="list-tab" role="tablist">
+        <div id="helptooltip1" class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %} active" id="list-example-list" data-toggle="list" href="#list-example" role="tab" aria-controls="example">
             Sample Search
             <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm" value="0" style="height: 0.35rem; width: 0.35rem;">
@@ -192,7 +229,7 @@
     <div class="row">        
       <div class="col">
         <div class="col-sm-12">
-          <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+          <div id="helptooltip2" class="btn-group btn-group-toggle float-right" data-toggle="buttons">
             <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" id="gridView">
               <input type="radio" name="options" checked>
               <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Grid View</span>
@@ -218,35 +255,119 @@
       <div id="gridData" class="col-md-12">
         <div class="card">
           <div class="card-body">
-            <div class="row" id="selectcity">
-
-              <!-- <div class="card" style="width: 18rem;">
-                <img class="card-img-top" alt="...">
-                <div class="card-body position-relative">
-                  <h5 class="card-title">Card with stretched link</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="stretched-link">Go somewhere</a>
-                </div>
-              </div> -->
-
+            <div class="row flex-fix-margin">
               {# <div class="card-deck"> Either use "card-deck" or "col" for 2 different UI styles #}
-              {% for city in range(1, 10) %}
-                <div class="col">
-                  <div class="card box" style="width: 20rem;">
-                    <img class="card-img-top" src="" alt="City Banner">
-                    <div class="card-body">
-                      <h4 class="card-title"></h4>
-                      <p class="card-text"></p>
-                      <a href="#" name="selectcitybutton" val="" class="stretched-link btn-{{ current_user.ui_button }}">Select</a>
+              <div id="helptooltip3" class="col box">
+                <div class="card trending">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-4">                      
+                      </div>
+                      <div class="col-4">
+                        <div class="count-up-example-1 place-number text-center" data-from="0" data-to="84" data-time="400">
+                          0
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <i class="tim-icons icon-minimal-up place-trend-up"></i>
+                        <div class="place-trend-up" data-from="0">
+                          40
+                        </div>
+                      </div>
                     </div>
-                    <div class="card-footer">
-                      <small class="text-muted">Number of Places in your Account:</small>
-                    </div>                
-                  </div>    
-                </div>  
-              {% endfor %}
-              {# </div> #}
-
+                  </div>
+                  <div class="card-body place-title">
+                    <h4 class="card-title">La Grande Boucherie</h4>
+                    {# <p class="card-text"> </p> #}
+                  </div>
+                  <div class="card-footer container">                  
+                    <small class="text-muted">145 W 53rd St, New York, NY 10019, United States</small>
+                    <div class="row">
+                      <div class="col">
+                      </div>
+                      <div class="col-auto">
+                      </div>
+                      <div class="col col-2 float-right">
+                        <i class="fas fa-info-circle"></i>
+                      </div>
+                    </div>
+                  </div>                
+                </div>    
+              </div>  
+              <div class="col box">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-4">                      
+                      </div>
+                      <div class="col-4">
+                        <div class="count-up-example-2 place-number text-center" data-from="0" data-to="52" data-time="400">
+                          0
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <i class="tim-icons icon-minimal-up place-trend-up"></i>
+                        <div class="place-trend-up" data-from="0">
+                          16
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body place-title">
+                    <h4 class="card-title">Petrossian Boutique & Cafe</h4>
+                    {# <p class="card-text"> </p> #}
+                  </div>
+                  <div class="card-footer container">                  
+                    <small class="text-muted">253 W 51st St, New York, NY 10019, United States</small>
+                    <div class="row">
+                      <div class="col">
+                      </div>
+                      <div class="col-auto">
+                      </div>
+                      <div class="col col-2 float-right">
+                        <i class="fas fa-info-circle"></i>
+                      </div>
+                    </div>
+                  </div>                
+                </div>    
+              </div>             
+              <div class="col box">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-4">                      
+                      </div>
+                      <div class="col-4">
+                        <div class="count-up-example-3 place-number text-center" data-from="0" data-to="8" data-time="400">
+                          0
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <i class="tim-icons icon-minimal-up place-trend-down"></i>
+                        <div class="place-trend-down" data-from="0">
+                          31
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body place-title">
+                    <h4 class="card-title">Brooklyn Diamond Coffee</h4>
+                    {# <p class="card-text"> </p> #}
+                  </div>
+                  <div class="card-footer container">                  
+                    <small class="text-muted">240 E 54th St, New York, NY 10022, United States	</small>
+                    <div class="row">
+                      <div class="col">
+                      </div>
+                      <div class="col-auto">
+                      </div>
+                      <div class="col col-2 float-right">
+                        <i class="fas fa-info-circle"></i>
+                      </div>
+                    </div>
+                  </div>                
+                </div>    
+              </div>                                         
             </div>
           </div>
         </div>
@@ -296,7 +417,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <div class="row" style="display: none;">
@@ -464,7 +584,7 @@
                       <p class="text-muted">List all the hot, as well as dead places, that were included inthe search.</p>
                     </td>
                     <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
+                      <button type="button" class="btn btn-link">
                         <i class="tim-icons icon-double-right"></i>
                       </button>
                     </td>
@@ -485,7 +605,7 @@
                       <p class="text-muted">Execute advanced data analysis per places with the use of Statistical Methods.</p>
                     </td>
                     <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
+                      <button type="button" class="btn btn-link">
                         <i class="tim-icons icon-double-right"></i>
                       </button>
                     </td>
@@ -506,7 +626,7 @@
                       <p class="text-muted">Visualize the results on a map in the form of circles.</p>
                     </td>
                     <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
+                      <button type="button" class="btn btn-link">
                         <i class="tim-icons icon-double-right"></i>
                       </button>
                     </td>
@@ -527,7 +647,7 @@
                       <p class="text-muted">Codebase Improvements.</p>
                     </td>
                     <td class="td-actions text-right">
-                      <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Go Task">
+                      <button type="button" class="btn btn-link">
                         <i class="tim-icons icon-double-right"></i>
                       </button>
                     </td>
@@ -546,6 +666,9 @@
 {% block javascripts %}
 
   <script>
+    const container = document.querySelector('.main-panel');
+
+    // DOCUMENT READY
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js
       demo.initDashboardPageCharts();
@@ -564,8 +687,33 @@
           });
         }
       }
-    });
 
+      $('.count-up-example-1').counter();
+      $('.count-up-example-2').counter();
+      $('.count-up-example-3').counter();
+
+      // Hints
+      {% if current_user.total_runs < 2 %}
+        var template = '<div class="tooltip {% if current_user.ui_theme == 'light' %}bs-tooltip-top-white{% endif %}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner {% if current_user.ui_theme == 'light' %}tooltip-inner-white{% endif %}"></div></div>';
+        $('#helptooltip1').tooltip({trigger: 'manual', template: template, title: "Previous Searches"}).tooltip('show');      
+        $('#helptooltip2').tooltip({trigger: 'manual', template: template, title: "Change View"}).tooltip('show');
+        $('#helptooltip3').tooltip({trigger: 'manual', template: template, title: "Click Me"}).tooltip('show');
+
+        container.addEventListener('ps-scroll-down', function() {
+          $('#helptooltip1').tooltip('hide');
+          $('#helptooltip2').tooltip('hide');
+          $('#helptooltip3').tooltip('hide');
+        }, { once: true });  // Call only once, then remove itself
+
+        container.addEventListener('click', function() {
+          $('#helptooltip1').tooltip('hide');
+          $('#helptooltip2').tooltip('hide');
+          $('#helptooltip3').tooltip('hide');
+        }, { once: true });  // Call only once, then remove itself       
+      {% endif %}             
+    }); 
+
+    // View Mode Buttons
     $('#gridView').click(function() {
       $('#tableData').slideUp();
       $('#actionData').slideUp(); 
@@ -578,6 +726,7 @@
       $('#actionData').slideDown();      
     });    
 
+    // Delete Search Button
     $('[name="deletebutton"]').click(function() {
       $.ajax({
           type: 'POST',
@@ -596,6 +745,7 @@
       });
     }); 
 
+    // Sample Search
     $('.list-group-item-action').click(function() {
       var divSelector = $("#" + $(this).attr('id').slice(0, -5));
       var id = divSelector.find("table > tbody > tr > :first-child").html();
@@ -649,8 +799,34 @@
         });
       }
     }); 
+  </script>
 
+  <script>
+    // Helper Function - Counter
+    (function ($){
+      $.fn.counter = function() {
+        const $this = $(this),
+        numberFrom = parseInt($this.attr('data-from')),
+        numberTo = parseInt($this.attr('data-to')),
+        delta = numberTo - numberFrom,
+        deltaPositive = delta > 0 ? 1 : 0,
+        time = parseInt($this.attr('data-time')),
+        changeTime = 10;
+        
+        let currentNumber = numberFrom,
+        value = delta*changeTime/time;
+        var interval1;
+        const changeNumber = () => {
+          currentNumber += value;
+          //checks if currentNumber reached numberTo
+          (deltaPositive && currentNumber >= numberTo) || (!deltaPositive &&currentNumber<= numberTo) ? currentNumber=numberTo : currentNumber;
+          this.text(parseInt(currentNumber));
+          currentNumber == numberTo ? clearInterval(interval1) : currentNumber;  
+        }
 
+        interval1 = setInterval(changeNumber,changeTime);
+      }
+    }(jQuery));  
   </script>
 
 {% endblock javascripts %}

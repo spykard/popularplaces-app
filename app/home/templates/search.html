@@ -10,6 +10,36 @@
     word-break: normal
   }
 
+  @media (max-width: 576px) {
+    .box {
+      min-width: 60%;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .box {
+      min-width: 50%;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .box {
+      min-width: 40%;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .box {
+      min-width: 30%;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .box {
+      min-width: 20%;
+    }
+  } 
+
   .btn.dropdown-toggle[data-toggle="dropdown"] {
     margin-top: 4px;
     margin-bottom: 4px;
@@ -23,23 +53,6 @@
   .btn-group>.btn+.dropdown-toggle-split {  
     padding-left: 0px;
   } 
-
-  .btn.btn-fill.btn-less-wide {  
-    padding-right: 32px;
-    padding-left: 32px;
-  } 
-
-  .bg-primary {  
-    background-color: #e14eca;
-  } 
-
-  .bg-info {  
-    background-color: #007bff;
-  }   
-
-  .bg-success {  
-    background-color: #28a745;
-  }   
 
   .modal-fix-position {
     top: -18.3vh;
@@ -91,13 +104,15 @@
         </h6>      
       </div>
 
+      <div id="helptooltip1"></div>
+
       <div class="card-body">
         <div class="row" id="selectcity">
 
           {# <div class="card-deck"> Either use "card-deck" or "col" for 2 different UI styles #}
           {% for city in cities %}
-            <div class="col">
-              <div class="card" style="width: 20rem;">
+            <div class="col box">
+              <div class="card">
                 <img class="card-img-top" src="{{ city['image_link'] }}" alt="City Banner">
                 <div class="card-body">
                   <h4 class="card-title">{{ city['name'] }}</h4>
@@ -216,22 +231,24 @@
       </div>
       
       <div class="card-footer">
-        <div class="btn-group" data-toggle="tooltip" data-placement="top" title="Please Select a City">        
+        <div id="searchdiv" class="btn-group">        
           {% if current_user.premium_enabled == 0 %}
-          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}">Search &nbsp;<span class="badge badge-default" {{'disabled' if not show_search_panel }}>Free: {{ current_user.free_runs_remaining }}</span></button>
+          <button type="submit" id="search" name="search" class="btn btn-fill btn-fill-less-wide btn-{{ current_user.ui_button }}" {{'disabled' if not show_search_panel }}>Search &nbsp;<span class="badge badge-default">Free: {{ current_user.free_runs_remaining }}</span></button>
           {% else %}
-          <button type="submit" id="search" name="search" class="btn btn-fill btn-less-wide btn-{{ current_user.ui_button }}" {{'disabled' if not show_search_panel }}>Search</button>
+          <button type="submit" id="search" name="search" class="btn btn-fill btn-fill-less-wide btn-{{ current_user.ui_button }}" {{'disabled' if not show_search_panel }}>Search</button>
           {% endif %}
           <button type="button" id="searchdropdown" class="btn dropdown-toggle dropdown-toggle-split btn-{{ current_user.ui_button }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div id="dropdownmenu" class="dropdown-menu {% if current_user.ui_theme == 'dark' %}dropdown-black{% endif %}">
-            <a class="dropdown-item" href="/places">Add Places</a>
             <a class="dropdown-item" href="/search-advanced">Advanced Search</a>
           </div>
         </div>
 
         <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->
+        <button class="btn btn-simple btn-simple-less-wide btn-{{ current_user.ui_button }}" onclick="location.href='/places'; return false;">
+            <i class="tim-icons icon-simple-add"></i>
+        </button>
       </div>
 
       <div id="progressbar" class="progress" style="display: none; height: 7px;">
@@ -358,6 +375,8 @@
 {% block javascripts %}
 
   <script>
+    const container = document.querySelector('.main-panel');
+
     $('#type1').val('{{ current_user.settings_type1 }}');
     $('#type2').val('{{ current_user.settings_type2 }}');
 
@@ -368,6 +387,21 @@
     
       $('[data-toggle="tooltip"]').tooltip()
 
+      var template = '<div class="tooltip {% if current_user.ui_theme == 'light' %}bs-tooltip-top-white{% endif %}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner {% if current_user.ui_theme == 'light' %}tooltip-inner-white{% endif %}"></div></div>';        
+      $('#searchdiv').tooltip({template: template, title: "Please Select a City"}); 
+
+      // Hints
+      {% if current_user.total_runs < 2 %}
+        $('#helptooltip1').tooltip({trigger: 'manual', template: template, title: "Select Existing or Add Your Own"}).tooltip('show');      
+
+        container.addEventListener('ps-scroll-down', function() {
+          $('#helptooltip1').tooltip('hide');
+        }, { once: true });  // Call only once, then remove itself
+
+        container.addEventListener('click', function() {
+          $('#helptooltip1').tooltip('hide');
+        }, { once: true });  // Call only once, then remove itself       
+      {% endif %} 
     });
 
     $('[name="selectcitybutton"]').click(function() {   

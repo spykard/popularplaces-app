@@ -43,3 +43,80 @@ select.dark-content option {
   border-color: #ecdcea;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
+
+
+.list-group-item-darkerer {
+  color: rgba(255, 255, 255, 0.8);
+  background: linear-gradient(to bottom, #222a42 0%, #1d253b 100%);
+  {# background: rgba(39, 41, 61, 1); #}
+  border: 1px solid #344675;
+  border-color: #101420 !important;  
+}
+
+.tooltip-inner-white {
+  background-color: #222a42 !important;
+  color: #ffffff;
+}
+.bs-tooltip-top-white .arrow::before, .bs-tooltip-auto[x-placement^="top"] .arrow::before {
+  border-top-color: #222a42 !important;
+}
+
+.bs-tooltip-right-white .arrow::before, .bs-tooltip-auto[x-placement^="right"] .arrow::before {
+  border-right-color: #222a42 !important;
+}
+
+.bs-tooltip-bottom-white .arrow::before, .bs-tooltip-auto[x-placement^="bottom"] .arrow::before {
+  border-bottom-color: #222a42 !important;
+}
+
+.bs-tooltip-left-white .arrow::before, .bs-tooltip-auto[x-placement^="left"] .arrow::before {
+  border-left-color: #222a42 !important;
+}
+
+.assistancelink {
+  font-size: 0.7rem;
+}
+
+.btn-fill-less-wide {  
+  padding-right: 32px;
+  padding-left: 32px;
+} 
+
+.btn-simple-less-wide {
+  padding: 9px 12px 11px 12px;    
+}
+
+.bg-primary {  
+  background-color: #e14eca;
+} 
+
+.bg-info {  
+  background-color: #007bff;
+}   
+
+.bg-success {  
+  background-color: #28a745;
+}   
+
+.place-number {
+  line-height: 1.2;
+  margin-bottom: 10px;
+  word-wrap: normal;
+  font-size: 2.0625rem;  
+}
+
+.place-trend-up {
+  color: #00f2c3;
+  word-wrap: normal;    
+}
+
+.place-trend-down {
+  color: #fd5d93;
+  word-wrap: normal;    
+}  
+
+.trending {
+  border-color: rgba(82,168,236,.8);
+  box-shadow: 0 0px 0px rgba(82,168,236,.8) inset, 0 0 8px rgba(82,168,236,.8);
+  outline: 0 none;
+} 

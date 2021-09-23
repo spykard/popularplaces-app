@@ -39,7 +39,8 @@ class User(db.Model, UserMixin):
     ui_color = Column(String, server_default='ui_color')
     ui_theme = Column(String, server_default='ui_theme')      
     ui_button = Column(String, server_default='ui_theme')       
-    superadmin = Column(Integer, server_default='superadmin')       
+    superadmin = Column(Integer, server_default='superadmin')     
+    total_runs = Column(Integer, server_default='total_runs')      
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

@@ -67,7 +67,8 @@ def search():
         current_user.settings_type1 = type1
         current_user.settings_type2 = type2
         current_user.settings_all_places = all_places
-        if current_user.premium_enabled == 0: current_user.free_runs_remaining = current_user.free_runs_remaining-1
+        current_user.total_runs += 1
+        if current_user.premium_enabled == 0: current_user.free_runs_remaining -= 1
         db.session.commit()            
 
         # Main
