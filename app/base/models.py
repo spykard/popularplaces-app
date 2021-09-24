@@ -180,9 +180,10 @@ class PlaceResult(db.Model):
     search_id = Column(Integer, ForeignKey('Search.id'))
     name = Column(String, server_default='name')       
     address = Column(String, server_default='description')    
-    current_popularity = Column(Integer, server_default='current_popularity')
+    usual_popularity = Column(Integer, server_default='usual_popularity')
     difference = Column(Integer, server_default='difference')
-    global_id = Column(Integer, ForeignKey('PlaceGlobal.id'))                 
+    global_id = Column(Integer, ForeignKey('PlaceGlobal.id'))
+    live_popularity = Column(Integer, server_default='live_popularity')                     
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

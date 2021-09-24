@@ -335,12 +335,12 @@ def page_user():
 def get_place_results():
     id = int(request.form['id'])
     #data = db.session.query(Place).filter((Place.id == id) & (Place.global_place == 1)).all()
-    place_results = db.session.query(PlaceResult).join(Search).filter(Search.id == id).order_by(nullslast(PlaceResult.current_popularity.desc()), nullslast(PlaceResult.rating_num.desc())).all() 
+    place_results = db.session.query(PlaceResult).join(Search).filter(Search.id == id).order_by(nullslast(PlaceResult.live_popularity.desc()), nullslast(PlaceResult.usual_popularity.desc())).all() 
 
     data = []
-    converter = lambda i : i or ''  # Convert None to empty string
+    #converter = lambda i : i or ''  # Convert None to empty string
     for place_result in place_results:
-        data.append({'name': place_result.name, 'address': place_result.address, 'rating': str(converter(place_result.rating)) + " (" + str(converter(place_result.rating_num)) + ")", 'popular_times': converter(place_result.popular_times),  'time_spent': converter(place_result.time_spent), 'current_popularity': converter(place_result.current_popularity), 'difference': converter(place_result.difference)})   
+        data.append({'name': place_result.name, 'address': place_result.address, 'rating': str(converter(place_result.rating)) + " (" + str(converter(place_result.rating_num)) + ")", 'popular_times': converter(place_result.popular_times),  'time_spent': converter(place_result.time_spent), 'usual_popularity': converter(place_result.usual_popularity), 'difference': converter(place_result.difference), 'live_popularity': converter(place_result.live_popularity)})   
 
     return jsonify(data)
 
@@ -415,13 +415,16 @@ def search_populartimes(city, type1, type2, all_places):
             if data["populartimes"]:
                 Place.query.filter_by(id=place[0]).update({"verification": "True"})
 
+                usual_popularity = ("usual_popularity", data["populartimes"][current_time.weekday()]["data"][current_time.hour])
+
                 if data["current_popularity"]:
-                    difference = ("difference", data["current_popularity"] - data["populartimes"][current_time.weekday()]["data"][current_time.hour])
+                    difference = ("difference", data["current_popularity"] - usual_popularity[1])
                 else:
                     difference = ("difference", None)
 
             else:
                 Place.query.filter_by(id=place[0]).update({"verification": "False"}) 
+                usual_popularity = ("usual_popularity", None)
                 difference = ("difference", None)
 
             # db.session.commit() 
@@ -430,7 +433,7 @@ def search_populartimes(city, type1, type2, all_places):
             #     data["time_wait"] = None
 
             # Write Data to DB
-            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("current_popularity" , data["current_popularity"]), difference, ("global_id", place[3])])
+            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("live_popularity" , data["current_popularity"]), difference, ("global_id", place[3]), usual_popularity])
             placeresult = PlaceResult(**insert_dict)
             db.session.add(placeresult)
             db.session.commit()
@@ -466,6 +469,11 @@ def search_populartimes_advanced(api_key, p1, p2, radius, type1, type2, all_plac
     db.session.commit()    
 
     return True, name[1]
+
+@login_required
+# Helper - Convert None to empty string
+def converter(s):
+    return '' if s is None else s
 
 # Helper - Check whether user must be notified for Premium subscription Enabling
 def notify_premium():

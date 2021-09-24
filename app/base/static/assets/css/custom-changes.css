@@ -115,6 +115,11 @@ select.dark-content option {
   word-wrap: normal;    
 }  
 
+.place-trend-none {
+  color: #6c757d;
+  word-wrap: normal;    
+} 
+
 .trending {
   border-color: rgba(82,168,236,.8);
   box-shadow: 0 0px 0px rgba(82,168,236,.8) inset, 0 0 8px rgba(82,168,236,.8);

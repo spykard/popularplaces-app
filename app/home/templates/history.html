@@ -255,7 +255,7 @@
       <div id="gridData" class="col-md-12">
         <div class="card">
           <div class="card-body">
-            <div class="row flex-fix-margin">
+            <div id="placesgrid" class="row flex-fix-margin">
               {# <div class="card-deck"> Either use "card-deck" or "col" for 2 different UI styles #}
               <div id="helptooltip3" class="col box">
                 <div class="card trending">
@@ -264,13 +264,13 @@
                       <div class="col-4">                      
                       </div>
                       <div class="col-4">
-                        <div class="count-up-example-1 place-number text-center" data-from="0" data-to="84" data-time="400">
+                        <div class="count-up-example-1 place-number text-center" data-from="0" data-to="91" data-time="400">
                           0
                         </div>
                       </div>
                       <div class="col-4">
                         <i class="tim-icons icon-minimal-up place-trend-up"></i>
-                        <div class="place-trend-up" data-from="0">
+                        <div class="place-trend-up">
                           40
                         </div>
                       </div>
@@ -287,7 +287,7 @@
                       </div>
                       <div class="col-auto">
                       </div>
-                      <div class="col col-2 float-right">
+                      <div class="col col-2 col-xl-1 float-right">
                         <i class="fas fa-info-circle"></i>
                       </div>
                     </div>
@@ -307,7 +307,7 @@
                       </div>
                       <div class="col-4">
                         <i class="tim-icons icon-minimal-up place-trend-up"></i>
-                        <div class="place-trend-up" data-from="0">
+                        <div class="place-trend-up">
                           16
                         </div>
                       </div>
@@ -324,7 +324,7 @@
                       </div>
                       <div class="col-auto">
                       </div>
-                      <div class="col col-2 float-right">
+                      <div class="col col-2 col-xl-1 float-right">
                         <i class="fas fa-info-circle"></i>
                       </div>
                     </div>
@@ -343,9 +343,9 @@
                         </div>
                       </div>
                       <div class="col-4">
-                        <i class="tim-icons icon-minimal-up place-trend-down"></i>
-                        <div class="place-trend-down" data-from="0">
-                          31
+                        <i class="tim-icons icon-minimal-down place-trend-down"></i>
+                        <div class="place-trend-down">
+                          -31
                         </div>
                       </div>
                     </div>
@@ -361,7 +361,7 @@
                       </div>
                       <div class="col-auto">
                       </div>
-                      <div class="col col-2 float-right">
+                      <div class="col col-2 col-xl-1 float-right">
                         <i class="fas fa-info-circle"></i>
                       </div>
                     </div>
@@ -469,7 +469,7 @@
           </div> #}
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table tablesorter" id="places_table">
+              <table id="placestable" class="table tablesorter">
                 <thead>
                   <tr>
                     <th>
@@ -482,7 +482,7 @@
                       Rating (#)
                     </th>
                     <th class="text-center">
-                      Current Popularity
+                      Usual Popularity
                     </th>   
                     <th class="text-center">
                       Live Trend
@@ -501,7 +501,7 @@
                       4.5 (578)
                     </td>
                     <td class="text-center">
-                      84
+                      91
                     </td>
                     <td class="text-center">
                       <p class="text-success">+40</p>
@@ -751,12 +751,25 @@
       var id = divSelector.find("table > tbody > tr > :first-child").html();
 
       if (id == 0) {
-        // Update the Table
-        var tableSelector = $("#places_table");       
+        //-- Update the Grid --//
+        var gridSelector = $("#placesgrid");
+
+        gridSelector.children().remove();  // Wipe
+
+        var content = '<div class="col box"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-1 place-number text-center" data-from="0" data-to="91" data-time="400"> 0 </div></div><div class="col-4"> <i class="tim-icons icon-minimal-up place-trend-up"></i> <div class="place-trend-up"> 40 </div></div></div></div><div class="card-body place-title"> <h4 class="card-title">La Grande Boucherie</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">145 W 53rd St, New York, NY 10019, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div><div class="col box"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-2 place-number text-center" data-from="0" data-to="52" data-time="400"> 0 </div></div><div class="col-4"> <i class="tim-icons icon-minimal-up place-trend-up"></i> <div class="place-trend-up"> 16 </div></div></div></div><div class="card-body place-title"> <h4 class="card-title">Petrossian Boutique & Cafe</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">253 W 51st St, New York, NY 10019, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div><div class="col box"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-3 place-number text-center" data-from="0" data-to="8" data-time="400"> 0 </div></div><div class="col-4"> <i class="tim-icons icon-minimal-down place-trend-down"></i> <div class="place-trend-down"> -31 </div></div></div></div><div class="card-body place-title"> <h4 class="card-title">Brooklyn Diamond Coffee</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">240 E 54th St, New York, NY 10022, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div>';
+
+        gridSelector.append(content);
+
+        $('.count-up-example-1').counter();
+        $('.count-up-example-2').counter();
+        $('.count-up-example-3').counter();      
+
+        //-- Update the Table --//
+        var tableSelector = $("#placestable");       
         
         tableSelector.find("tbody > tr").remove();  // Wipe        
         
-        var content = '<tr><td> La Grande Boucherie </td><td> 145 W 53rd St, New York, NY 10019, United States </td><td class="text-center"> 4.5 (578) </td><td class="text-center"> 84 </td><td class="text-center"> <p class="text-success">+40</p></td></tr><tr> <td> Petrossian Boutique & Cafe </td><td> 253 W 51st St, New York, NY 10019, United States </td><td class="text-center"> 4.6 (1632) </td><td class="text-center"> 52 </td><td class="text-center"> <p class="text-success">+16</p></td></tr><tr> <td> Brooklyn Diamond Coffee </td><td> 240 E 54th St, New York, NY 10022, United States </td><td class="text-center"> 4.1 (81) </td><td class="text-center"> 8 </td><td class="text-center"> <p class="text-danger">-31</p></td></tr>'
+        var content = '<tr><td> La Grande Boucherie </td><td> 145 W 53rd St, New York, NY 10019, United States </td><td class="text-center"> 4.5 (578) </td><td class="text-center"> 91 </td><td class="text-center"> <p class="text-success">+40</p></td></tr><tr> <td> Petrossian Boutique & Cafe </td><td> 253 W 51st St, New York, NY 10019, United States </td><td class="text-center"> 4.6 (1632) </td><td class="text-center"> 52 </td><td class="text-center"> <p class="text-success">+16</p></td></tr><tr> <td> Brooklyn Diamond Coffee </td><td> 240 E 54th St, New York, NY 10022, United States </td><td class="text-center"> 4.1 (81) </td><td class="text-center"> 8 </td><td class="text-center"> <p class="text-danger">-31</p></td></tr>';
 
         tableSelector.children("tbody").append(content);
       }
@@ -770,8 +783,37 @@
             success: function(data){ 
                     //console.log(data);  // JSON.stringify
 
-                    // Update the Table
-                    var tableSelector = $("#places_table");
+                    //-- Update the Grid --//
+                    var gridSelector = $("#placesgrid");
+
+                    gridSelector.children().remove();  // Wipe
+
+                    for (i = 0; i < data.length; i++) {  // Rebuild
+                      if (data[i].usual_popularity > 89) {var content = '<div class="col box"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
+                      else {var content = '<div class="col box"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
+
+                      if (data[i].usual_popularity === "") {content += '<div class="col-4"> <div class="count-up-' + i + ' place-number text-center" data-from="0" data-to="0" data-time="400"><p class="text-muted">N/A</p></div></div>';}                      
+                      else {content += '<div class="col-4"> <div class="count-up-' + i + ' place-number text-center" data-from="0" data-to=\"' + data[i].usual_popularity + '\" data-time="400"> 0 </div></div>';}
+
+                      if (data[i].difference === "") {content += '<div class="col-4"> <i class="tim-icons icon-simple-delete place-trend-none"></i> <div class="place-trend-none">N/A</div></div>';}
+                      else if (data[i].difference > 0) {content += '<div class="col-4"> <i class="tim-icons icon-minimal-up place-trend-up"></i> <div class="place-trend-up">' + data[i].difference + '</div></div>';}
+                      else if (data[i].difference < 0) {content += '<div class="col-4"> <i class="tim-icons icon-minimal-down place-trend-down"></i> <div class="place-trend-down">' + data[i].difference + '</div></div>';}
+                      else {content += '<div class="col-4"> <i class="tim-icons icon-simple-delete "></i> <div class="">' + data[i].difference + '</div></div>';}
+
+                      
+                      content += '</div></div> <div class="card-body place-title">';
+                      content += '<h4 class="card-title">' + data[i].name +'</h4>';
+                      content += '</div> <div class="card-footer container">'
+                      content += '<small class="text-muted">' + data[i].address + '</small>';
+                      content += '<div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div>';
+
+                      gridSelector.append(content);
+
+                      if (data[i].usual_popularity != "") {$('.count-up-'+ i).counter();}
+                    }
+
+                    //-- Update the Table --//
+                    var tableSelector = $("#placestable");
 
                     tableSelector.find("tbody > tr").remove();  // Wipe
 
@@ -781,9 +823,11 @@
                       content += "<td>" + data[i].name + "</td>";
                       content += "<td>" + data[i].address + "</td>";
                       content += "<td class='text-center'>" + data[i].rating + "</td>";
-                      content += "<td class='text-center'>" + data[i].current_popularity + "</td>";
 
-                      if (data[i].difference == "") {content += "<td class='text-center'><p class='text-muted'>N/A</p></td>";}
+                      if (data[i].usual_popularity === "") {content += "<td class='text-center'><p class='text-muted'>N/A</p></td>";}                      
+                      else {content += "<td class='text-center'>" + data[i].usual_popularity + "</td>";}
+
+                      if (data[i].difference === "") {content += "<td class='text-center'><p class='text-muted'>N/A</p></td>";}
                       else if (data[i].difference > 0) {content += "<td class='text-center'><p class='text-success'>" + data[i].difference + "</p></td>";}
                       else if (data[i].difference < 0) {content += "<td class='text-center'><p class='text-danger'>" + data[i].difference + "</p></td>";}
                       else {content += "<td class='text-center'><p>" + data[i].difference + "</p></td>";}
