@@ -74,8 +74,9 @@
         </div>
         <div class="card-body">
           <h4 class="card-title">You have no free runs remaining!</h4>
-          <p class="card-text">Contact me at:</p>
-          <a id="contactmebutton" target="_blank" href="https://github.com/spykard" class="btn btn-{{ current_user.ui_button }}">GitHub</a>
+          <p class="card-text">Contact me via:</p>
+          <a id="contactmebutton1" target="_blank" href="mailto: spycorfu@gmail.com" class="btn btn-{{ current_user.ui_button }}">E-mail</a>          
+          <a id="contactmebutton2" target="_blank" href="https://github.com/spykard" class="btn btn-{{ current_user.ui_button }}">GitHub</a>
         </div>
         <div class="card-footer text-muted">
           A Strange Game. The only winning Move is not to Play. How about a nice game of Chess?
@@ -263,7 +264,7 @@
 </div>
 
 <!-- Modal -->        
-<div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="tempUseless" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
+<div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
   <div class="modal-dialog modal-fix-position modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header justify-content-center">
@@ -405,14 +406,14 @@
     });
 
     $('[name="selectcitybutton"]').click(function() {   
-      //$('#selectcity').slideUp();
+      {# //$('#selectcity').slideUp(); #}
       $('#selectcity').hide();
       $("#search").prop("disabled", false);
       $(".btn-group").removeAttr('data-toggle data-placement title data-original-title');
       $('.category').text("Please Select your Desired Settings");
       $('#city').val($(this).attr("val")); 
 
-      // https://mdbootstrap.com/freebies/perfect-scrollbar/?utm_source=GitHub&utm_medium=PerfectScrollbar#howtouse
+      {# // https://mdbootstrap.com/freebies/perfect-scrollbar/?utm_source=GitHub&utm_medium=PerfectScrollbar#howtouse #}
       const container = document.querySelector('.main-panel');
       container.scrollTop = 0;
 

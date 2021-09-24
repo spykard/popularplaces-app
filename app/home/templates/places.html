@@ -90,72 +90,72 @@
         </div>
     </div>
     
-    <!-- Modal 1 -->        
-    <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="addPlaceModal" tabindex="-1" role="dialog" aria-labelledby="addPlaceTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-            <h5 class="modal-title title title-up" id="addPlaceTitle">Add to My Places</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                <i class="tim-icons icon-simple-remove"></i>
-            </button>
+<!-- Modal 1 -->        
+<div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="addPlaceModal" tabindex="-1" role="dialog" aria-labelledby="addPlaceTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header justify-content-center">
+        <h5 class="modal-title title title-up" id="addPlaceTitle">Add to My Places</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        </div>
+
+        <form id="addPlaceForm" role="form" method="post" action="">
+            <!-- Bug Fix: https://stackoverflow.com/a/42874365 -->
+            {{ form.hidden_tag() }}
+
+            <div class="modal-body">
+                <label>Name</label>
+                <div id="namediv" class="form-group">              
+                    <input type="text" class="form-control form-{{ current_user.ui_color }}" id="name" name="name" placeholder="Name" value="">
+                </div>
+                <label>City</label>
+                <div id="citydiv" class="form-group">              
+                    <input type="text" class="form-control form-{{ current_user.ui_color }}" id="city" name="city" placeholder="City" value="">
+                </div>                                     
+                <label>Address</label>
+                <div id="addressdiv" class="form-group">              
+                    <input type="text" class="form-control form-{{ current_user.ui_color }}" id="address" name="address" placeholder="Address" value="">                                                    
+                <a class="assistancelink" href="#">Automatically Find Address</a>
+                </div>
+                <label>Type</label>
+                <div id="typediv" class="form-group">
+                    <select type="text" class="form-control form-{{ current_user.ui_color }} {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type_p" name="type_p">
+                    <option>Choose...</option>
+                    <option>Bar</option>
+                    <option>Night Club</option>
+                    <option>Restaurant</option>
+                    <option>Cafe</option>
+                    <option>Bakery</option>
+                    <option>Food</option>
+                    <option>Subway Station</option>
+                    <option>Gas Station</option>
+                    <option>Bank</option>
+                    <option>Pharmacy</option>
+                    <option>Health</option>
+                    <option>Place of Worship</option>
+                    <option>Department Store</option>
+                    <option>Establishment</option>
+                    <option>University</option>
+                    <option>Library</option>
+                    <option>Book Store</option>
+                    <option>Gym</option>
+                    <option>Clothing Store</option>
+                    <option>Casino</option>
+                    <option>Liquor Store</option>
+                    </select>
+                </div>                                  
             </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button name="addbuttonModal" type="button" class="btn btn-{{ current_user.ui_button }}">Submit</button>
+            </div>
+        </form>
 
-            <form id="addPlaceForm" role="form" method="post" action="">
-                <!-- Bug Fix: https://stackoverflow.com/a/42874365 -->
-                {{ form.hidden_tag() }}
-
-                <div class="modal-body">
-                    <label>Name</label>
-                    <div id="namediv" class="form-group">              
-                        <input type="text" class="form-control form-{{ current_user.ui_color }}" id="name" name="name" placeholder="Name" value="">
-                    </div>
-                    <label>City</label>
-                    <div id="citydiv" class="form-group">              
-                        <input type="text" class="form-control form-{{ current_user.ui_color }}" id="city" name="city" placeholder="City" value="">
-                    </div>                                     
-                    <label>Address</label>
-                    <div id="addressdiv" class="form-group">              
-                        <input type="text" class="form-control form-{{ current_user.ui_color }}" id="address" name="address" placeholder="Address" value="">                                                    
-                    <a class="assistancelink" href="#">Automatically Find Address</a>
-                    </div>
-                    <label>Type</label>
-                    <div id="typediv" class="form-group">
-                        <select type="text" class="form-control form-{{ current_user.ui_color }} {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type_p" name="type_p">
-                        <option>Choose...</option>
-                        <option>Bar</option>
-                        <option>Night Club</option>
-                        <option>Restaurant</option>
-                        <option>Cafe</option>
-                        <option>Bakery</option>
-                        <option>Food</option>
-                        <option>Subway Station</option>
-                        <option>Gas Station</option>
-                        <option>Bank</option>
-                        <option>Pharmacy</option>
-                        <option>Health</option>
-                        <option>Place of Worship</option>
-                        <option>Department Store</option>
-                        <option>Establishment</option>
-                        <option>University</option>
-                        <option>Library</option>
-                        <option>Book Store</option>
-                        <option>Gym</option>
-                        <option>Clothing Store</option>
-                        <option>Casino</option>
-                        <option>Liquor Store</option>
-                        </select>
-                    </div>                                  
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button name="addbuttonModal" type="button" class="btn btn-{{ current_user.ui_button }}">Submit</button>
-                </div>
-            </form>
-
-        </div>
-        </div>
     </div>
+    </div>
+</div>
 
 <!-- Modal 2 -->        
 <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="removePlaceModal" tabindex="-1" role="dialog" aria-labelledby="removePlaceTitle" aria-hidden="true">
@@ -205,8 +205,8 @@
       }); 
 
     $('#removePlaceModal').on('show.bs.modal', function(event) {
-        var id = $(event.relatedTarget).data('value')  // Extract info from data-* attributes
-        // $("#removePlaceModal").modal({});  // Activates the content as a modal with default options.
+        var id = $(event.relatedTarget).data('value');  // Extract info from data-* attributes
+        {# // $("#removePlaceModal").modal({});  // Activates the content as a modal with default options. #}
         $('[name="deletebuttonModal"]').attr('value', id);  // Stores an important value inside the Button
 
         $('[name="deletebuttonModal"]').unbind('click');

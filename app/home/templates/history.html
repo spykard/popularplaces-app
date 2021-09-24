@@ -42,6 +42,10 @@
     padding-top: 0px;
   }  
 
+  .carousel-caption {
+    bottom: -10px;
+  }   
+
   .box {
     width: 12rem;
     {# max-width: 18rem;
@@ -111,6 +115,37 @@
       min-width: 20%;
     }
   }
+
+  /* all values found manually */
+  /*@media (max-height: 480px) {
+    .modal-fix-position {
+      top: -33.7vh;
+    }
+  }
+
+  @media (min-height: 480px) {
+    .modal-fix-position {
+      top: -26.4vh;
+    }
+  }  
+
+  @media (min-height: 600px) {
+    .modal-fix-position {
+      top: -20.3vh;
+    }
+  }
+
+  @media (min-height: 760px) {
+    .modal-fix-position {
+      top: -15.0vh;
+    }
+  }
+
+  @media (min-height: 1000px) {
+    .modal-fix-position {
+      top: -13.9vh;
+    }
+  }*/
 </style>
 
 {% endblock stylesheets %}
@@ -257,7 +292,7 @@
           <div class="card-body">
             <div id="placesgrid" class="row flex-fix-margin">
               {# <div class="card-deck"> Either use "card-deck" or "col" for 2 different UI styles #}
-              <div id="helptooltip3" class="col box">
+              <div id="helptooltip3" class="col box" data-toggle="modal" data-target="#gridModal" data-name="La Grande Boucherie" data-populartimes="1 2 4">
                 <div class="card trending">
                   <div class="card-header">
                     <div class="row">
@@ -287,14 +322,14 @@
                       </div>
                       <div class="col-auto">
                       </div>
-                      <div class="col col-2 col-xl-1 float-right">
+                      <div class="col-2 col-xl-1 float-right">
                         <i class="fas fa-info-circle"></i>
                       </div>
                     </div>
                   </div>                
                 </div>    
               </div>  
-              <div class="col box">
+              <div class="col box" data-toggle="modal" data-target="#gridModal" data-value="">
                 <div class="card">
                   <div class="card-header">
                     <div class="row">
@@ -324,14 +359,14 @@
                       </div>
                       <div class="col-auto">
                       </div>
-                      <div class="col col-2 col-xl-1 float-right">
+                      <div class="col-2 col-xl-1 float-right">
                         <i class="fas fa-info-circle"></i>
                       </div>
                     </div>
                   </div>                
                 </div>    
               </div>             
-              <div class="col box">
+              <div class="col box" data-toggle="modal" data-target="#gridModal" data-value="">
                 <div class="card">
                   <div class="card-header">
                     <div class="row">
@@ -361,20 +396,21 @@
                       </div>
                       <div class="col-auto">
                       </div>
-                      <div class="col col-2 col-xl-1 float-right">
+                      <div class="col-2 col-xl-1 float-right">
                         <i class="fas fa-info-circle"></i>
                       </div>
                     </div>
                   </div>                
                 </div>    
-              </div>                                         
+              </div> 
+              {# </div> #}                                        
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="row" style="display: none;">
+    {# <div class="row" style="display: none;">
       <div class="col-12">
         <div class="card card-chart">
           <div class="card-header ">
@@ -417,7 +453,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> #}
 
     <div class="row" style="display: none;">
       <div class="col-lg-4">
@@ -660,6 +696,198 @@
       </div>
     </div>
 
+    <div class="row row justify-content-center">
+      <div class="col-12 col-md-8 col-sm-10">     
+        <div class="card card-nav-tabs">
+          <div class="card-body" style="padding-bottom: 15px;">
+            <blockquote class="blockquote mb-0">
+              <footer class="blockquote-footer">A Strange Game. The only winning Move is not to Play. How about a nice game of Chess?</footer>
+            </blockquote>
+          </div>
+        </div>
+      </div> 
+    </div>    
+
+    <!-- Modal -->        
+    <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="gridModal" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
+      <div class="modal-dialog modal-xxl" role="document">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h3 class="modal-title title title-up" id="modalLongTitle" style="text-transform: none;">La Grande Boucherie</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div id="gridCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+              <ol class="carousel-indicators">
+                <li data-target="#gridCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#gridCarousel" data-slide-to="1"></li>
+                <li data-target="#gridCarousel" data-slide-to="2"></li>
+              </ol>
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card card-chart">
+                        <div class="card-header ">
+                          <div class="row">
+                            <div class="col-sm-6 text-left">
+                              <h5 class="card-category">Monday</h5>
+                              <h2 class="card-title">Popularity</h2>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" id="0">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Accounts</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-single-02"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" id="1">
+                                  <input type="radio" class="d-none d-sm-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Purchases</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-gift-2"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" id="2">
+                                  <input type="radio" class="d-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Sessions</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-tap-02"></i>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="chart-area">
+                            <canvas id="chartBig1"></canvas>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-caption d-none d-sm-block">
+                    <p>Monday</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card card-chart">
+                        <div class="card-header ">
+                          <div class="row">
+                            <div class="col-sm-6 text-left">
+                              <h5 class="card-category">Total Shipments</h5>
+                              <h2 class="card-title">Performance</h2>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" id="0">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Accounts</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-single-02"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" id="1">
+                                  <input type="radio" class="d-none d-sm-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Purchases</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-gift-2"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" id="2">
+                                  <input type="radio" class="d-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Sessions</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-tap-02"></i>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="chart-area">
+                            <canvas id="chartBig1"></canvas>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+                <div class="carousel-item">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card card-chart">
+                        <div class="card-header ">
+                          <div class="row">
+                            <div class="col-sm-6 text-left">
+                              <h5 class="card-category">Total Shipments</h5>
+                              <h2 class="card-title">Performance</h2>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" id="0">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Accounts</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-single-02"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" id="1">
+                                  <input type="radio" class="d-none d-sm-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Purchases</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-gift-2"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" id="2">
+                                  <input type="radio" class="d-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Sessions</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-tap-02"></i>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="chart-area">
+                            <canvas id="chartBig1"></canvas>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <a class="carousel-control carousel-control-prev" href="#gridCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control carousel-control-next" href="#gridCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>          
+          </div>
+
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
@@ -677,13 +905,13 @@
 
       if (isWindows) {
         if ($('#searchHistoryList').length != 0) {
-          var ps = new PerfectScrollbar('#searchHistoryList', {
+          var ps3 = new PerfectScrollbar('#searchHistoryList', {
             wheelSpeed: 2,
             wheelPropagation: false,
             minScrollbarLength: 20
-            //useBothWheelAxes: true,
+            {# //useBothWheelAxes: true,
             //suppressScrollX: false,
-            //suppressScrollY: false
+            //suppressScrollY: false #}
           });
         }
       }
@@ -745,7 +973,36 @@
       });
     }); 
 
-    // Sample Search
+    // Modal Actions (Grid View)
+    $('#gridModal').on('show.bs.modal', function(event) {
+      var name = $(event.relatedTarget).data('name');  // Extract info from data-* attributes
+      var populartimes = $(event.relatedTarget).data('populartimes');  // Extract info from data-* attributes
+
+      {# // $("#removePlaceModal").modal({});  // Activates the content as a modal with default options.
+      // $('[name="deletebuttonModal"]').attr('value', id);  // Stores an important value inside the Button #}
+      {# // Same Functions for vanilla scrolling
+      //const body = document.querySelector("body");
+      //body.style.overflow = "hidden";
+      //window.scrollTop(storeScrollPos); #}
+      {# // PerfectScrollbar Functions Guide - https://github.com/mdbootstrap/perfect-scrollbar/issues/339 #} 
+
+      storeScrollPos = $('.main-panel').scrollTop();
+
+      $html.removeClass('perfect-scrollbar-on');
+      $html.addClass('perfect-scrollbar-off');
+    });
+
+    $('#gridModal').on('hide.bs.modal', function(event) { 
+      {# // Same Functions for vanilla scrolling
+        //const body = document.querySelector("body");
+        //body.style.overflow = null; #}
+
+      $html.removeClass('perfect-scrollbar-off');
+      $html.addClass('perfect-scrollbar-on');
+      $('.main-panel').scrollTop(storeScrollPos);
+    });    
+
+    // Main Actions
     $('.list-group-item-action').click(function() {
       var divSelector = $("#" + $(this).attr('id').slice(0, -5));
       var id = divSelector.find("table > tbody > tr > :first-child").html();
@@ -781,7 +1038,7 @@
             },
             url: "/get-place-results",
             success: function(data){ 
-                    //console.log(data);  // JSON.stringify
+                    {# //console.log(data);  // JSON.stringify #}
 
                     //-- Update the Grid --//
                     var gridSelector = $("#placesgrid");
@@ -862,7 +1119,7 @@
         var interval1;
         const changeNumber = () => {
           currentNumber += value;
-          //checks if currentNumber reached numberTo
+          // checks if currentNumber reached numberTo
           (deltaPositive && currentNumber >= numberTo) || (!deltaPositive &&currentNumber<= numberTo) ? currentNumber=numberTo : currentNumber;
           this.text(parseInt(currentNumber));
           currentNumber == numberTo ? clearInterval(interval1) : currentNumber;  
@@ -870,7 +1127,27 @@
 
         interval1 = setInterval(changeNumber,changeTime);
       }
-    }(jQuery));  
+    }(jQuery)); 
+    
+    // Helper Function - Enable Swipes on Mobile    
+    $('.carousel').on('touchstart', function(event){
+      const xClick = event.originalEvent.touches[0].pageX;
+      $(this).one('touchmove', function(event){
+          const xMove = event.originalEvent.touches[0].pageX;
+          const sensitivityInPx = 14;
+  
+          if( Math.floor(xClick - xMove) > sensitivityInPx ){
+              $(this).carousel('next');
+          }
+          else if( Math.floor(xClick - xMove) < -sensitivityInPx ){
+              $(this).carousel('prev');
+          }
+      });
+      $(this).on('touchend', function(){
+          $(this).off('touchmove');
+      });
+  });
+
   </script>
 
 {% endblock javascripts %}

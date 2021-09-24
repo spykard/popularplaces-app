@@ -44,6 +44,14 @@ select.dark-content option {
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
+.intro-text {
+  line-height: 1.4;
+}
+
+.intro-text-highlight {
+  color: #ba54f5;
+  font-weight: 300;
+}
 
 .list-group-item-darkerer {
   color: rgba(255, 255, 255, 0.8);
@@ -125,3 +133,35 @@ select.dark-content option {
   box-shadow: 0 0px 0px rgba(82,168,236,.8) inset, 0 0 8px rgba(82,168,236,.8);
   outline: 0 none;
 } 
+
+.carousel {
+  padding-left: 1.0em;
+  padding-right: 1.0em;
+}
+
+.carousel-indicators {
+  bottom: -18px;
+}
+
+.carousel-control {
+  height: 380px;
+  width: 3em;
+  color: #ccc;
+  text-shadow: none;
+  background-image: none;  
+}
+
+.carousel-control:hover,
+.carousel-control:focus {
+  color: #999;
+}
+
+.carousel-control-prev-icon, .carousel-control-prev-next {
+  margin: 0.2em;
+}
+.carousel-control-prev {
+  left: -20px;
+}
+.carousel-control-next {
+  right: -20px;
+}
