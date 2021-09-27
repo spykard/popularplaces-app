@@ -224,7 +224,7 @@
                             },
                 error: function(data){
                         if (data.status == 400) {
-                            demo.showNotification('top','center', 'true', 'The selected place is globally available to all Users and thus cannot be Deleted.');    
+                            helpers.showNotification('top','center', 'true', 'The selected place is globally available to all Users and thus cannot be Deleted.');    
                             }},
             });
         }); 
@@ -258,7 +258,7 @@
             $("#addPlaceForm").submit();
         }
         else {
-            demo.showNotification('top','center', 'true', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')        
+            helpers.showNotification('top','center', 'true', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')        
         }
 
     });
@@ -271,11 +271,11 @@
         else {
             $('#namediv').addClass('has-danger');
             $('#name').addClass('form-control-danger');              
-            demo.showNotification('top','center', 'true', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')
+            helpers.showNotification('top','center', 'true', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')
         }
     }); 
 
-    demo.showNotification('top','center', '{{ to_notify }}', 'Failed to Add Place: Input does not follow the Appropriate Form.')
+    helpers.showNotification('top','center', '{{ to_notify }}', 'Failed to Add Place: Input does not follow the Appropriate Form.')
 </script>
 
 {% endblock javascripts %}

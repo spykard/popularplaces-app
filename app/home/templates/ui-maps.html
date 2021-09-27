@@ -39,11 +39,11 @@
   <script src="https://maps.googleapis.com/maps/api/js?key={{ current_user.google_maps_api }}"></script>
 
   <script>
-  demo.showNotification('top','center', 'true', 'Please make sure that the correct <b>Google API Key</b> has been inputted.')
+  helpers.showNotification('top','center', 'true', 'Please make sure that the correct <b>Google API Key</b> has been inputted.')
 
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js
-      demo.initGoogleMaps();
+      helpers.initGoogleMaps();
     });
   </script>
   

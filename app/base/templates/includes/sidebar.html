@@ -24,17 +24,11 @@
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>History</p>
             </a>
-          </li> 
-          <li class="{% if 'places-data' in segment %} active {% endif %}">
-            <a href="/places-data">
-              <i class="tim-icons icon-single-copy-04"></i>
-              <p>My Places - Data</p>
-            </a>
-          </li>          
+          </li>         
           <li class="{% if 'places' in segment %} active {% endif %}">
             <a href="/places">
               <i class="tim-icons icon-pin"></i>
-              <p>My Places - Manage</p>
+              <p>My Places</p>
             </a>
           </li>                     
           <li class="{% if 'page-user' in segment %} active {% endif %}">
@@ -55,7 +49,13 @@
               <p>Index &nbsp;<code>DEV</code></p>
             </a>
           </li>    
-          {% if current_user.superadmin %}                 
+          {% if current_user.superadmin %} 
+            <li class="{% if 'places-data' in segment %} active {% endif %}">
+              <a href="/data">
+                <i class="tim-icons icon-single-copy-04"></i>
+                <p>Data Analysis &nbsp;<code>DEV</code></p>
+              </a>
+            </li>                           
             <li class="{% if 'icons' in segment %} active {% endif %}">
               <a href="/ui-icons">
                 <i class="tim-icons icon-atom"></i>

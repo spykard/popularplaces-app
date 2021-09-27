@@ -334,13 +334,20 @@ def page_user():
 @login_required
 def get_place_results():
     id = int(request.form['id'])
-    #data = db.session.query(Place).filter((Place.id == id) & (Place.global_place == 1)).all()
     place_results = db.session.query(PlaceResult).join(Search).filter(Search.id == id).order_by(nullslast(PlaceResult.live_popularity.desc()), nullslast(PlaceResult.usual_popularity.desc())).all() 
 
     data = []
     #converter = lambda i : i or ''  # Convert None to empty string
     for place_result in place_results:
-        data.append({'name': place_result.name, 'address': place_result.address, 'rating': str(converter(place_result.rating)) + " (" + str(converter(place_result.rating_num)) + ")", 'popular_times': converter(place_result.popular_times),  'time_spent': converter(place_result.time_spent), 'usual_popularity': converter(place_result.usual_popularity), 'difference': converter(place_result.difference), 'live_popularity': converter(place_result.live_popularity)})   
+        popular_times = place_result.popular_times
+        decoded = ""
+        if popular_times != "null":
+            load_data = json.loads(popular_times)
+            for day in load_data:
+                decoded += ' '.join([str(int) for int in day["data"]])
+                decoded += (',')
+
+        data.append({'name': place_result.name, 'address': place_result.address, 'rating': str(converter(place_result.rating)) + " (" + str(converter(place_result.rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result.time_spent), 'usual_popularity': converter(place_result.usual_popularity), 'difference': converter(place_result.difference), 'live_popularity': converter(place_result.live_popularity)})   
 
     return jsonify(data)
 
