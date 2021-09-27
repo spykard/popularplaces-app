@@ -334,12 +334,12 @@ def page_user():
 @login_required
 def get_place_results():
     id = int(request.form['id'])
-    place_results = db.session.query(PlaceResult).join(Search).filter(Search.id == id).order_by(nullslast(PlaceResult.live_popularity.desc()), nullslast(PlaceResult.usual_popularity.desc())).all() 
+    place_results = db.session.query(PlaceResult, Search).join(Search).filter(Search.id == id).order_by(nullslast(PlaceResult.live_popularity.desc()), nullslast(PlaceResult.usual_popularity.desc())).all() 
 
     data = []
     #converter = lambda i : i or ''  # Convert None to empty string
     for place_result in place_results:
-        popular_times = place_result.popular_times
+        popular_times = place_result[0].popular_times
         decoded = ""
         if popular_times != "null":
             load_data = json.loads(popular_times)
@@ -347,7 +347,7 @@ def get_place_results():
                 decoded += ' '.join([str(int) for int in day["data"]])
                 decoded += (',')
 
-        data.append({'name': place_result.name, 'address': place_result.address, 'rating': str(converter(place_result.rating)) + " (" + str(converter(place_result.rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result.time_spent), 'usual_popularity': converter(place_result.usual_popularity), 'difference': converter(place_result.difference), 'live_popularity': converter(place_result.live_popularity)})   
+        data.append({'name': place_result[0].name, 'address': place_result[0].address, 'rating': str(converter(place_result[0].rating)) + " (" + str(converter(place_result[0].rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result[0].time_spent), 'usual_popularity': converter(place_result[0].usual_popularity), 'difference': converter(place_result[0].difference), 'live_popularity': converter(place_result[0].live_popularity), 'day': place_result[1].time.strftime("%A - %H Hour")})        
 
     return jsonify(data)
 

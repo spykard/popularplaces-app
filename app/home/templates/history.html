@@ -124,7 +124,7 @@
     }
   }
 
-  /* all values found manually */
+  {# /* all values found manually */
   /*@media (max-height: 480px) {
     .modal-fix-position {
       top: -33.7vh;
@@ -153,7 +153,7 @@
     .modal-fix-position {
       top: -13.9vh;
     }
-  }*/
+  }*/ #}
 </style>
 
 {% endblock stylesheets %}
@@ -228,7 +228,7 @@
                               <td>New York</td>
                               <td>Cafe</td> 
                               <td>Restaurant</td> 
-                              <td><p class="text-primary">Monday - 19 Hour</p></td>                                                                                                    
+                              <td name="day"><p class="text-primary">Monday - 19 Hour</p></td>                                                                                                    
                               <td class="text-center">2021-01-18 19:42:03</td>
                           </tr>
                     </tbody>                                                       
@@ -257,7 +257,7 @@
                                 <td>{{ search['city'] }}</td>
                                 <td>{{ search['settings_type1'] }}</td> 
                                 <td>{{ search['settings_type2'] }}</td>     
-                                <td><p class="text-primary">{{ search['day'] }}</p></td>
+                                <td name="day"><p class="text-primary">{{ search['day'] }}</p></td>
                                 <td class="text-center">{{ search['time'] }}</td>
                             </tr>
                       </tbody>                                                       
@@ -300,7 +300,7 @@
           <div class="card-body">
             <div id="placesgrid" class="row flex-fix-margin">
               {# <div class="card-deck"> Either use "card-deck" or "col" for 2 different UI styles #}
-              <div id="helptooltip3" class="col box" data-toggle="modal" data-target="#gridModal" data-name="La Grande Boucherie" data-day="Monday - 19 Hour" data-populartimes="14 6 1 0 0 0 0 0 3 16 34 51 63 63 53 38 26 25 37 55 70 70 55 33,12 1 1 0 0 0 0 0 8 26 48 66 71 61 43 28 23 30 45 62 71 70 57 38,19 5 1 0 0 0 0 0 3 15 35 59 75 72 53 33 23 29 44 57 61 52 34 16,2 1 1 0 0 0 0 0 5 20 38 55 63 60 48 33 26 31 47 65 75 70 54 34,16 5 1 0 0 0 0 0 7 31 65 93 99 80 51 29 24 33 50 66 75 72 59 41,22 7 1 0 0 0 0 0 1 5 34 73 100 90 55 24 13 17 29 42 51 55 52 43,30 17 6 0 0 0 0 0 1 1 1 3 7 11 11 9 7 10 23 43 53 47 33 22,">
+              <div id="helptooltip3" class="col box" data-toggle="modal" data-target="#gridModal" data-name="La Grande Boucherie" data-day="Monday - 19 Hour" data-live="91" data-populartimes="14 6 1 0 0 0 0 0 3 16 34 51 63 63 53 38 26 25 37 55 70 70 55 33,12 1 1 0 0 0 0 0 8 26 48 66 71 61 43 28 23 30 45 62 71 70 57 38,19 5 1 0 0 0 0 0 3 15 35 59 75 72 53 33 23 29 44 57 61 52 34 16,2 1 1 0 0 0 0 0 5 20 38 55 63 60 48 33 26 31 47 65 75 70 54 34,16 5 1 0 0 0 0 0 7 31 65 93 99 80 51 29 24 33 50 66 75 72 59 41,22 7 1 0 0 0 0 0 1 5 34 73 100 90 55 24 13 17 29 42 51 55 52 43,30 17 6 0 0 0 0 0 1 1 1 3 7 11 11 9 7 10 23 43 53 47 33 22,">
                 <div class="card trending">
                   <div class="card-header">
                     <div class="row">
@@ -342,7 +342,7 @@
                   </div>                
                 </div>    
               </div>  
-              <div class="col box" data-toggle="modal" data-target="#gridModal" data-name="Petrossian Boutique & Cafe" data-day="Monday - 19 Hour" data-populartimes="0 0 0 0 0 0 0 0 11 23 40 57 66 64 52 38 29 26 29 31 31 25 16 7,0 0 0 0 0 0 0 0 4 13 24 34 39 39 37 34 33 34 35 35 34 30 25 19,0 0 0 0 0 0 0 0 13 28 43 56 60 56 44 32 24 21 23 25 24 19 12 4,0 0 0 0 0 0 0 0 10 24 39 52 59 56 46 34 26 27 34 41 42 35 27 19,0 0 0 0 0 0 0 0 15 28 40 48 50 47 38 31 27 29 34 39 39 35 29 21,0 0 0 0 0 0 0 0 6 19 42 70 94 100 86 61 39 28 26 28 26 19 10 3,0 0 0 0 0 0 0 0 0 0 0 52 80 87 72 51 39 34 31 28 23 18 12 7,">
+              <div class="col box" data-toggle="modal" data-target="#gridModal" data-name="Petrossian Boutique & Cafe" data-day="Monday - 19 Hour" data-live="52" data-populartimes="0 0 0 0 0 0 0 0 11 23 40 57 66 64 52 38 29 26 29 31 31 25 16 7,0 0 0 0 0 0 0 0 4 13 24 34 39 39 37 34 33 34 35 35 34 30 25 19,0 0 0 0 0 0 0 0 13 28 43 56 60 56 44 32 24 21 23 25 24 19 12 4,0 0 0 0 0 0 0 0 10 24 39 52 59 56 46 34 26 27 34 41 42 35 27 19,0 0 0 0 0 0 0 0 15 28 40 48 50 47 38 31 27 29 34 39 39 35 29 21,0 0 0 0 0 0 0 0 6 19 42 70 94 100 86 61 39 28 26 28 26 19 10 3,0 0 0 0 0 0 0 0 0 0 0 52 80 87 72 51 39 34 31 28 23 18 12 7,">
                 <div class="card">
                   <div class="card-header">
                     <div class="row">
@@ -384,7 +384,7 @@
                   </div>                
                 </div>    
               </div>             
-              <div class="col box" data-toggle="modal" data-target="#gridModal" data-name="Brooklyn Diamond Coffee" data-day="Monday - 19 Hour" data-populartimes="0 0 0 0 0 0 27 40 57 74 88 92 84 68 49 32 24 27 37 46 47 36 0 0,0 0 0 0 0 0 25 33 40 54 74 93 97 81 55 34 25 26 32 36 37 32 0 0,0 0 0 0 0 0 16 30 49 66 76 75 64 49 35 27 26 30 35 38 37 31 0 0,0 0 0 0 0 0 16 31 50 69 81 83 76 66 57 53 52 52 50 45 38 30 0 0,0 0 0 0 0 0 25 35 45 55 71 90 100 85 58 39 33 35 38 39 38 35 0 0,0 0 0 0 0 0 30 39 47 54 61 69 72 63 47 32 26 28 33 36 35 28 0 0,0 0 0 0 0 0 0 25 33 38 38 35 30 24 21 23 28 33 37 34 27 18 0 0,">
+              <div class="col box" data-toggle="modal" data-target="#gridModal" data-name="Brooklyn Diamond Coffee" data-day="Monday - 19 Hour" data-live="8" data-populartimes="0 0 0 0 0 0 27 40 57 74 88 92 84 68 49 32 24 27 37 46 47 36 0 0,0 0 0 0 0 0 25 33 40 54 74 93 97 81 55 34 25 26 32 36 37 32 0 0,0 0 0 0 0 0 16 30 49 66 76 75 64 49 35 27 26 30 35 38 37 31 0 0,0 0 0 0 0 0 16 31 50 69 81 83 76 66 57 53 52 52 50 45 38 30 0 0,0 0 0 0 0 0 25 35 45 55 71 90 100 85 58 39 33 35 38 39 38 35 0 0,0 0 0 0 0 0 30 39 47 54 61 69 72 63 47 32 26 28 33 36 35 28 0 0,0 0 0 0 0 0 0 25 33 38 38 35 30 24 21 23 28 33 37 34 27 18 0 0,">
                 <div class="card">
                   <div class="card-header">
                     <div class="row">
@@ -673,6 +673,10 @@
                 <li data-target="#gridCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#gridCarousel" data-slide-to="1"></li>
                 <li data-target="#gridCarousel" data-slide-to="2"></li>
+                <li data-target="#gridCarousel" data-slide-to="3"></li>
+                <li data-target="#gridCarousel" data-slide-to="4"></li>
+                <li data-target="#gridCarousel" data-slide-to="5"></li>                
+                <li data-target="#gridCarousel" data-slide-to="6"></li>                
               </ol>
               <div class="carousel-inner">
                 <div class="carousel-item active">
@@ -688,17 +692,17 @@
                             <div class="col-sm-6">
                               <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
                                 <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" name="changeChart1">
-                                  <input type="radio" name="options" checked>
-                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
-                                  <span class="d-block d-sm-none">
-                                    <i class="fas fa-chart-line"></i>
-                                  </span>
-                                </label>
-                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
                                   <input type="radio" class="d-none d-sm-none" name="options">
                                   <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Bar Blue</span>
                                   <span class="d-block d-sm-none">
                                     <i class="fas fa-chart-bar"></i>
+                                  </span>
+                                </label>                              
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
                                   </span>
                                 </label>
                                 <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart3">
@@ -737,17 +741,17 @@
                             <div class="col-sm-6">
                               <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
                                 <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" name="changeChart1">
-                                  <input type="radio" name="options" checked>
-                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
-                                  <span class="d-block d-sm-none">
-                                    <i class="fas fa-chart-line"></i>
-                                  </span>
-                                </label>
-                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
                                   <input type="radio" class="d-none d-sm-none" name="options">
                                   <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Bar Blue</span>
                                   <span class="d-block d-sm-none">
                                     <i class="fas fa-chart-bar"></i>
+                                  </span>
+                                </label>                              
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
                                   </span>
                                 </label>
                                 <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart3">
@@ -786,17 +790,17 @@
                             <div class="col-sm-6">
                               <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
                                 <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" name="changeChart1">
-                                  <input type="radio" name="options" checked>
-                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
-                                  <span class="d-block d-sm-none">
-                                    <i class="fas fa-chart-line"></i>
-                                  </span>
-                                </label>
-                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
                                   <input type="radio" class="d-none d-sm-none" name="options">
                                   <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Bar Blue</span>
                                   <span class="d-block d-sm-none">
                                     <i class="fas fa-chart-bar"></i>
+                                  </span>
+                                </label>                              
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
                                   </span>
                                 </label>
                                 <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart3">
@@ -822,6 +826,202 @@
                     <p>Wednesday</p>
                   </div>                                     
                 </div>
+                <div class="carousel-item">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card card-chart">
+                        <div class="card-header ">
+                          <div class="row">
+                            <div class="col-sm-6 text-left">
+                              <h5 class="card-category">Thursday</h5>
+                              <h2 class="card-title">Popularity</h2>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" name="changeChart1">
+                                  <input type="radio" class="d-none d-sm-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Bar Blue</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-bar"></i>
+                                  </span>
+                                </label>                              
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart3">
+                                  <input type="radio" class="d-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Green</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="chart-area">
+                            <canvas id="chartThursday"></canvas>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-caption d-none d-sm-block">
+                    <p>Thursday</p>
+                  </div>                                     
+                </div>
+                <div class="carousel-item">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card card-chart">
+                        <div class="card-header ">
+                          <div class="row">
+                            <div class="col-sm-6 text-left">
+                              <h5 class="card-category">Friday</h5>
+                              <h2 class="card-title">Popularity</h2>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" name="changeChart1">
+                                  <input type="radio" class="d-none d-sm-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Bar Blue</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-bar"></i>
+                                  </span>
+                                </label>                              
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart3">
+                                  <input type="radio" class="d-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Green</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="chart-area">
+                            <canvas id="chartFriday"></canvas>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-caption d-none d-sm-block">
+                    <p>Friday</p>
+                  </div>                                     
+                </div>
+                <div class="carousel-item">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card card-chart">
+                        <div class="card-header ">
+                          <div class="row">
+                            <div class="col-sm-6 text-left">
+                              <h5 class="card-category">Saturday</h5>
+                              <h2 class="card-title">Popularity</h2>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" name="changeChart1">
+                                  <input type="radio" class="d-none d-sm-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Bar Blue</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-bar"></i>
+                                  </span>
+                                </label>                              
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart3">
+                                  <input type="radio" class="d-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Green</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="chart-area">
+                            <canvas id="chartSaturday"></canvas>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-caption d-none d-sm-block">
+                    <p>Saturday</p>
+                  </div>                                     
+                </div>
+                <div class="carousel-item">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card card-chart">
+                        <div class="card-header ">
+                          <div class="row">
+                            <div class="col-sm-6 text-left">
+                              <h5 class="card-category">Sunday</h5>
+                              <h2 class="card-title">Popularity</h2>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple active" name="changeChart1">
+                                  <input type="radio" class="d-none d-sm-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Bar Blue</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-bar"></i>
+                                  </span>
+                                </label>                              
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart2">
+                                  <input type="radio" name="options" checked>
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Purple</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
+                                  </span>
+                                </label>
+                                <label class="btn-{{ current_user.ui_button }} btn btn-sm btn-simple" name="changeChart3">
+                                  <input type="radio" class="d-none" name="options">
+                                  <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Line Green</span>
+                                  <span class="d-block d-sm-none">
+                                    <i class="fas fa-chart-line"></i>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="chart-area">
+                            <canvas id="chartSunday"></canvas>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-caption d-none d-sm-block">
+                    <p>Sunday</p>
+                  </div>                                     
+                </div>                                                                
               </div>
               <a class="carousel-control carousel-control-prev" href="#gridCarousel" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -850,6 +1050,8 @@
   <script>
     const container = document.querySelector('.main-panel');
     hour_labels = ["6am", "7am", "8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am", "1am", "2am", "3am", "4am", "5am"];   
+    hour_labels_mapping = { '6': 0, '7': 1, '8': 2, '9': 3, '10': 4, '11': 5, '12': 6, '13': 7, '14': 8, '15': 9, '16': 10, '17': 11, '18': 12, '19': 13, '20': 14, '21': 15, '22': 16, '23': 17, '24': 18, '1': 19, '2': 20, '3': 21, '4': 22, '5': 23 }  
+    day_labels_mapping = { 'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6 }    
     chart_mode = 1; 
 
     // DOCUMENT READY
@@ -943,19 +1145,57 @@
     });
 
     $('#gridModal').on('shown.bs.modal', function(event) {
-      // Initiate the Charts
+      var day = $(event.relatedTarget).data('day');  // Extract info from data-* attributes
+      var live = $(event.relatedTarget).data('live');  // Extract info from data-* attributes      
       var populartimes = $(event.relatedTarget).data('populartimes');  // Extract info from data-* attributes
 
-      if (chart_mode == 1) {
-        chartMonday = charts.gradientChartWithTooltipPurple('chartMonday', hour_labels, [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630, 453, 380, 434, 568, 610, 700, 630, 453, 380, 434, 568, 610]);  
-        chartTuesday = charts.gradientChartWithTooltipPurple('chartTuesday', hour_labels, [434, 568, 610, 700, 630, 453, 380, 434, 568, 610, 700, 630, 453, 380, 434, 568, 610, 542, 480, 430, 550, 530, 453, 380]);
-        chartWednesday = charts.gradientChartWithTooltipPurple('chartWednesday', hour_labels, [542, 480, 380, 434, 568, 610, 700, 630, 453, 380, 434, 568, 610, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630, 453]);  
+      // Build the Data for Live Popularity
+      var live_popularity = new Array(24).fill(null);      
+      if (live) {
+        day = day.slice(day.length - 7, day.length - 5);
+        live_popularity[hour_labels_mapping[day]] = live;
+      }
+
+      if (populartimes) {
+        var decode_populartimes = populartimes.split(',');
+        for (i = 0; i < 7; i++) {
+          decode_populartimes[i] = decode_populartimes[i].split(' ').map(Number);}
       }
       else {
-        chartMonday = charts.gradientChartWithTooltipGreen('chartMonday', hour_labels, [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630, 453, 380, 434, 568, 610, 700, 630, 453, 380, 434, 568, 610]);
-        chartTuesday = charts.gradientChartWithTooltipGreen('chartTuesday', hour_labels, [434, 568, 610, 700, 630, 453, 380, 434, 568, 610, 700, 630, 453, 380, 434, 568, 610, 542, 480, 430, 550, 530, 453, 380]);
-        chartWednesday = charts.gradientChartWithTooltipGreen('chartWednesday', hour_labels, [542, 480, 380, 434, 568, 610, 700, 630, 453, 380, 434, 568, 610, 430, 550, 530, 453, 380, 434, 568, 610, 700, 630, 453]);        
+        var decode_populartimes = new Array(7);
+        for (i = 0; i < 7; i++) {
+          decode_populartimes[i] = new Array(24).fill(null);}
       }    
+
+      // Initiate the Charts
+      if (chart_mode == 1) {
+        chartMonday = charts.gradientBarChart('chartMonday', hour_labels, decode_populartimes[0], live_popularity);  
+        chartTuesday = charts.gradientBarChart('chartTuesday', hour_labels, decode_populartimes[1], live_popularity); 
+        chartWednesday = charts.gradientBarChart('chartWednesday', hour_labels, decode_populartimes[2], live_popularity); 
+        chartThursday = charts.gradientBarChart('chartThursday', hour_labels, decode_populartimes[3], live_popularity); 
+        chartFriday = charts.gradientBarChart('chartFriday', hour_labels, decode_populartimes[4], live_popularity); 
+        chartSaturday = charts.gradientBarChart('chartSaturday', hour_labels, decode_populartimes[5], live_popularity); 
+        chartSunday = charts.gradientBarChart('chartSunday', hour_labels, decode_populartimes[6], live_popularity);        
+      }    
+      else if (chart_mode == 2) {
+        chartMonday = charts.gradientChartWithTooltipPurple('chartMonday', hour_labels, decode_populartimes[0], live_popularity);   
+        chartTuesday = charts.gradientChartWithTooltipPurple('chartTuesday', hour_labels, decode_populartimes[1], live_popularity); 
+        chartWednesday = charts.gradientChartWithTooltipPurple('chartWednesday', hour_labels, decode_populartimes[2], live_popularity); 
+        chartThursday = charts.gradientChartWithTooltipPurple('chartThursday', hour_labels, decode_populartimes[3], live_popularity); 
+        chartFriday = charts.gradientChartWithTooltipPurple('chartFriday', hour_labels, decode_populartimes[4], live_popularity); 
+        chartSaturday = charts.gradientChartWithTooltipPurple('chartSaturday', hour_labels, decode_populartimes[5], live_popularity); 
+        chartSunday = charts.gradientChartWithTooltipPurple('chartSunday', hour_labels, decode_populartimes[6], live_popularity); 
+      }
+      else {
+        chartMonday = charts.gradientChartWithTooltipGreen('chartMonday', hour_labels, decode_populartimes[0], live_popularity);  
+        chartTuesday = charts.gradientChartWithTooltipGreen('chartTuesday', hour_labels, decode_populartimes[1], live_popularity); 
+        chartWednesday = charts.gradientChartWithTooltipGreen('chartWednesday', hour_labels, decode_populartimes[2], live_popularity); 
+        chartThursday = charts.gradientChartWithTooltipGreen('chartThursday', hour_labels, decode_populartimes[3], live_popularity); 
+        chartFriday = charts.gradientChartWithTooltipGreen('chartFriday', hour_labels, decode_populartimes[4], live_popularity); 
+        chartSaturday = charts.gradientChartWithTooltipGreen('chartSaturday', hour_labels, decode_populartimes[5], live_popularity); 
+        chartSunday = charts.gradientChartWithTooltipGreen('chartSunday', hour_labels, decode_populartimes[6], live_popularity); 
+      }      
+
     });
 
     $('#gridModal').on('hide.bs.modal', function(event) { 
@@ -970,7 +1210,11 @@
       // Destroy the Charts
       chartMonday.destroy();
       chartTuesday.destroy();
-      chartWednesday.destroy();          
+      chartWednesday.destroy();  
+      chartThursday.destroy();
+      chartFriday.destroy();
+      chartSaturday.destroy(); 
+      chartSunday.destroy(); 
     });  
 
     $('label[name="changeChart1"]').click(function() {
@@ -1009,7 +1253,7 @@
 
         gridSelector.children().remove();  // Wipe
 
-        var content = ' <div class="col box" data-toggle="modal" data-target="#gridModal" data-name="La Grande Boucherie" data-day="Monday - 19 Hour" data-populartimes="14 6 1 0 0 0 0 0 3 16 34 51 63 63 53 38 26 25 37 55 70 70 55 33,12 1 1 0 0 0 0 0 8 26 48 66 71 61 43 28 23 30 45 62 71 70 57 38,19 5 1 0 0 0 0 0 3 15 35 59 75 72 53 33 23 29 44 57 61 52 34 16,2 1 1 0 0 0 0 0 5 20 38 55 63 60 48 33 26 31 47 65 75 70 54 34,16 5 1 0 0 0 0 0 7 31 65 93 99 80 51 29 24 33 50 66 75 72 59 41,22 7 1 0 0 0 0 0 1 5 34 73 100 90 55 24 13 17 29 42 51 55 52 43,30 17 6 0 0 0 0 0 1 1 1 3 7 11 11 9 7 10 23 43 53 47 33 22,"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-1 place-number text-center" data-from="0" data-to="91" data-time="400"> 0 </div></div><div class="col-2"> <i class="tim-icons icon-minimal-up place-trend-up"></i> <div class="place-trend-up"> 40 </div></div><div class="col-2 float-left" style="backface-visibility: hidden;"> <span class="text-danger live-text"> LIVE </span> </div></div></div><div class="card-body place-title"> <h4 class="card-title">La Grande Boucherie</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">145 W 53rd St, New York, NY 10019, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div><div class="col box" data-toggle="modal" data-target="#gridModal" data-name="Petrossian Boutique & Cafe" data-day="Monday - 19 Hour" data-populartimes="0 0 0 0 0 0 0 0 11 23 40 57 66 64 52 38 29 26 29 31 31 25 16 7,0 0 0 0 0 0 0 0 4 13 24 34 39 39 37 34 33 34 35 35 34 30 25 19,0 0 0 0 0 0 0 0 13 28 43 56 60 56 44 32 24 21 23 25 24 19 12 4,0 0 0 0 0 0 0 0 10 24 39 52 59 56 46 34 26 27 34 41 42 35 27 19,0 0 0 0 0 0 0 0 15 28 40 48 50 47 38 31 27 29 34 39 39 35 29 21,0 0 0 0 0 0 0 0 6 19 42 70 94 100 86 61 39 28 26 28 26 19 10 3,0 0 0 0 0 0 0 0 0 0 0 52 80 87 72 51 39 34 31 28 23 18 12 7,"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-2 place-number text-center" data-from="0" data-to="52" data-time="400"> 0 </div></div><div class="col-2"> <i class="tim-icons icon-minimal-up place-trend-up"></i> <div class="place-trend-up"> 16 </div></div><div class="col-2 float-left" style="backface-visibility: hidden;"> <span class="text-danger live-text"> LIVE </span> </div></div></div><div class="card-body place-title"> <h4 class="card-title">Petrossian Boutique & Cafe</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">253 W 51st St, New York, NY 10019, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div><div class="col box" data-toggle="modal" data-target="#gridModal" data-name="Brooklyn Diamond Coffee" data-day="Monday - 19 Hour" data-populartimes="0 0 0 0 0 0 27 40 57 74 88 92 84 68 49 32 24 27 37 46 47 36 0 0,0 0 0 0 0 0 25 33 40 54 74 93 97 81 55 34 25 26 32 36 37 32 0 0,0 0 0 0 0 0 16 30 49 66 76 75 64 49 35 27 26 30 35 38 37 31 0 0,0 0 0 0 0 0 16 31 50 69 81 83 76 66 57 53 52 52 50 45 38 30 0 0,0 0 0 0 0 0 25 35 45 55 71 90 100 85 58 39 33 35 38 39 38 35 0 0,0 0 0 0 0 0 30 39 47 54 61 69 72 63 47 32 26 28 33 36 35 28 0 0,0 0 0 0 0 0 0 25 33 38 38 35 30 24 21 23 28 33 37 34 27 18 0 0,"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-3 place-number text-center" data-from="0" data-to="8" data-time="400"> 0 </div></div><div class="col-2"> <i class="tim-icons icon-minimal-down place-trend-down"></i> <div class="place-trend-down"> -31 </div></div><div class="col-2 float-left" style="backface-visibility: hidden;"> <span class="text-danger live-text"> LIVE </span> </div></div></div><div class="card-body place-title"> <h4 class="card-title">Brooklyn Diamond Coffee</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">240 E 54th St, New York, NY 10022, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div>';
+        var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="La Grande Boucherie" data-day="Monday - 19 Hour" data-live="91" data-populartimes="14 6 1 0 0 0 0 0 3 16 34 51 63 63 53 38 26 25 37 55 70 70 55 33,12 1 1 0 0 0 0 0 8 26 48 66 71 61 43 28 23 30 45 62 71 70 57 38,19 5 1 0 0 0 0 0 3 15 35 59 75 72 53 33 23 29 44 57 61 52 34 16,2 1 1 0 0 0 0 0 5 20 38 55 63 60 48 33 26 31 47 65 75 70 54 34,16 5 1 0 0 0 0 0 7 31 65 93 99 80 51 29 24 33 50 66 75 72 59 41,22 7 1 0 0 0 0 0 1 5 34 73 100 90 55 24 13 17 29 42 51 55 52 43,30 17 6 0 0 0 0 0 1 1 1 3 7 11 11 9 7 10 23 43 53 47 33 22,"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-1 place-number text-center" data-from="0" data-to="91" data-time="400"> 0 </div></div><div class="col-2"> <i class="tim-icons icon-minimal-up place-trend-up"></i> <div class="place-trend-up"> 40 </div></div><div class="col-2 float-left" style="backface-visibility: hidden;"> <span class="text-danger live-text"> LIVE </span> </div></div></div><div class="card-body place-title"> <h4 class="card-title">La Grande Boucherie</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">145 W 53rd St, New York, NY 10019, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div><div class="col box" data-toggle="modal" data-target="#gridModal" data-name="Petrossian Boutique & Cafe" data-day="Monday - 19 Hour" data-live="52" data-populartimes="0 0 0 0 0 0 0 0 11 23 40 57 66 64 52 38 29 26 29 31 31 25 16 7,0 0 0 0 0 0 0 0 4 13 24 34 39 39 37 34 33 34 35 35 34 30 25 19,0 0 0 0 0 0 0 0 13 28 43 56 60 56 44 32 24 21 23 25 24 19 12 4,0 0 0 0 0 0 0 0 10 24 39 52 59 56 46 34 26 27 34 41 42 35 27 19,0 0 0 0 0 0 0 0 15 28 40 48 50 47 38 31 27 29 34 39 39 35 29 21,0 0 0 0 0 0 0 0 6 19 42 70 94 100 86 61 39 28 26 28 26 19 10 3,0 0 0 0 0 0 0 0 0 0 0 52 80 87 72 51 39 34 31 28 23 18 12 7,"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-2 place-number text-center" data-from="0" data-to="52" data-time="400"> 0 </div></div><div class="col-2"> <i class="tim-icons icon-minimal-up place-trend-up"></i> <div class="place-trend-up"> 16 </div></div><div class="col-2 float-left" style="backface-visibility: hidden;"> <span class="text-danger live-text"> LIVE </span> </div></div></div><div class="card-body place-title"> <h4 class="card-title">Petrossian Boutique & Cafe</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">253 W 51st St, New York, NY 10019, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div><div class="col box" data-toggle="modal" data-target="#gridModal" data-name="Brooklyn Diamond Coffee" data-day="Monday - 19 Hour" data-live="8" data-populartimes="0 0 0 0 0 0 27 40 57 74 88 92 84 68 49 32 24 27 37 46 47 36 0 0,0 0 0 0 0 0 25 33 40 54 74 93 97 81 55 34 25 26 32 36 37 32 0 0,0 0 0 0 0 0 16 30 49 66 76 75 64 49 35 27 26 30 35 38 37 31 0 0,0 0 0 0 0 0 16 31 50 69 81 83 76 66 57 53 52 52 50 45 38 30 0 0,0 0 0 0 0 0 25 35 45 55 71 90 100 85 58 39 33 35 38 39 38 35 0 0,0 0 0 0 0 0 30 39 47 54 61 69 72 63 47 32 26 28 33 36 35 28 0 0,0 0 0 0 0 0 0 25 33 38 38 35 30 24 21 23 28 33 37 34 27 18 0 0,"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div><div class="col-4"> <div class="count-up-example-3 place-number text-center" data-from="0" data-to="8" data-time="400"> 0 </div></div><div class="col-2"> <i class="tim-icons icon-minimal-down place-trend-down"></i> <div class="place-trend-down"> -31 </div></div><div class="col-2 float-left" style="backface-visibility: hidden;"> <span class="text-danger live-text"> LIVE </span> </div></div></div><div class="card-body place-title"> <h4 class="card-title">Brooklyn Diamond Coffee</h4>{# <p class="card-text"> </p>#}</div><div class="card-footer container"> <small class="text-muted">240 E 54th St, New York, NY 10022, United States</small> <div class="row"> <div class="col"> </div><div class="col-auto"> </div><div class="col-2 col-xl-1 float-right"> <i class="fas fa-info-circle"></i> </div></div></div></div></div>';
 
         gridSelector.append(content);
 
@@ -1044,8 +1288,8 @@
                     for (i = 0; i < data.length; i++) {  // Rebuild
                       if (data[i].live_popularity === "") {
                         // Step 1
-                        if (data[i].usual_popularity > 89) {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-populartimes="' + data[i].popular_times + '"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
-                        else {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-populartimes="' + data[i].popular_times + '"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
+                        if (data[i].usual_popularity > 89) {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-day="' + data[i].day + '" data-live="' + data[i].live_popularity + '" data-populartimes="' + data[i].popular_times + '"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
+                        else {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-day="' + data[i].day + '" data-live="' + data[i].live_popularity + '" data-populartimes="' + data[i].popular_times + '"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
 
                         // Step 2
                         if (data[i].usual_popularity === "") {content += '<div class="col-4"> <div class="count-up-' + i + ' place-number text-center" data-from="0" data-to="0" data-time="400"><p class="text-muted">N/A</p></div></div>';}                      
@@ -1053,8 +1297,8 @@
                       }
                       else {
                         // Step 1                        
-                        if (data[i].live_popularity > 89) {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-populartimes="' + data[i].popular_times + '"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
-                        else {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-populartimes="' + data[i].popular_times + '"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
+                        if (data[i].live_popularity > 89) {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-day="' + data[i].day + '" data-live="' + data[i].live_popularity + '" data-populartimes="' + data[i].popular_times + '"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
+                        else {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-day="' + data[i].day + '" data-live="' + data[i].live_popularity + '" data-populartimes="' + data[i].popular_times + '"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
 
                         // Step 2                     
                         content += '<div class="col-4"> <div class="count-up-' + i + ' place-number text-center" data-from="0" data-to=\"' + data[i].live_popularity + '\" data-time="400"> 0 </div></div>';
@@ -1085,6 +1329,16 @@
 
                       if (data[i].usual_popularity != "") {$('.count-up-'+ i).counter();}
                     }
+
+                    // Correct the currently active Carousel Page
+                    day = data[0].day.slice(0, -10);
+                    var carouselSelector1 = $(".carousel-item");
+                    var carouselSelector2 = $("li[data-target='#gridCarousel']");
+                    carouselSelector1.removeClass('active');
+                    carouselSelector1.eq(day_labels_mapping[day]).addClass('active');
+                    carouselSelector2.removeClass('active');
+                    carouselSelector2.eq(day_labels_mapping[day]).addClass('active');                    
+
 
                     //-- Update the Table --//
                     var tableSelector = $("#placestable");

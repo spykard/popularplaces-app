@@ -88,8 +88,8 @@ gradientChartOptionsConfigurationWithTooltipBlue = {
         zeroLineColor: "transparent",
       },
       ticks: {
-        suggestedMin: 60,
-        suggestedMax: 125,
+        suggestedMin: 0,
+        suggestedMax: 100,
         padding: 20,
         fontColor: "#2380f7"
       }
@@ -141,8 +141,8 @@ gradientChartOptionsConfigurationWithTooltipPurple = {
         zeroLineColor: "transparent",
       },
       ticks: {
-        suggestedMin: 60,
-        suggestedMax: 125,
+        suggestedMin: 0,
+        suggestedMax: 100,
         padding: 20,
         fontColor: "#9a9a9a"
       }
@@ -194,8 +194,8 @@ gradientChartOptionsConfigurationWithTooltipOrange = {
         zeroLineColor: "transparent",
       },
       ticks: {
-        suggestedMin: 50,
-        suggestedMax: 110,
+        suggestedMin: 0,
+        suggestedMax: 100,
         padding: 20,
         fontColor: "#ff8a76"
       }
@@ -247,8 +247,8 @@ gradientChartOptionsConfigurationWithTooltipGreen = {
         zeroLineColor: "transparent",
       },
       ticks: {
-        suggestedMin: 50,
-        suggestedMax: 125,
+        suggestedMin: 0,
+        suggestedMax: 100,
         padding: 20,
         fontColor: "#9e9e9e"
       }
@@ -300,8 +300,8 @@ gradientBarChartConfiguration = {
         zeroLineColor: "transparent",
       },
       ticks: {
-        suggestedMin: 60,
-        suggestedMax: 120,
+        suggestedMin: 0,
+        suggestedMax: 100,
         padding: 20,
         fontColor: "#9e9e9e"
       }
@@ -323,7 +323,7 @@ gradientBarChartConfiguration = {
 };
 
 charts = {
-  gradientChart: function(selector, input_labels, input_data) {
+  gradientChart: function(selector, input_labels, input_data, extra_data) {
     // Chart 1 : gradientChart
     chartColor = "#FFFFFF";
     ctx = document.getElementById(selector).getContext("2d");
@@ -354,6 +354,20 @@ charts = {
           backgroundColor: gradientFill,
           borderWidth: 2,
           data: input_data
+        },
+        {
+          label: "Live",
+          borderColor: "#f96332",
+          pointBorderColor: "#FFF",
+          pointBackgroundColor: "#f96332",
+          pointBorderWidth: 2,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 1,
+          pointRadius: 4,
+          fill: true,
+          backgroundColor: gradientFill,
+          borderWidth: 2,
+          data: extra_data
         }]
       },
       options: gradientChartOptionsConfiguration
@@ -362,7 +376,7 @@ charts = {
     return myChart;
   },
 
-  gradientChartWithTooltipPurple: function(selector, input_labels, input_data) {
+  gradientChartWithTooltipPurple: function(selector, input_labels, input_data, extra_data) {
     // Chart 2 : gradientChartWithTooltipPurple
     var ctx = document.getElementById(selector).getContext("2d");
 
@@ -390,6 +404,25 @@ charts = {
         pointHoverBorderWidth: 15,
         pointRadius: 4,
         data: input_data,
+      },
+      { label: "Live",
+        fill: true,
+        backgroundColor: gradientStroke,
+        borderColor: '#fd5d93',
+        borderWidth: 2,
+        borderDash: [],
+        borderDashOffset: 0.0,
+        pointBackgroundColor: '#d048b6',
+        pointBorderColor: 'rgba(255,255,255,0)',
+        pointHoverBackgroundColor: '#d048b6',
+        pointBorderWidth: 20,
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 15,
+        pointRadius: 4,
+        data: extra_data,
+        type: 'bubble',
+        pointStyle: 'circle',
+        radius: 7        
       }]
     };
 
@@ -402,7 +435,7 @@ charts = {
     return myChart;    
   },
 
-  gradientChartWithTooltipGreen: function(selector, input_labels, input_data) {
+  gradientChartWithTooltipGreen: function(selector, input_labels, input_data, extra_data) {
     // Chart 3 : gradientChartWithTooltipGreen
     var ctxGreen = document.getElementById(selector).getContext("2d");
 
@@ -430,6 +463,26 @@ charts = {
         pointHoverBorderWidth: 15,
         pointRadius: 4,
         data: input_data,
+      },
+      {
+        label: "Live",
+        fill: true,
+        backgroundColor: gradientStroke,
+        borderColor: '#fd5d93',
+        borderWidth: 2,
+        borderDash: [],
+        borderDashOffset: 0.0,
+        pointBackgroundColor: '#00d6b4',
+        pointBorderColor: 'rgba(255,255,255,0)',
+        pointHoverBackgroundColor: '#00d6b4',
+        pointBorderWidth: 20,
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 15,
+        pointRadius: 4,
+        data: extra_data,
+        type: 'bubble',
+        pointStyle: 'circle',
+        radius: 7 
       }]
     };
 
@@ -442,7 +495,7 @@ charts = {
     return myChart;
   },
 
-  gradientChartWithTooltipPurpleAlternative: function(selector, input_labels, input_data) {
+  gradientChartWithTooltipPurpleAlternative: function(selector, input_labels, input_data, extra_data) {
     // Chart 4 : gradientChartWithTooltipPurpleAlternative    
     var ctx = document.getElementById(selector).getContext('2d');
 
@@ -460,7 +513,7 @@ charts = {
           label: "Popularity",
           fill: true,
           backgroundColor: gradientStroke,
-          borderColor: '#d346b1',
+          borderColor: '#fd5d93',
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
@@ -472,6 +525,26 @@ charts = {
           pointHoverBorderWidth: 15,
           pointRadius: 4,
           data: input_data,
+        },
+        {
+          label: "Live",
+          fill: true,
+          backgroundColor: gradientStroke,
+          borderColor: '#fd5d93',
+          borderWidth: 2,
+          borderDash: [],
+          borderDashOffset: 0.0,
+          pointBackgroundColor: '#d346b1',
+          pointBorderColor: 'rgba(255,255,255,0)',
+          pointHoverBackgroundColor: '#d346b1',
+          pointBorderWidth: 20,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 15,
+          pointRadius: 4,
+          data: extra_data,
+          type: 'bubble',
+          pointStyle: 'circle',
+          radius: 7 
         }]
       },
       options: gradientChartOptionsConfigurationWithTooltipPurple
@@ -482,7 +555,7 @@ charts = {
     return myChart;
   },
 
-  gradientBarChart: function(selector, input_labels, input_data) {
+  gradientBarChart: function(selector, input_labels, input_data, extra_data) {
     // Chart 5 : gradientBarChart     
     var ctx = document.getElementById(selector).getContext("2d");
 
@@ -510,6 +583,20 @@ charts = {
           borderDash: [],
           borderDashOffset: 0.0,
           data: input_data,
+        },
+        {
+          label: "Live",
+          fill: true,
+          backgroundColor: '#fd5d93',
+          hoverBackgroundColor: gradientStroke,
+          borderColor: '#fd5d93',
+          borderWidth: 2,
+          borderDash: [],
+          borderDashOffset: 0.0,
+          data: extra_data,
+          type: 'bubble',
+          pointStyle: 'circle',
+          radius: 7
         }]
       },
       options: gradientBarChartConfiguration
