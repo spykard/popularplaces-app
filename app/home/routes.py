@@ -13,6 +13,7 @@ from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAd
 from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal
 from app.base.util import hash_pass
 from datetime import datetime
+from collections import deque
 import populartimes
 import json
 
@@ -200,7 +201,10 @@ def places():
     place_dicts = []
     count = 1
     for place in places:
-        place_dicts.append({'id': place[0].id, 'count': count, 'name': place[0].name, 'address': place[0].address, 'type': place[0].type_p,  'city': place[1].name, 'verification': place[0].verification, 'time': place[0].time.strftime("%Y-%m-%d")})
+        types = place[0].type_p
+        # if place[0].type_p2: types += ", " + place[0].type_p2
+        # if place[0].type_p3: types += ", " + place[0].type_p3
+        place_dicts.append({'id': place[0].id, 'count': count, 'name': place[0].name, 'address': place[0].address, 'type': types,  'city': place[1].name, 'verification': place[0].verification, 'time': place[0].time.strftime("%Y-%m-%d")})
         count += 1
 
     add_place_form = AddPlaceForm(request.form)
@@ -210,7 +214,9 @@ def places():
         name = request.form['name']
         address = request.form['address']
         type_p = request.form['type_p']
-        city = request.form['city'].title()        
+        city = request.form['city'].title()   
+        type_p2 = None if request.form['type_p2'] == "Choose..." else request.form['type_p2']
+        type_p3 = None if request.form['type_p3'] == "Choose..." else request.form['type_p3']      
 
         # Validate Form Data
         if not add_place_form.validate():
@@ -237,7 +243,7 @@ def places():
             db.session.add(placeglobal_to)
             db.session.commit()                  
 
-        insert_dict = dict([("name" , name), ("address" , address), ("type_p" , type_p), ("user_id" , current_user.id), ("city_id" , city_to.id), ("global_id" , placeglobal_to.id)])
+        insert_dict = dict([("name" , name), ("address" , address), ("type_p" , type_p), ("user_id" , current_user.id), ("city_id" , city_to.id), ("global_id" , placeglobal_to.id), ("type_p2", type_p2), ("type_p3", type_p3)])
         place_to = Place(**insert_dict)
         db.session.add(place_to)
         db.session.commit()
@@ -247,7 +253,10 @@ def places():
         place_dicts = []
         count = 1
         for place in places:
-            place_dicts.append({'id': place[0].id, 'count': count, 'name': place[0].name, 'address': place[0].address, 'type': place[0].type_p,  'city': place[1].name, 'verification': place[0].verification, 'time': place[0].time.strftime("%Y-%m-%d")})
+            types = place[0].type_p
+            # if place[0].type_p2: types += ", " + place[0].type_p2
+            # if place[0].type_p3: types += ", " + place[0].type_p3            
+            place_dicts.append({'id': place[0].id, 'count': count, 'name': place[0].name, 'address': place[0].address, 'type': types,  'city': place[1].name, 'verification': place[0].verification, 'time': place[0].time.strftime("%Y-%m-%d")})
             count += 1
 
         return render_template( 'places.html', 
@@ -344,12 +353,31 @@ def get_place_results():
         if popular_times != "null":
             load_data = json.loads(popular_times)
             for day in load_data:
-                decoded += ' '.join([str(int) for int in day["data"]])
+                temp_deque = deque(day["data"])  
+                temp_deque.rotate(-6)  # 'rotate' to convert from 12AM on first position of array to 6AM on first position of array
+                decoded += ' '.join([str(int) for int in temp_deque])
                 decoded += (',')
 
         data.append({'name': place_result[0].name, 'address': place_result[0].address, 'rating': str(converter(place_result[0].rating)) + " (" + str(converter(place_result[0].rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result[0].time_spent), 'usual_popularity': converter(place_result[0].usual_popularity), 'difference': converter(place_result[0].difference), 'live_popularity': converter(place_result[0].live_popularity), 'day': place_result[1].time.strftime("%A - %H Hour")})        
 
     return jsonify(data)
+
+@blueprint.route('/get-place-info', methods=['POST'])
+@login_required
+def get_place_info():
+    search_name = request.form['name']
+    search_city = request.form['city']
+    place = populartimes.get_popular_times_by_crawl(name=search_name, address=search_city)
+    if not place["place_address"]: abort(400)
+
+    types = []
+    for type_p in place["types"]:
+        types.append(type_mapper(type_p[0], 2))
+
+    data = []
+    data.append({'name': place["place_name"], 'address': place["place_address"], 'types': types})
+
+    return jsonify(data)    
 
 @blueprint.route('/delete-search', methods=['POST'])
 @login_required
@@ -419,34 +447,45 @@ def search_populartimes(city, type1, type2, all_places):
             data = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)            
 
             # Write Verification for Places to DB
-            if data["populartimes"]:
-                Place.query.filter_by(id=place[0]).update({"verification": "True"})
+            if data["place_address"]:
+                Place.query.filter_by(id=place[0]).update({"verification": "True", "name_verified": data["place_name"], "address_verified": data["place_address"], "latitude": float(data["latitude"]), "longtitude": float(data["longtitude"]), "type_verified": data["types"], "place_id": data["place_id"]})
 
-                usual_popularity = ("usual_popularity", data["populartimes"][current_time.weekday()]["data"][current_time.hour])
+                if data["populartimes"]:
+                    usual_popularity = ("usual_popularity", data["populartimes"][current_time.weekday()]["data"][current_time.hour])
 
-                if data["current_popularity"]:
-                    difference = ("difference", data["current_popularity"] - usual_popularity[1])
+                    if data["current_popularity"]:
+                        difference = ("difference", data["current_popularity"] - usual_popularity[1])
+                    else:
+                        difference = ("difference", None)
+
+                    if data["time_spent"]:
+                        time_spent = ("time_spent", '-'.join(map(str, data["time_spent"])))   
+                    else:
+                        time_spent = ("time_spent", None)
+
                 else:
+                    usual_popularity = ("usual_popularity", None)
                     difference = ("difference", None)
+                    time_spent = ("time_spent", None)
 
             else:
                 Place.query.filter_by(id=place[0]).update({"verification": "False"}) 
                 usual_popularity = ("usual_popularity", None)
                 difference = ("difference", None)
+                time_spent = ("time_spent", None)
 
             # db.session.commit() 
-             
+
             # if "time_wait" not in data:
             #     data["time_wait"] = None
 
             # Write Data to DB
-            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), ("time_spent" , data["time_spent"]), user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("live_popularity" , data["current_popularity"]), difference, ("global_id", place[3]), usual_popularity])
+            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), time_spent, user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("live_popularity" , data["current_popularity"]), difference, ("global_id", place[3]), usual_popularity])
             placeresult = PlaceResult(**insert_dict)
             db.session.add(placeresult)
             db.session.commit()
 
     except Exception as e:
-        raise ValueError(str(e))
         return False, str(e) 
 
     return True, name[1]
@@ -514,16 +553,20 @@ def get_places_to_search(city, type1, type2, all_places):
     return places_list
 
 # Helper - Maps a string we receive from a Form to a string that can be used as a parameter inside the code, e.g. "Night Club" -> "night_club"
-def type_mapper( type1, type2 ): 
-    places_map = {"Bar": "bar", "Night Club": "night_club", "Restaurant": "restaurant", "Cafe": "cafe", "Bakery": "bakery", "Food": "food", "Subway Station": "subway_station", "Gas Station": "gas_station", "Bank": "bank", "Pharmacy": "pharmacy", "Health": "health", "Place of Worship": "place_of_worship", "Department Store": "department_store", "Establishment": "establishment", "University": "university", "Library": "library", "Book Store": "book_store", "Gym": "gym", "Clothing Store": "clothing_store", "Casino": "casino", "Liquor Store": "liquor_store"}
-    to_return = []
+def type_mapper( type_p, mode ): 
+    places_map = {"Bar": "bar", "Night Club": "night_club", "Restaurant": "restaurant", "Cafe": "cafe", "Bakery": "bakery", "Food": "food", "Subway Station": "subway_station", "Gas Station": "gas_station", "Bank": "bank", "Pharmacy": "pharmacy", "Health": "health", "Place of Worship": "place_of_worship", "Department Store": "department_store", "Establishment": "establishment", "University": "university", "Library": "library", "Book Store": "book_store", "Gym": "gym", "Clothing Store": "clothing_store", "Casino": "casino", "Liquor Store": "liquor_store", "Other": "other"}
+    place_map_inv = {v: k for k, v in places_map.items()}
 
-    if type1 != "Choose...":
-        to_return.append([places_map[type1]])
-    if type2 != "Choose...":
-        to_return.append([places_map[type2]])
-    
-    return to_return
+    if mode == 1:
+        if type_p == "Choose...":
+            return None
+        else:
+            return places_map[type_p]
+    else:
+        try: 
+            return place_map_inv[type_p]
+        except:
+            return "Other"
         
 # Helper - Extract current page name from request 
 def get_segment( request ): 

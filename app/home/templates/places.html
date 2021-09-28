@@ -113,11 +113,14 @@
                 <label>City</label>
                 <div id="citydiv" class="form-group">              
                     <input type="text" class="form-control form-{{ current_user.ui_color }}" id="city" name="city" placeholder="City" value="">
-                </div>                                     
+                </div>    
+                <div>
+                   <button id="autofill" type="button" class="btn btn-secondary">Auto-Fill</button> 
+                </div>                                
                 <label>Address</label>
                 <div id="addressdiv" class="form-group">              
                     <input type="text" class="form-control form-{{ current_user.ui_color }}" id="address" name="address" placeholder="Address" value="">                                                    
-                <a class="assistancelink" href="#">Automatically Find Address</a>
+                <a class="assistancelink" href="#">Help: Find Address from Google Maps</a>
                 </div>
                 <label>Type</label>
                 <div id="typediv" class="form-group">
@@ -144,8 +147,63 @@
                     <option>Clothing Store</option>
                     <option>Casino</option>
                     <option>Liquor Store</option>
+                    <option>Other</option>                    
                     </select>
-                </div>                                  
+                </div> 
+                <div id="typediv2" class="form-group" style="display: none;">              
+                    <select type="text" class="form-control form-{{ current_user.ui_color }} {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type_p2" name="type_p2">
+                    <option>Choose...</option>
+                    <option>Bar</option>
+                    <option>Night Club</option>
+                    <option>Restaurant</option>
+                    <option>Cafe</option>
+                    <option>Bakery</option>
+                    <option>Food</option>
+                    <option>Subway Station</option>
+                    <option>Gas Station</option>
+                    <option>Bank</option>
+                    <option>Pharmacy</option>
+                    <option>Health</option>
+                    <option>Place of Worship</option>
+                    <option>Department Store</option>
+                    <option>Establishment</option>
+                    <option>University</option>
+                    <option>Library</option>
+                    <option>Book Store</option>
+                    <option>Gym</option>
+                    <option>Clothing Store</option>
+                    <option>Casino</option>
+                    <option>Liquor Store</option>
+                    <option>Other</option>                    
+                    </select>
+                </div> 
+                <div id="typediv3" class="form-group" style="display: none;">               
+                    <select type="text" class="form-control form-{{ current_user.ui_color }} {% if current_user.ui_theme == 'dark' %}dark-content{% endif %}" id="type_p3" name="type_p3">
+                    <option>Choose...</option>
+                    <option>Bar</option>
+                    <option>Night Club</option>
+                    <option>Restaurant</option>
+                    <option>Cafe</option>
+                    <option>Bakery</option>
+                    <option>Food</option>
+                    <option>Subway Station</option>
+                    <option>Gas Station</option>
+                    <option>Bank</option>
+                    <option>Pharmacy</option>
+                    <option>Health</option>
+                    <option>Place of Worship</option>
+                    <option>Department Store</option>
+                    <option>Establishment</option>
+                    <option>University</option>
+                    <option>Library</option>
+                    <option>Book Store</option>
+                    <option>Gym</option>
+                    <option>Clothing Store</option>
+                    <option>Casino</option>
+                    <option>Liquor Store</option>
+                    <option>Other</option>                    
+                    </select>
+                </div>                                                                                    
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -274,6 +332,46 @@
             helpers.showNotification('top','center', 'true', 'Hint: Re-type the Values in <font color="#ec250d">Red</font>.')
         }
     }); 
+
+    $('#autofill').click(function(event) {
+        var name = $("#name").val();
+        var city = $("#city").val();
+
+        $("#typediv2").slideUp();
+        $("#typediv3").slideUp();        
+
+        $.ajax({
+            type: 'POST',
+            data: {
+                name: name,
+                city: city
+            },                
+            url: "/get-place-info",
+            success: function(data){ 
+                        $("#name").val(data[0].name);
+                        $("#address").val(data[0].address);
+                        if (data[0].types.length >= 3) {
+                            $("#type_p").val(data[0].types[0]);
+                            $("#type_p2").val(data[0].types[1]);
+                            $("#type_p3").val(data[0].types[2]);
+                            $("#typediv2").slideDown();
+                            $("#typediv3").slideDown();
+                        }
+                        else if (data[0].types.length == 2) {
+                            $("#type_p").val(data[0].types[0]);
+                            $("#type_p2").val(data[0].types[1]);
+                            $("#typediv2").slideDown();                            
+                        }
+                        else if (data[0].types.length == 1) {
+                            $("#type_p").val(data[0].types[0]);
+                        }                          
+                        },
+            error: function(data){
+                    if (data.status == 400) {
+                        helpers.showNotification('top','center', 'true', 'Error: A place with the given Name and City could not be found.');    
+                        }},
+        });
+    });    
 
     helpers.showNotification('top','center', '{{ to_notify }}', 'Failed to Add Place: Input does not follow the Appropriate Form.')
 </script>

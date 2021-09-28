@@ -72,7 +72,15 @@ class Place(db.Model):
     city_id = Column(String, ForeignKey('City.id'))
     time = Column(DateTime, server_default='time') 
     verification = Column(String, server_default='verification')  
-    global_id = Column(Integer, ForeignKey('PlaceGlobal.id'))      
+    global_id = Column(Integer, ForeignKey('PlaceGlobal.id'))   
+    type_p2 = Column(String, server_default='type_p2')
+    type_p3 = Column(String, server_default='type_p3')           
+    name_verified = Column(String, server_default='name_verified')           
+    address_verified = Column(String, server_default='address_verified')
+    latitude = Column(Float, server_default='latitude')
+    longtitude = Column(Float, server_default='longtitude')                   
+    type_verified = Column(String, server_default='type_verified')           
+    place_id = Column(String, server_default='place_id')           
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

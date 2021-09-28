@@ -50,7 +50,13 @@
     white-space: nowrap; 
     font-size: 0.6rem; 
     font-weight: 600;  
-  }     
+  }   
+
+  .modal-text-below {
+    padding: 12px 0px 0px 0px;
+    line-height: 1.0;
+    text-align: center
+  }  
 
   .box {
     width: 12rem;
@@ -644,7 +650,7 @@
       </div>
     </div>
 
-    <div class="row row justify-content-center">
+    <div class="row justify-content-center">
       <div class="col-12 col-md-8 col-sm-10">     
         <div class="card card-nav-tabs">
           <div class="card-body" style="padding-bottom: 15px;">
@@ -1031,12 +1037,23 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
               </a>
-            </div>          
-          </div>
-
-            <div class="modal-footer">
-            <button id="closebutton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>    
+            <div class="row justify-content-center modal-text-below">
+              <p>Exact Time Calculator: People Spend Exactly <span class="text-primary">live</span> on this Place</p>
             </div>
+            <div class="row justify-content-center modal-text-below">
+              <p>Exact Crowd Size Calculator: <span class="text-primary">Click</span> Below</p></p> 
+            </div>
+            <div class="row justify-content-center modal-text-below" style="padding-top: 0px;">
+              <button type="button" class="btn btn-sm">
+                <i class="fas fa-calculator"></i>
+              </button> 
+            </div>
+          </div>           
+
+          <div class="modal-footer">
+          <button id="closebutton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
 
         </div>
       </div>
