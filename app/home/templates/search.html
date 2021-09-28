@@ -249,7 +249,7 @@
         </div>
 
         <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->
-        <button class="btn btn-simple btn-simple-less-wide btn-{{ current_user.ui_button }}" onclick="location.href='/places'; return false;">
+        <button id="helptooltip2" class="btn btn-simple btn-simple-less-wide btn-{{ current_user.ui_button }}" onclick="location.href='/places'; return false;">
             <i class="tim-icons icon-simple-add"></i>
         </button>
       </div>
@@ -396,13 +396,16 @@
       // Hints
       {% if current_user.total_runs < 2 %}
         $('#helptooltip1').tooltip({trigger: 'manual', template: template, title: "Select Existing or Add Your Own"}).tooltip('show');      
+        $('#helptooltip2').tooltip({trigger: 'manual', placement: 'bottom', template: template, title: "Add your Favorite Places"}).tooltip('show');
 
         container.addEventListener('ps-scroll-down', function() {
           $('#helptooltip1').tooltip('hide');
+          $('#helptooltip2').tooltip('hide');
         }, { once: true });  // Call only once, then remove itself
 
         container.addEventListener('click', function() {
           $('#helptooltip1').tooltip('hide');
+          $('#helptooltip2').tooltip('hide');
         }, { once: true });  // Call only once, then remove itself       
       {% endif %} 
     });
