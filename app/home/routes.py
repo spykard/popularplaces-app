@@ -10,10 +10,11 @@ from app import db, login_manager
 from sqlalchemy import func, nullslast
 from jinja2 import TemplateNotFound
 from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAdvanced, AddPlaceForm
-from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal
+from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal, CrowdInput
 from app.base.util import hash_pass
 from datetime import datetime
 from collections import deque
+from random import randint
 import populartimes
 import json
 
@@ -358,7 +359,7 @@ def get_place_results():
                 decoded += ' '.join([str(int) for int in temp_deque])
                 decoded += (',')
 
-        data.append({'name': place_result[0].name, 'address': place_result[0].address, 'rating': str(converter(place_result[0].rating)) + " (" + str(converter(place_result[0].rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result[0].time_spent), 'usual_popularity': converter(place_result[0].usual_popularity), 'difference': converter(place_result[0].difference), 'live_popularity': converter(place_result[0].live_popularity), 'day': place_result[1].time.strftime("%A - %H Hour")})        
+        data.append({'name': place_result[0].name, 'address': place_result[0].address, 'global_id': place_result[0].global_id, 'rating': str(converter(place_result[0].rating)) + " (" + str(converter(place_result[0].rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result[0].time_spent), 'usual_popularity': converter(place_result[0].usual_popularity), 'difference': converter(place_result[0].difference), 'live_popularity': converter(place_result[0].live_popularity), 'day': place_result[1].time.strftime("%A - %H Hour")})        
 
     return jsonify(data)
 
@@ -379,6 +380,38 @@ def get_place_info():
 
     return jsonify(data)    
 
+@blueprint.route('/set-person-count', methods=['POST'])
+@login_required
+def set_person_count():
+    id = request.form['id']
+    input = request.form['input']
+
+    insert_dict = dict([("user_id" , current_user.id), ("global_id" , id), ("input" , input)])
+    search = CrowdInput(**insert_dict)
+    db.session.add(search)
+    db.session.commit()     
+
+    return "true" 
+
+@blueprint.route('/get-person-count', methods=['POST'])
+@login_required
+def get_person_count():
+    id = request.form['id']
+
+    if (int(id) != 0):
+        crowd_input = db.session.query(func.avg(CrowdInput.input).label('average')).filter(CrowdInput.global_id == id).first()
+
+        data = []
+        for place in crowd_input:
+            if (place):
+                data.append({'count': place})
+            else:
+                data.append({'count': -1})
+
+        return jsonify(data)            
+    else:
+        return jsonify([{'count': randint(8, 21)}])     
+
 @blueprint.route('/delete-search', methods=['POST'])
 @login_required
 def delete_search():
@@ -389,10 +422,8 @@ def delete_search():
         is_not_empty = db.session.query(Search).join(PlaceResult).filter(Search.id == id).first() 
 
         if is_not_empty:
-            print("LOL")
             Search.query.filter_by(id=id).update({"user_id": None})          
         else:
-            print("LEL")
             Search.query.filter_by(id=id).delete()
 
         db.session.commit() 

@@ -205,7 +205,31 @@ class PlaceResult(db.Model):
             setattr(self, property, value)
 
     def __repr__(self):
-        return str(self.id)                        
+        return str(self.id) 
+
+class CrowdInput(db.Model):
+
+    __tablename__ = 'CrowdInput'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('User.id'))
+    time = Column(DateTime, server_default='time') 
+    global_id = Column(Integer, ForeignKey('PlaceGlobal.id'))
+    input = Column(Integer, server_default='input')                 
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+                
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.id)                               
 
 @login_manager.user_loader
 def user_loader(id):

@@ -18,8 +18,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 # The configuration, however, we will be using PostgreSQL in Debug too and not just in Production
 get_config_mode = 'Debug' if DEBUG else 'Production'
 
-try:
-    
+try:    
     # Load the configuration using the default values 
     app_config = config_dict[get_config_mode.capitalize()]
 
