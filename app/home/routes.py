@@ -1,8 +1,4 @@
 # -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 from app.home import blueprint
 from flask import render_template, redirect, url_for, request, abort, jsonify
 from flask_login import login_required, current_user
@@ -410,7 +406,7 @@ def get_person_count():
 
         return jsonify(data)            
     else:
-        return jsonify([{'count': randint(8, 21)}])     
+        return jsonify([{'count': randint(13, 34)}])     
 
 @blueprint.route('/delete-search', methods=['POST'])
 @login_required

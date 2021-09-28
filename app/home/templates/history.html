@@ -63,6 +63,17 @@
     text-align: center
   }  
 
+  .white-content .form-control[readonly] {
+    background-color: transparent;
+    color: #222a42 !important;
+  }
+
+  .text-success,
+  .text-danger, 
+  .text-muted {
+    margin-bottom: 0px;
+  }   
+
   .box {
     width: 12rem;
     {# max-width: 18rem;
@@ -472,7 +483,10 @@
                     </th>                       
                     <th class="text-center">
                       Trend
-                    </th>                                     
+                    </th> 
+                    <th class="text-center">
+                      #
+                    </th>                                                         
                   </tr>
                 </thead>
                 <tbody>
@@ -494,7 +508,12 @@
                     </td>                    
                     <td class="text-center">
                       <p class="text-success">+40</p>
-                    </td>                    
+                    </td>
+                    <td class="td-actions text-right">
+                        <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(&quot;https://maps.google.com/?q=La Grande Boucherie 145 W 53rd St, New York, NY 10019, United States&quot;);">
+                            <i class="tim-icons icon-square-pin"></i>
+                        </button>
+                    </td>                                        
                   </tr>                
                   <tr>
                     <td>
@@ -514,7 +533,12 @@
                     </td>                    
                     <td class="text-center">
                       <p class="text-success">+16</p>
-                    </td>                    
+                    </td>
+                    <td class="td-actions text-right">
+                        <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(&quot;https://maps.google.com/?q=Petrossian Boutique & Cafe 253 W 51st St, New York, NY 10019, United States&quot;);">
+                            <i class="tim-icons icon-square-pin"></i>
+                        </button>
+                    </td>                                         
                   </tr>
                   <tr>
                     <td>
@@ -533,8 +557,13 @@
                       8
                     </td>                    
                     <td class="text-center">
-                      <p class="text-danger">-31</p>
-                    </td>                    
+                      <p class="text-danger" style="margin-bottom: 0px;">-31</p>
+                    </td> 
+                    <td class="td-actions text-right">
+                        <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(&quot;https://maps.google.com/?q=Brooklyn Diamond Coffee 240 E 54th St, New York, NY 10022, United States&quot;);">
+                            <i class="tim-icons icon-square-pin"></i>
+                        </button>
+                    </td>                                       
                   </tr>                                    
                 </tbody>
               </table>
@@ -1078,7 +1107,7 @@
                     <div class="input-group">
                       <div class="input-group-prepend">
                             <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" style="padding: 8px 0 8px 18px">
-                              <label style="margin-bottom: 0rem;"><span class="text-danger live-text-calculator">LIVE</span>                   
+                              <label style="margin-bottom: 0rem;"><span class="text-danger live-text-calculator">LIVE&nbsp;</span>                   
                                 <i class="fas fa-users"></i>
                               </label>
                           </div>      
@@ -1439,7 +1468,7 @@
         
         tableSelector.find("tbody > tr").remove();  // Wipe        
         
-        var content = '<tr><td> La Grande Boucherie </td><td> 145 W 53rd St, New York, NY 10019, United States </td><td class="text-center"> 4.5 (578) </td><td class="text-center"> 51 </td><td class="text-center"> 91 </td><td class="text-center"> <p class="text-success">+40</p></td></tr><tr> <td> Petrossian Boutique & Cafe </td><td> 253 W 51st St, New York, NY 10019, United States </td><td class="text-center"> 4.6 (1632) </td><td class="text-center"> 36 </td><td class="text-center"> 52 </td><td class="text-center"> <p class="text-success">+16</p></td></tr><tr> <td> Brooklyn Diamond Coffee </td><td> 240 E 54th St, New York, NY 10022, United States </td><td class="text-center"> 4.1 (81) </td><td class="text-center"> 39 </td><td class="text-center"> 8 </td><td class="text-center"> <p class="text-danger">-31</p></td></tr>';
+        var content = '<tr><td> La Grande Boucherie </td><td> 145 W 53rd St, New York, NY 10019, United States </td><td class="text-center"> 4.5 (578) </td><td class="text-center"> 51 </td><td class="text-center"> 91 </td><td class="text-center"> <p class="text-success">+40</p></td><td class="td-actions text-right"> <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(&quot;https://maps.google.com/?q=La Grande Boucherie 145 W 53rd St, New York, NY 10019, United States&quot;);"> <i class="tim-icons icon-square-pin"></i> </button> </td></tr><tr> <td> Petrossian Boutique & Cafe </td><td> 253 W 51st St, New York, NY 10019, United States </td><td class="text-center"> 4.6 (1632) </td><td class="text-center"> 36 </td><td class="text-center"> 52 </td><td class="text-center"> <p class="text-success">+16</p></td><td class="td-actions text-right"> <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(&quot;https://maps.google.com/?q=Petrossian Boutique & Cafe 253 W 51st St, New York, NY 10019, United States&quot;);"> <i class="tim-icons icon-square-pin"></i> </button> </td></tr><tr> <td> Brooklyn Diamond Coffee </td><td> 240 E 54th St, New York, NY 10022, United States </td><td class="text-center"> 4.1 (81) </td><td class="text-center"> 39 </td><td class="text-center"> 8 </td><td class="text-center"> <p class="text-danger" style="margin-bottom: 0px;">-31</p></td><td class="td-actions text-right"> <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(&quot;https://maps.google.com/?q=Brooklyn Diamond Coffee 240 E 54th St, New York, NY 10022, United States&quot;);"> <i class="tim-icons icon-square-pin"></i> </button> </td></tr>';
 
         tableSelector.children("tbody").append(content);
       }
@@ -1539,6 +1568,9 @@
                       else if (data[i].difference > 0) {content += "<td class='text-center'><p class='text-success'>" + data[i].difference + "</p></td>";}
                       else if (data[i].difference < 0) {content += "<td class='text-center'><p class='text-danger'>" + data[i].difference + "</p></td>";}
                       else {content += "<td class='text-center'><p>" + data[i].difference + "</p></td>";}
+
+                      // Step 5
+                      content += '<td class="td-actions text-right"> <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(\'https://maps.google.com/?q=' + data[i].name + ' ' + data[i].address + '\');"> <i class="tim-icons icon-square-pin"></i> </button> </td>';
 
                       content += "</tr>";
 

@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.0] 2021-09-28
+### Dependencies Update
+
+- Codebase Overhaul
+- Tons of Issues Fixed
+
 ## [1.0.4] 2021-05-16
 ### Dependencies Update
 
