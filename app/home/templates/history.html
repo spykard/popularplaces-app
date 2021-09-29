@@ -206,7 +206,7 @@
       <div id="searchHistoryList" class="col overflow-auto" style="max-height: 236px;">
         <div id="helptooltip1" class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %} active" id="list-example-list" data-toggle="list" href="#list-example" role="tab" aria-controls="example">
-            Sample Search
+            Example Search
             <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm" value="0" style="height: 0.35rem; width: 0.35rem;">
                 <i class="tim-icons icon-simple-remove" style="font-size: 0.9em;"></i>
             </button>
@@ -214,7 +214,7 @@
 
           {% for search in searches %}
             <a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action list-group-item-action-{{ current_user.ui_button }} {% if current_user.ui_theme == 'dark' %}list-group-item-darkerer{% endif %}" id="list-{{ search['name'] }}-list" data-toggle="list" href="#list-{{ search['name'] }}" role="tab" aria-controls="{{ search['name'] }}">
-              {{ search['name'] }}
+              Search {{ search['city'] }} for {{ search['settings_type1'] }} {{ search['settings_type2'] }} on {{ search['day'][:-10]  }} ({{ search['name'] }})
               <button name="deletebutton" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm" value="{{ search['id'] }}" style="height: 0.35rem; width: 0.35rem;">
                   <i class="tim-icons icon-simple-remove" style="font-size: 0.9em;"></i>
               </button>            
@@ -246,7 +246,7 @@
                     <tbody>
                           <tr>
                               <td style="display:none;">0</td>
-                              <td class="text-center">Sample Search</td>                          
+                              <td class="text-center">Example Search</td>                          
                               <td>New York</td>
                               <td>Cafe</td> 
                               <td>Restaurant</td> 
@@ -1179,8 +1179,15 @@
           $('#helptooltip2').tooltip('hide');
           $('#helptooltip3').tooltip('hide');
         }, { once: true });  // Call only once, then remove itself       
-      {% endif %}             
+      {% endif %}  
+
+      // Came from Search via GET
+      {% if msg %}
+        $('#helptooltip1 > a:eq(1)').trigger("click");
+      {% endif %} 
     }); 
+
+ 
 
     // View Mode Buttons
     $('#gridView').click(function() {
@@ -1209,7 +1216,7 @@
                       },
           error: function(data){
                   if (data.status == 400) {
-                      helpers.showNotification('top','center', 'true', 'This is a Sample Search and thus cannot be Deleted.');    
+                      helpers.showNotification('top','center', 'true', 'This is an Example Search and thus cannot be Deleted.');    
                       }},
       });
     }); 
@@ -1346,7 +1353,7 @@
       else if (id == 0) {
         $('#userInputDiv').addClass('has-danger');        
         $('#userInput').addClass('form-control-danger');         
-        helpers.showNotification('top','center', 'true', 'This is a Sample Search, try using the Calculator in a real-world Search!');       
+        helpers.showNotification('top','center', 'true', 'This is an Example Search, try using the Calculator in a real-world Search!');       
       }
       else {
         $.ajax({

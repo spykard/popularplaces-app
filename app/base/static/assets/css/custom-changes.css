@@ -165,3 +165,35 @@ select.dark-content option {
 .carousel-control-next {
   right: -20px;
 }
+
+.container-row-margin .row + .row {
+  margin-top: 0.8rem;
+}
+
+.popover-like-tooltip {
+  color: #222a42;
+  background-color: #ffffff;       
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.75rem;    
+  line-height: 1.5;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  text-align: center;    
+  letter-spacing: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: break-word;    
+  white-space: normal;
+  line-break: auto;
+}
+
+.popover-body {
+  padding-bottom: 0.30rem;
+}
+
+.popover-button {
+  font-size: 0.760rem;
+}

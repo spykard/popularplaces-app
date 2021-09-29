@@ -249,7 +249,7 @@
         </div>
 
         <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->
-        <button id="helptooltip2" class="btn btn-simple btn-simple-less-wide btn-{{ current_user.ui_button }}" onclick="location.href='/places'; return false;">
+        <button id="helptooltip2" class="btn btn-simple btn-simple-less-wide btn-{{ current_user.ui_button }}" onclick="location.href='/places?add=1'; return false;">
             <i class="tim-icons icon-simple-add"></i>
         </button>
       </div>
@@ -265,7 +265,7 @@
   </div>
 </div>
 
-<!-- Modal -->        
+<!-- Modal 1 -->        
 <div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
   <div class="modal-dialog modal-fix-position modal-lg" role="document">
     <div class="modal-content">
@@ -372,6 +372,57 @@
   </div>
 </div>
 
+<!-- Modal 2 -->        
+<div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header justify-content-center">
+        <h5 class="modal-title title title-up" id="warningTitle">Remove from My Places</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        </div>
+        <div class="modal-body">
+            <p>There is <span class="intro-text-highlight">only 1 Place</span> stored in <a href="/places">My Places</a>. For an optimal experience please manually add more Places.</p> 
+            <p>Are you absolutely certain you want to continue with the Search?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple-less-wide btn-{{ current_user.ui_button }}" data-dismiss="modal" onclick="location.href='/places?add=1'; return false;">
+              <i class="tim-icons icon-simple-add"></i>
+          </button>
+          <button id="deletebuttonModal" type="button" class="btn btn-default" data-dismiss="modal">Search</button>
+        </div>
+    </div>
+    </div>
+</div> 
+
+<!-- Hint 1 --> 
+<div id="popover-content1" style="display: none;">
+  <div class="container-row-margin">
+    <div class="row">
+      <div class="col">
+        <div class="popover-like-tooltip">
+          Select from Examples or Add Your Own
+          <br/>
+          <small>Three Examples Cities and Places are Provided</small>
+        </div>                    
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">       
+        <button type="button" class="btn btn-sm btn-{{ current_user.ui_button }} popover-button float-left" onclick="$(this).closest('.popover').popover('hide'); location.href='/places?add=1'; return false;">
+          Add
+        </button>
+      </div>
+      <div class="col">                       
+        <button id="popover-content1-close" type="button" class="btn btn-sm btn-default popover-button float-right" onclick="$(this).closest('.popover').popover('hide'); return false;" >
+          Got it!
+        </button>
+      </div>
+    </div>
+  </div>             
+</div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
@@ -395,37 +446,69 @@
 
       // Hints
       {% if current_user.total_runs < 2 %}
-        $('#helptooltip1').tooltip({trigger: 'manual', template: template, title: "Select Existing or Add Your Own"}).tooltip('show');      
+        // Hints using 'tooltip'
+        {# // $('#helptooltip1').tooltip({trigger: 'manual', template: template, title: "Select Existing or Add Your Own"}).tooltip('show'); #}
         $('#helptooltip2').tooltip({trigger: 'manual', placement: 'bottom', template: template, title: "Add your Favorite Places"}).tooltip('show');
 
+        // Hints using 'popover'
+        $("#helptooltip1").popover({
+            trigger: 'manual', 
+            placement: 'top',
+            container: $("#helptooltip1"),
+            html: true, 
+            sanitize: false,
+            content: function() {
+                return $('#popover-content1').html();
+            }
+        }).popover('show');      
+
         container.addEventListener('ps-scroll-down', function() {
-          $('#helptooltip1').tooltip('hide');
+          //$('#helptooltip1').tooltip('hide');
           $('#helptooltip2').tooltip('hide');
         }, { once: true });  // Call only once, then remove itself
 
-        container.addEventListener('click', function() {
-          $('#helptooltip1').tooltip('hide');
-          $('#helptooltip2').tooltip('hide');
-        }, { once: true });  // Call only once, then remove itself       
+        {# container.addEventListener('click', function() {
+          //$('#helptooltip1').tooltip('hide');
+          //$('#helptooltip2').tooltip('hide');
+        }, { once: true });  // Call only once, then remove itself #}      
       {% endif %} 
     });
 
-    $('[name="selectcitybutton"]').click(function() {   
-      {# //$('#selectcity').slideUp(); #}
-      $('#selectcity').hide();
-      $("#search").prop("disabled", false);
-      $(".btn-group").removeAttr('data-toggle data-placement title data-original-title');
-      $('.category').text("Please Select your Desired Settings");
-      $('#city').val($(this).attr("val")); 
+    $('[name="selectcitybutton"]').click(function() { 
+      $('.popover').popover('hide');
+      $('#helptooltip2').tooltip('hide');
 
-      {# // https://mdbootstrap.com/freebies/perfect-scrollbar/?utm_source=GitHub&utm_medium=PerfectScrollbar#howtouse #}
-      const container = document.querySelector('.main-panel');
-      container.scrollTop = 0;
-
-      $('#search-row-1').slideDown(); 
-      $('#search-row-2').slideDown();
-      $('#search-row-3').slideDown();    
+      var numberofplaces = $(this).closest('.card').children('.card-footer').children('.text-muted').text().slice(-1);
+      if (numberofplaces <= 1) {
+        $('#warningModal').modal();
+        $("#deletebuttonModal").attr('value', $(this).attr("val"));  // Stores an important value inside the Button
+      }
+      else { 
+        selectCity($(this).attr("val"));
+      }  
     });
+
+    $('#deletebuttonModal').click(function() { 
+      selectCity($(this).val());
+    });  
+
+    function selectCity(name) {
+      {# //$('#selectcity').slideUp(); #}
+        $('#selectcity').hide();
+        $("#search").prop("disabled", false);
+        $(".btn-group").removeAttr('data-toggle data-placement title data-original-title');
+        $('.category').text("Please Select your Desired Settings");
+        $('#city').val(name); 
+
+        {# // https://mdbootstrap.com/freebies/perfect-scrollbar/?utm_source=GitHub&utm_medium=PerfectScrollbar#howtouse #}
+        const container = document.querySelector('.main-panel');
+        container.scrollTop = 0;
+
+        $('#search-row-1').slideDown(); 
+        $('#search-row-2').slideDown();
+        $('#search-row-3').slideDown(); 
+    }
+
 
     $('#search').click(function() { 
       $('#progressbar').slideDown(); 

@@ -193,6 +193,11 @@ def history():
 @blueprint.route('/places', methods=['GET', 'POST'])
 @login_required
 def places():
+    # Get message parameters
+    parameter = None
+    if 'add' in request.args:
+        parameter = request.args['add']
+
     # Load Cities
     places = db.session.query(Place, City).join(City).filter((Place.user_id == current_user.id) | (Place.global_place == 1)).order_by(Place.id.asc()).all() 
     place_dicts = []
@@ -211,7 +216,19 @@ def places():
         name = request.form['name']
         address = request.form['address']
         type_p = request.form['type_p']
-        city = request.form['city'].title()   
+
+        city = request.form['city'].title()
+        typo_errors_fixlist1 = ("Patr", "Πατρ", "Πάτρ")
+        typo_errors_fixlist2 = ("Athe", "Αθην", "Αθήν")
+        typo_errors_fixlist3 = ("Κερκυ", "Κέρκυ")
+
+        if city.startswith(typo_errors_fixlist1):
+            city = "Patras"
+        elif city.startswith(typo_errors_fixlist2):
+            city = "Athens"
+        elif city.startswith(typo_errors_fixlist3):
+            city = "Corfu"
+
         type_p2 = None if request.form['type_p2'] == "Choose..." else request.form['type_p2']
         type_p3 = None if request.form['type_p3'] == "Choose..." else request.form['type_p3']      
 
@@ -266,6 +283,7 @@ def places():
     return render_template( 'places.html', 
                             segment='places',
                             error_dict={},
+                            parameter=parameter,
                             form=add_place_form,
                             places=place_dicts)
 

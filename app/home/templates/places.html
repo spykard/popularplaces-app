@@ -21,18 +21,18 @@
                         <table class="table tablesorter" id="">
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th class="text-right">    
+                                    <th class="text-center">    
                                     <button id="helptooltip1" type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" data-toggle="modal" data-target="#addPlaceModal">
                                         <i class="tim-icons icon-simple-add"></i>
                                     </button>                                
-                                    </th>
+                                    </th>                                
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                                 <tr>
                                     <th class="text-center">#</th>
@@ -68,19 +68,19 @@
                                 {% endfor %}
                             </tbody>                            
                             <tfoot>
-                                <tr>                                 
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>                                
-                                    <td></td>                                
-                                    <td></td>                                                                                                
-                                    <td class="text-right">
+                                <tr> 
+                                    <td class="text-center">
                                     <button type="button" rel="tooltip" class="btn btn-success btn-link btn-icon btn-sm" data-toggle="modal" data-target="#addPlaceModal">
                                         <i class="tim-icons icon-simple-add"></i>
                                     </button> 
-                                    </td>                                
+                                    </td>                                                                
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>                                
+                                    <td></td>                                
+                                    <td></td>                                                                                                                                
                                 </tr>
                                 </tfoot>                            
                         </table>
@@ -248,7 +248,7 @@
         // Hints
         {% if current_user.total_runs < 2 %}
             var template = '<div class="tooltip {% if current_user.ui_theme == 'light' %}bs-tooltip-left-white{% endif %}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner {% if current_user.ui_theme == 'light' %}tooltip-inner-white{% endif %}"></div></div>';        
-          $('#helptooltip1').tooltip({trigger: 'manual', placement: 'left', template: template, title: "Add Place"}).tooltip('show');      
+          $('#helptooltip1').tooltip({trigger: 'manual', placement: 'right', template: template, title: "Add Place"}).tooltip('show');      
   
           container.addEventListener('ps-scroll-down', function() {
             $('#helptooltip1').tooltip('hide');
@@ -259,7 +259,12 @@
             $('#helptooltip1').tooltip('hide');
 
           }, { once: true });  // Call only once, then remove itself       
-        {% endif %}             
+        {% endif %}  
+
+        // Open with Add already Clicked if parameter given via GET
+        {% if parameter %}   
+            $('#helptooltip1').trigger("click");
+        {% endif %}                          
       }); 
 
     $('#removePlaceModal').on('show.bs.modal', function(event) {
