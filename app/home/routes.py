@@ -9,7 +9,6 @@ from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAd
 from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal, CrowdInput
 from app.base.util import hash_pass
 from datetime import datetime
-from collections import deque
 from random import randint
 import populartimes
 import json
@@ -368,12 +367,10 @@ def get_place_results():
         if popular_times != "null":
             load_data = json.loads(popular_times)
             for day in load_data:
-                temp_deque = deque(day["data"])  
-                temp_deque.rotate(-6)  # 'rotate' to convert from 12AM on first position of array to 6AM on first position of array
-                decoded += ' '.join([str(int) for int in temp_deque])
+                decoded += ' '.join([str(int) for int in day["data"]])
                 decoded += (',')
 
-        data.append({'name': place_result[0].name, 'address': place_result[0].address, 'global_id': place_result[0].global_id, 'rating': str(converter(place_result[0].rating)) + " (" + str(converter(place_result[0].rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result[0].time_spent), 'usual_popularity': converter(place_result[0].usual_popularity), 'difference': converter(place_result[0].difference), 'live_popularity': converter(place_result[0].live_popularity), 'day': place_result[1].time.strftime("%A - %H Hour")})        
+        data.append({'name': place_result[0].name, 'address': place_result[0].address, 'global_id': place_result[0].global_id, 'rating': str(converter(place_result[0].rating)) + " (" + str(converter(place_result[0].rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result[0].time_spent), 'usual_popularity': converter(place_result[0].usual_popularity), 'difference': converter(place_result[0].difference), 'live_popularity': converter(place_result[0].live_popularity), 'time': str(place_result[1].time)})        
 
     return jsonify(data)
 
@@ -490,7 +487,7 @@ def search_populartimes(city, type1, type2, all_places):
             search_name = place[1]
             search_address = place[2]
             data = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)            
-            print(place[0])
+
             # Write Verification for Places to DB
             if data["place_address"]:
                 data["types"] = [item for sublist in data["types"] for item in sublist]  # https://stackoverflow.com/a/952952
@@ -519,7 +516,6 @@ def search_populartimes(city, type1, type2, all_places):
                 usual_popularity = ("usual_popularity", None)
                 difference = ("difference", None)
                 time_spent = ("time_spent", None)
-            print("DONE")
 
             # db.session.commit() 
 
