@@ -490,9 +490,10 @@ def search_populartimes(city, type1, type2, all_places):
             search_name = place[1]
             search_address = place[2]
             data = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)            
-
+            print(place[0])
             # Write Verification for Places to DB
             if data["place_address"]:
+                data["types"] = [item for sublist in data["types"] for item in sublist]  # https://stackoverflow.com/a/952952
                 Place.query.filter_by(id=place[0]).update({"verification": "True", "name_verified": data["place_name"], "address_verified": data["place_address"], "latitude": float(data["latitude"]), "longtitude": float(data["longtitude"]), "type_verified": data["types"], "place_id": data["place_id"]})
 
                 if data["populartimes"]:
@@ -518,6 +519,7 @@ def search_populartimes(city, type1, type2, all_places):
                 usual_popularity = ("usual_popularity", None)
                 difference = ("difference", None)
                 time_spent = ("time_spent", None)
+            print("DONE")
 
             # db.session.commit() 
 
