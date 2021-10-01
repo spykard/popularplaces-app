@@ -105,12 +105,18 @@ def register():
 
         # Read form data
         username  = request.form['username']
-        email     = request.form['email'   ]
+        email     = request.form['email']
 
         # Validate Form Data
         if not create_account_form.validate():
             return render_template( 'accounts/register.html', 
                                     msg='Input does not follow the Appropriate Form',
+                                    success=False,
+                                    form=create_account_form)
+
+        if len(request.form['password']) < 4:
+            return render_template( 'accounts/register.html', 
+                                    msg='Password is too short',
                                     success=False,
                                     form=create_account_form)
 

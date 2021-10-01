@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 import os
-from   decouple import config
+from decouple import config
 
 class Config(object):
 
