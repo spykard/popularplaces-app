@@ -1,2 +1,2 @@
 web: gunicorn run:app --log-file=- 
-release: flask db upgrade
+release: heroku run flask db upgrade
