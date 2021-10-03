@@ -8,7 +8,7 @@ from app import db, login_manager
 from app.base.util import hash_pass
 
 # -- #
-table_city_id_seq = Sequence('table_city_id_seq')
+table_city_id_seq = Sequence('City_id_seq')
 
 class City(db.Model):
 
@@ -36,7 +36,7 @@ class City(db.Model):
 
 
 # -- #
-table_crowdinput_id_seq = Sequence('table_crowdinput_id_seq')
+table_crowdinput_id_seq = Sequence('CrowdInput_id_seq')
 
 class CrowdInput(db.Model):
 
@@ -64,7 +64,7 @@ class CrowdInput(db.Model):
 
 
 # -- #
-table_place_id_seq = Sequence('table_place_id_seq')
+table_place_id_seq = Sequence('Place_id_seq')
 
 class Place(db.Model):
 
@@ -105,7 +105,7 @@ class Place(db.Model):
 
 
 # -- #
-table_placeglobal_id_seq = Sequence('table_placeglobal_id_seq')
+table_placeglobal_id_seq = Sequence('PlaceGlobal_id_seq')
 
 class PlaceGlobal(db.Model):
 
@@ -134,7 +134,7 @@ class PlaceGlobal(db.Model):
 
 
 # -- #
-table_placeresult_id_seq = Sequence('table_placeresult_id_seq')
+table_placeresult_id_seq = Sequence('PlaceResult_id_seq')
 
 class PlaceResult(db.Model):
 
@@ -170,7 +170,7 @@ class PlaceResult(db.Model):
 
 
 # -- #
-table_search_id_seq = Sequence('table_search_id_seq')
+table_search_id_seq = Sequence('Search_id_seq')
 
 class Search(db.Model):
 
@@ -207,7 +207,7 @@ class Search(db.Model):
 
 
 # -- #
-table_user_id_seq = Sequence('table_user_id_seq')
+table_user_id_seq = Sequence('User_id_seq')
 
 class User(db.Model, UserMixin):
 
