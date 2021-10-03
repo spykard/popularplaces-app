@@ -66,7 +66,7 @@ def search():
         current_user.settings_all_places = all_places
         current_user.total_runs += 1
         if current_user.premium_enabled == 0: current_user.free_runs_remaining -= 1
-        db.session.commit()            
+        db.session.commit()  
 
         # Main
         search_success, search_msg = search_populartimes(city, type1, type2, all_places)
