@@ -11,11 +11,15 @@ class Config(object):
     # This will create a file in <app> FOLDER
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+    }
 
 class ProductionConfig(Config):
     DEBUG = False
 
     # Security
+    SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY  = True
     REMEMBER_COOKIE_HTTPONLY = True
     REMEMBER_COOKIE_DURATION = 3600
@@ -23,7 +27,7 @@ class ProductionConfig(Config):
     # PostgreSQL database
     SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
         config( 'DB_ENGINE'   , default='postgresql'    ),
-        config( 'DB_USERNAME' , default='unreal '       ),
+        config( 'DB_USERNAME' , default='unreal'        ),
         config( 'DB_PASS'     , default='pass'          ),
         config( 'DB_HOST'     , default='localhost'     ),
         config( 'DB_PORT'     , default=5432            ),
