@@ -21,6 +21,10 @@ def route_default():
     session['intro'] = True         
     return redirect(url_for('base_blueprint.login'))
 
+@blueprint.route('/zohoverify/verifyforzoho.html')
+def tempp():         
+    return render_template('verifyforzoho.html')
+
 @blueprint.route('/hide-colors', methods=['POST'])
 def hide_colors():
     session['colors'] = False
