@@ -157,7 +157,7 @@ def register():
         return render_template( 'accounts/register.html', form=create_account_form)
     else:
         return redirect(url_for('home_blueprint.search'))
-
+ 
 @blueprint.route('/recover-password', methods=['GET', 'POST'])
 def forgot_password():
     forgot_form = RecoverPasswordForm(request.form)
