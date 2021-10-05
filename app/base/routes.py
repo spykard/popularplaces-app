@@ -7,7 +7,7 @@ from flask_login import (
     logout_user
 )
 
-from app import db, login_manager
+from app import db, login_manager, mail
 from app.base import blueprint
 from app.base.forms import LoginForm, CreateAccountForm
 from app.base.models import User
@@ -57,9 +57,15 @@ def update_ui_theme_preferences():
         return "false"
 
 ## Login & Registration
-
+from flask_mail import Message
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():  
+    msg = Message("Hello",
+                  recipients=["to@example.com"])
+
+    msg.html = "<b>testing</b>"      
+    mail.send(msg)            
+
     login_form = LoginForm(request.form)
     if 'login' in request.form:
         
