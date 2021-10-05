@@ -56,9 +56,6 @@ def update_ui_theme_preferences():
     else:
         return "false"
 
-@blueprint.route('/zohoverify/verifyforzoho.html')
-def tempp():
-    return render_template( 'verifyforzoho.html')
 
 ## Login & Registration
 from flask_mail import Message
@@ -168,8 +165,8 @@ def logout():
     logout_user()
     return redirect(url_for('base_blueprint.login'))
 
-## Errors
 
+## Errors
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return render_template('page-403.html'), 403
