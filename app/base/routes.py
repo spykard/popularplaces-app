@@ -56,15 +56,19 @@ def update_ui_theme_preferences():
     else:
         return "false"
 
+@blueprint.route('/zohoverify/verifyforzoho.html')
+def tempp():
+    return render_template( 'verifyforzoho.html')
+
 ## Login & Registration
 from flask_mail import Message
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():  
-    msg = Message("Hello",
-                  recipients=["to@example.com"])
+    # msg = Message("Hello",
+    #               recipients=["to@example.com"])
 
-    msg.html = "<b>testing</b>"      
-    mail.send(msg)            
+    # msg.html = "<b>testing</b>"      
+    # mail.send(msg)            
 
     login_form = LoginForm(request.form)
     if 'login' in request.form:
