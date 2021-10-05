@@ -23,8 +23,7 @@ def upgrade():
     op.add_column('User', sa.Column('last_login_ip', sa.String(), server_default='', nullable=True))
     op.add_column('User', sa.Column('login_count', sa.Integer(), server_default='0', nullable=True))
     op.alter_column('User', 'active',
-               existing_type=postgresql.BYTEA(),
-               nullable=False)
+               existing_type=postgresql.BYTEA())
     op.drop_constraint('User_fs_uniquifier_key', 'User', type_='unique')
     op.create_index(op.f('ix_User_active'), 'User', ['active'], unique=False)
     op.drop_column('User', 'fs_uniquifier')
