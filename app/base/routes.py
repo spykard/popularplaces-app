@@ -16,14 +16,10 @@ from datetime import datetime
 from app.base.util import verify_pass
 
 @blueprint.route('/')
-def route_default():  
+def route_default():
     session['colors'] = True 
     session['intro'] = True         
     return redirect(url_for('base_blueprint.login'))
-
-@blueprint.route('/zohoverify/verifyforzoho.html')
-def tempp():         
-    return render_template('verifyforzoho.html')
 
 @blueprint.route('/hide-colors', methods=['POST'])
 def hide_colors():
