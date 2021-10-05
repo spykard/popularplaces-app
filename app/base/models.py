@@ -1,7 +1,10 @@
 # -*- encoding: utf-8 -*-
+from flask import current_app
 from flask_login import UserMixin
 from sqlalchemy import Binary, Boolean, Column, Integer, String, DateTime, ForeignKey, Float, Sequence, UniqueConstraint
 from sqlalchemy.sql import func
+from datetime import datetime
+import jwt
 
 from app import db, login_manager
 
@@ -256,13 +259,31 @@ class User(db.Model, UserMixin):
                 value = value[0]
 
             if property == 'password':
-                value = hash_pass( value ) # we need bytes here (not plain str)
+                value = hash_pass(value) # we need bytes here (not plain str)
                 
             setattr(self, property, value)
 
     def __repr__(self):
         return str(self.username)
-                         
+
+    def set_password(self, value):
+            self.password = hash_pass(value)
+
+    # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-x-email-support
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': datetime.now().timestamp() + expires_in},
+            current_app.config['SECRET_KEY'], algorithm='HS256')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, current_app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)            
+
 
 @login_manager.user_loader
 def user_loader(id):

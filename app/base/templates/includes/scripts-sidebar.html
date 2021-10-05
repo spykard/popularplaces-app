@@ -60,7 +60,9 @@
           // Specific Visual Fix just for some Special Buttons
           $login_button = $('#login');
           $register_button = $('#register');
+          $recover_button = $('#recover');          
           $login_link = $('#pagelink');
+          $forgot_link = $('#forgotlink');          
           $save_button = $('#save');
           $search_button = $('#search');
           $search_button_dropdown = $('#searchdropdown');            
@@ -83,12 +85,22 @@
             $lastClass = $register_button.attr('class').split(' ').pop();
             $register_button.removeClass($lastClass);
             $register_button.addClass('btn-' + new_button_color);                    
-          }           
+          } 
+          if ($recover_button.length != 0) {
+            $lastClass = $recover_button.attr('class').split(' ').pop();
+            $recover_button.removeClass($lastClass);
+            $recover_button.addClass('btn-' + new_button_color);                    
+          }                       
           if ($login_link.length != 0) {
             $lastClass = $login_link.attr('class').split(' ').pop();
             $login_link.removeClass($lastClass);
             $login_link.addClass('text-' + new_button_color);                    
           }
+          if ($forgot_link.length != 0) {
+            $lastClass = $forgot_link.attr('class').split(' ').pop();
+            $forgot_link.removeClass($lastClass);
+            $forgot_link.addClass('text-' + new_button_color);                    
+          }          
           if ($save_button.length != 0) {
             $lastClass = $save_button.attr('class').split(' ').pop();
             $save_button.removeClass($lastClass);

@@ -43,6 +43,11 @@
     max-width: 60%;
   }
 
+  .forgot-button {  
+    line-height: 1.0;
+    font-size: 0.68rem;
+  }  
+
   /* all values found manually */
   @media (max-width: 480px) {
     .intro-image {
@@ -112,12 +117,13 @@
                 </div>
 
               </div>
+              
               <div class="row">
 
                 <div class="col-md-5 px-md-1">
                   <div class="form-group">
                     <label>&nbsp;Password</label>
-                    <div class="input-group">
+                    <div class="input-group" style="margin-bottom: 4px;">
                       <div class="input-group-prepend">
                           <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
                             <i class="fas fa-key"></i>
@@ -125,12 +131,14 @@
                       </div>  
                       <input type="password" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="password" name="password" required="" value="">
                     </div>
+                    <a href="{{ url_for('base_blueprint.forgot_password') }}" id="forgotlink" class="forgot-button text-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">&nbsp;&nbsp;Forgot Password</a>
                   </div>
                 </div>
 
               </div>
               
           </div>
+          
           <div class="card-footer">
             <button type="submit" id="login" name="login" class="btn btn-fill btn-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Login</button>
             &nbsp; &nbsp;

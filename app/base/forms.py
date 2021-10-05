@@ -14,6 +14,12 @@ class CreateAccountForm(FlaskForm):
     email    = TextField('Email'        , id='email'           , validators=[DataRequired(), Email()])
     password = PasswordField('Password' , id='password'        , validators=[DataRequired()])
 
+class RecoverPasswordForm(FlaskForm):
+    email    = TextField('Email'        , id='email'           , validators=[DataRequired(), Email()])  
+
+class SetPasswordForm(FlaskForm):
+    password = PasswordField('Password', id='password'         , validators=[DataRequired()])      
+
 class EditProfileForm(FlaskForm):   
     username = TextField('Username'     , id='username'        , validators=[DataRequired()])
     email    = TextField('Email'        , id='email'           , validators=[DataRequired(), Email()])

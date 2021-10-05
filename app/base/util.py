@@ -12,7 +12,7 @@ def hash_pass( password ):
     return (salt + pwdhash) # return bytes
 
 def verify_pass(provided_password, stored_password):
-    """Verify a stored password against one provided by user"""
+    """Verify a stored password against one provided by a user."""
     stored_password = stored_password.decode('ascii')
     salt = stored_password[:64]
     stored_password = stored_password[64:]

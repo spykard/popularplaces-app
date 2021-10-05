@@ -5,6 +5,9 @@ from decouple import config
 class Config(object):
     basedir = os.path.abspath(os.path.dirname(__file__))
 
+    FLASK_APP = config('FLASK_APP', default='run.py')
+    FLASK_ENV = config('FLASK_ENV', default='development')
+
     # Set up the App SECRET_KEY
     SECRET_KEY = config('SECRET_KEY', default='gE2c!HRRP3avx2^a')
 
@@ -16,6 +19,17 @@ class Config(object):
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
     }
+
+    # Mail Settings
+    MAIL_SERVER = config('MAIL_SERVER', default='localhost')
+    MAIL_PORT = config('MAIL_PORT', default=25)
+    MAIL_USE_TLS = config('MAIL_USE_TLS', default=False, cast=bool)
+    MAIL_USE_SSL = config('MAIL_USE_SSL', default=False, cast=bool)
+    MAIL_DEBUG = config('MAIL_DEBUG', default=False, cast=bool)
+    MAIL_USERNAME = config('MAIL_USERNAME', default=None)
+    MAIL_PASSWORD = config('MAIL_PASSWORD', default=None)
+    MAIL_DEFAULT_SENDER = config('MAIL_DEFAULT_SENDER', default=None)
+    MAIL_SUPPRESS_SEND = config('MAIL_SUPPRESS_SEND', default=False, cast=bool)
 
 class ProductionConfig(Config):
     DEBUG = False
