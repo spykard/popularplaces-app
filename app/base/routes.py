@@ -11,12 +11,12 @@ from app import db, login_manager
 from app.base import blueprint
 from app.base.forms import LoginForm, CreateAccountForm
 from app.base.models import User
-from datetime import date
+from datetime import datetime
 
 from app.base.util import verify_pass
 
 @blueprint.route('/')
-def route_default():
+def route_default():  
     session['colors'] = True 
     session['intro'] = True         
     return redirect(url_for('base_blueprint.login'))
@@ -81,7 +81,9 @@ def login():
         if user and verify_pass( password, user.password):
 
             login_user(user)
-            current_user.last_login = date.today()
+            current_user.last_login = datetime.utcnow()
+            current_user.last_login_ip = request.remote_addr
+            current_user.login_count += 1
             db.session.commit()
             
             return redirect(url_for('base_blueprint.route_default'))

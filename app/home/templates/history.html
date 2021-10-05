@@ -321,9 +321,9 @@
       <div id="gridData" class="col-md-12">
         <div class="card">
           <div class="card-body">
-            <div id="placesgrid" class="row flex-fix-margin">
+            <div id="placesgrid" name="helptooltip3" class="row flex-fix-margin">
               {# <div class="card-deck"> Either use "card-deck" or "col" for 2 different UI styles #}
-              <div id="helptooltip3" class="col box" data-toggle="modal" data-target="#gridModal" data-name="La Grande Boucherie" data-day="2021-01-18 21:42:03.000 +02:00" data-live="91" data-spent="90" data-id="0" data-populartimes="14 6 1 0 0 0 0 0 3 16 29 34 46 51 47 38 26 25 37 55 70 70 55 33,12 1 1 0 0 0 0 0 8 26 48 66 71 61 43 28 23 30 45 62 71 70 57 38,19 5 1 0 0 0 0 0 3 15 35 59 75 72 53 33 23 29 44 57 61 52 34 16,2 1 1 0 0 0 0 0 5 20 38 55 63 60 48 33 26 31 47 65 75 70 54 34,16 5 1 0 0 0 0 0 7 31 65 93 99 80 51 29 24 33 50 66 75 72 59 41,22 7 1 0 0 0 0 0 1 5 34 73 100 90 55 24 13 17 29 42 51 55 52 43,30 17 6 0 0 0 0 0 1 1 1 3 7 11 11 9 7 10 23 43 53 47 33 22,">
+              <div class="col box" data-toggle="modal" data-target="#gridModal" data-name="La Grande Boucherie" data-day="2021-01-18 21:42:03.000 +02:00" data-live="91" data-spent="90" data-id="0" data-populartimes="14 6 1 0 0 0 0 0 3 16 29 34 46 51 47 38 26 25 37 55 70 70 55 33,12 1 1 0 0 0 0 0 8 26 48 66 71 61 43 28 23 30 45 62 71 70 57 38,19 5 1 0 0 0 0 0 3 15 35 59 75 72 53 33 23 29 44 57 61 52 34 16,2 1 1 0 0 0 0 0 5 20 38 55 63 60 48 33 26 31 47 65 75 70 54 34,16 5 1 0 0 0 0 0 7 31 65 93 99 80 51 29 24 33 50 66 75 72 59 41,22 7 1 0 0 0 0 0 1 5 34 73 100 90 55 24 13 17 29 42 51 55 52 43,30 17 6 0 0 0 0 0 1 1 1 3 7 11 11 9 7 10 23 43 53 47 33 22,">
                 <div class="card trending">
                   <div class="card-header">
                     <div class="row">
@@ -1183,18 +1183,18 @@
         var template = '<div class="tooltip {% if current_user.ui_theme == 'light' %}bs-tooltip-top-white{% endif %}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner {% if current_user.ui_theme == 'light' %}tooltip-inner-white{% endif %}"></div></div>';
         $('#helptooltip1').tooltip({trigger: 'manual', template: template, title: "Previous Searches"}).tooltip('show');      
         $('#helptooltip2').tooltip({trigger: 'manual', template: template, title: "Change View"}).tooltip('show');
-        $('#helptooltip3').tooltip({trigger: 'manual', template: template, title: "Click Me"}).tooltip('show');
+        $('div[name="helptooltip3"]').tooltip({trigger: 'manual', template: template, title: "Click Me"}).tooltip('show');
 
-        container.addEventListener('ps-scroll-down', function() {
+        container.addEventListener('ps-scroll-down', function() {  // On non-Windows devices this is not executed, thus working even better in that scenario
           $('#helptooltip1').tooltip('hide');
           $('#helptooltip2').tooltip('hide');
-          $('#helptooltip3').tooltip('hide');
+          $('div[name="helptooltip3"]').tooltip('hide');
         }, { once: true });  // Call only once, then remove itself
 
         container.addEventListener('click', function() {
           $('#helptooltip1').tooltip('hide');
           $('#helptooltip2').tooltip('hide');
-          $('#helptooltip3').tooltip('hide');
+          $('div[name="helptooltip3"]').tooltip('hide');
         }, { once: true });  // Call only once, then remove itself       
       {% endif %}  
 

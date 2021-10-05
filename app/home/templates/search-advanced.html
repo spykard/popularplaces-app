@@ -42,7 +42,7 @@
   <div class="col-md-12">
     <div class="card">
 
-      {% if current_user.premium_enabled == 0 and current_user.free_runs_remaining < 1 %}
+      {% if current_user.premium_enabled == False and current_user.free_runs_remaining < 1 %}
       <div class="card-nav-tabs text-center">
         <div class="card-header card-header-primary">
           Warning
@@ -199,7 +199,7 @@
 
       <div class="card-footer">
         <div id="searchdiv" class="btn-group">        
-          {% if current_user.premium_enabled == 0 %}
+          {% if current_user.premium_enabled == False %}
           <button type="submit" id="search" name="search" class="btn btn-fill btn-fill-less-wide btn-{{ current_user.ui_button }}">Search &nbsp;<span class="badge badge-default" disabled>Free: {{ current_user.free_runs_remaining }}</span></button>
           {% else %}
           <button type="submit" id="search" name="search" class="btn btn-fill btn-fill-less-wide btn-{{ current_user.ui_button }}" disabled>Search</button>

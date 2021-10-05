@@ -67,7 +67,7 @@
   <div class="col-md-12">
     <div class="card">
 
-      {% if current_user.premium_enabled == 0 and current_user.free_runs_remaining < 1 %}
+      {% if current_user.premium_enabled == False and current_user.free_runs_remaining < 1 %}
       <div class="card-nav-tabs text-center">
         <div class="card-header card-header-primary">
           Warning
@@ -235,7 +235,7 @@
       
       <div class="card-footer">
         <div id="searchdiv" class="btn-group">        
-          {% if current_user.premium_enabled == 0 %}
+          {% if current_user.premium_enabled == False %}
           <button type="submit" id="search" name="search" class="btn btn-fill btn-fill-less-wide btn-{{ current_user.ui_button }}" {{'disabled' if not show_search_panel }}>Search &nbsp;<span class="badge badge-default">Free: {{ current_user.free_runs_remaining }}</span></button>
           {% else %}
           <button type="submit" id="search" name="search" class="btn btn-fill btn-fill-less-wide btn-{{ current_user.ui_button }}" {{'disabled' if not show_search_panel }}>Search</button>
@@ -445,7 +445,7 @@
       $('#searchdiv').tooltip({template: template, title: "Please Select a City"}); 
 
       // Hints
-      {% if current_user.total_runs < 2 %}
+      {% if current_user.total_runs < 2 and not msg %}
         // Hints using 'tooltip'
         {# // $('#helptooltip1').tooltip({trigger: 'manual', template: template, title: "Select Existing or Add Your Own"}).tooltip('show'); #}
         $('#helptooltip2').tooltip({trigger: 'manual', placement: 'bottom', template: template, title: "Add your Favorite Places"}).tooltip('show');

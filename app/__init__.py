@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-from flask import Flask, url_for
+from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
-from logging import basicConfig, DEBUG, getLogger, StreamHandler
+# from logging import basicConfig, getLogger, StreamHandler
 from os import path
 
 db = SQLAlchemy()
@@ -19,9 +19,9 @@ def register_blueprints(app):
         app.register_blueprint(module.blueprint)
 
 def configure_database(app):
-    #@app.before_first_request
-    #def initialize_database():
-        # db.create_all()
+    # @app.before_first_request
+    # def initialize_database():
+    #     db.create_all()
 
     @app.teardown_request
     def shutdown_session(exception=None):

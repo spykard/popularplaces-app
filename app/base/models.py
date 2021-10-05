@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 from flask_login import UserMixin
-from sqlalchemy import Binary, Column, Integer, String, Date, DateTime, ForeignKey, Float, Sequence, UniqueConstraint
+from sqlalchemy import Binary, Boolean, Column, Integer, String, DateTime, ForeignKey, Float, Sequence, UniqueConstraint
 from sqlalchemy.sql import func
 
 from app import db, login_manager
@@ -225,8 +225,6 @@ class User(db.Model, UserMixin):
     zipcode = Column(Integer, server_default='0')
     about_me = Column(String, server_default='A Strange Game. The only winning Move is not to Play. How about a nice game of Chess?')
     google_api_key = Column(String, server_default='') 
-    premium_enabled = Column(Integer, nullable=False, index=True, server_default='0')
-    premium_notified = Column(Integer, server_default='0')
     free_runs_remaining = Column(Integer, index=True, server_default='5')   
     settings_p1 = Column(String, server_default="")
     settings_p2 = Column(String, server_default="")
@@ -234,13 +232,19 @@ class User(db.Model, UserMixin):
     settings_type1 = Column(String, server_default='Choose...')
     settings_type2 = Column(String, server_default='Choose...')    
     settings_all_places = Column(Integer, server_default='0')
-    last_login = Column(Date, server_default=func.current_date())   
     ui_color = Column(String, nullable=False, index=True, server_default='blue')
     ui_theme = Column(String, nullable=False, index=True, server_default='dark')      
-    ui_button = Column(String, nullable=False, index=True, server_default='info')       
-    superadmin = Column(Integer, nullable=False, server_default='0')     
-    total_runs = Column(Integer, server_default='0', index=True)   
-    UniqueConstraint(username, email)     
+    ui_button = Column(String, nullable=False, index=True, server_default='info')
+    premium_enabled = Column(Boolean, nullable=False, index=True, server_default='False') 
+    premium_notified = Column(Boolean, server_default='False')     
+    last_login = Column(DateTime, server_default=func.current_timestamp())           
+    superadmin = Column(Boolean, nullable=False, index=True, server_default='False')
+    total_runs = Column(Integer, index=True, server_default='0') 
+    active = Column(Boolean, nullable=False, index=True, server_default='True') 
+    last_login_ip = Column(String, server_default="")
+    login_count = Column(Integer, server_default='0')
+    UniqueConstraint(username) 
+    UniqueConstraint(email) 
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

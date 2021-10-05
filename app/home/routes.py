@@ -38,7 +38,6 @@ def route_template(template):
 def search():
     settings_form = EditSettingsForm(request.form)
     if 'search' in request.form:
-
         # Read form data
         city = request.form['city'].title()
         type1 = request.form['type1']
@@ -65,7 +64,7 @@ def search():
         current_user.settings_type2 = type2
         current_user.settings_all_places = all_places
         current_user.total_runs += 1
-        if current_user.premium_enabled == 0: current_user.free_runs_remaining -= 1
+        if current_user.premium_enabled == False: current_user.free_runs_remaining -= 1
         db.session.commit()  
 
         # Main
@@ -105,7 +104,6 @@ def search():
 def search_advanced():
     settings_form = EditSettingsFormAdvanced(request.form)
     if 'search' in request.form:
-
         # Read form data
         api_key = request.form['api_key']
         p1 = request.form['p1']
@@ -136,7 +134,7 @@ def search_advanced():
         current_user.settings_type1 = type1
         current_user.settings_type2 = type2
         current_user.settings_all_places = all_places
-        if current_user.premium_enabled == 0: current_user.free_runs_remaining = current_user.free_runs_remaining-1
+        if current_user.premium_enabled == False: current_user.free_runs_remaining = current_user.free_runs_remaining-1
         db.session.commit()            
 
         # Main
@@ -468,7 +466,7 @@ def search_populartimes(city, type1, type2, all_places):
     places = get_places_to_search(city, type1, type2, all_places)
 
     # Write Search Object to DB
-    current_time = datetime.now()    
+    current_time = datetime.utcnow()    
     user_id = ("user_id", current_user.id)
     if type2 == "Choose...": type2 = ""
     name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
@@ -566,9 +564,9 @@ def converter(s):
 
 # Helper - Check whether user must be notified for Premium subscription Enabling
 def notify_premium():
-    if current_user.premium_enabled == 1 and current_user.premium_notified == 0:
+    if current_user.premium_enabled == True and current_user.premium_notified == False:
         to_notify = "true"
-        current_user.premium_notified = 1
+        current_user.premium_notified = True
         db.session.commit()        
     else:
         to_notify = "false"
