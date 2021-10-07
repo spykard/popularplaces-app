@@ -185,7 +185,7 @@ def forgot_password():
         else: 
             send_email_recover(user, email)
             return render_template( 'accounts/recover-password.html', 
-                                    msg='Check your E-mail for Further Instructions, the Reset Link will be valid for 600 Seconds',
+                                    msg='Check your E-mail for Further Instructions, the Reset Link will be valid for 10 Minutes',
                                     success=True,
                                     form=forgot_form)
 
@@ -242,17 +242,24 @@ def logout():
 
 # Helper - Send E-mail regarding User Register
 def send_email_register(email, username):
-    email_template_create_path = os.path.join(os.getcwd(),'app', 'base', 'static', 'assets', 'html', 'email-template-create.html')
+    email_template_create_path = os.path.join(os.getcwd(),'app', 'base', 'static', 'assets', 'html', 'email-template-create')
     email_template_create_path_img = os.path.join(os.getcwd(),'app', 'base', 'static', 'assets', 'html', 'images', 'image-1.png')
+    email_template_create_text = ""    
     email_template_create_html = ""
-          
-    f = open(email_template_create_path, 'r', encoding='utf-8')
+
+    f = open(email_template_create_path + ".txt", 'r', encoding='utf-8')
+    for line in f: 
+        email_template_create_text += line
+    f.close()      
+
+    f = open(email_template_create_path + ".html", 'r', encoding='utf-8')
     for line in f: 
         email_template_create_html += line
     f.close()
 
     msg = Message("Welcome to PopularTimes.app - Account Registration",
                   recipients=[email])
+    msg.body = email_template_create_text.replace('XXX', username)
     msg.html = email_template_create_html.replace('XXX', username)
     # https://stackoverflow.com/a/55837389
     msg.attach('image.png', 'image/png', open(email_template_create_path_img, 'rb').read(), 'inline', headers=[['Content-ID','<MyImage>'],])
@@ -263,16 +270,23 @@ def send_email_recover(user, email):
     # Generate JWT Expirable Tokens
     token = user.get_reset_password_token()
 
-    email_template_recover_path = os.path.join(os.getcwd(),'app', 'base', 'static', 'assets', 'html', 'email-template-recover.html')
+    email_template_recover_path = os.path.join(os.getcwd(),'app', 'base', 'static', 'assets', 'html', 'email-template-recover')
+    email_template_create_text = ""     
     email_template_recover_html = ""
-          
-    f = open(email_template_recover_path, 'r', encoding='utf-8')
+
+    f = open(email_template_recover_path + ".txt", 'r', encoding='utf-8')
+    for line in f: 
+        email_template_create_text += line
+    f.close()           
+
+    f = open(email_template_recover_path + ".html", 'r', encoding='utf-8')
     for line in f: 
         email_template_recover_html += line
     f.close()
 
     msg = Message("PopularTimes.app - Password Reset Request",
                   recipients=[email])
+    msg.body = email_template_create_text.replace('https://popularplaces.app/XXX', 'https://popularplaces.app/set-password?token=' + token)                 
     msg.html = email_template_recover_html.replace('https://popularplaces.app/XXX', 'https://popularplaces.app/set-password?token=' + token)
     mail.send(msg)     
 
