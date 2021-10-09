@@ -12,6 +12,7 @@ from datetime import datetime
 from random import randint
 import populartimes
 import json
+import concurrent
 
 @blueprint.route('/<template>')
 @login_required
@@ -456,13 +457,29 @@ def delete_place():
 
 # --//----//----//----//----//----//----//----//--
 
-
 @login_required
 # Helper - Run the populartimes Implementation using mode #2
 def search_populartimes(city, type1, type2, all_places):
     ''' Query Google's PopularTimes, using a crawler that takes name and address of a specific place as input '''
+    # Perform the main Search in a Threaded fashion
+    def main_search_threaded(place):
+        # Debug
+        # search_name = "Avli By Vouz"
+        # search_address = "Pantanassis 17-29"
+        # search_name = "Kynorodo"
+        # search_address = "Korinthou 167, Patra 262 23"    
+        search_name = place[1]
+        search_address = place[2]
+        output_dict = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)
+        output_dict["id"] = place[0]
+        output_dict["search_name"] = search_name
+        output_dict["search_address"] = search_address
+        output_dict["global_id"] = place[3]
+
+        return output_dict            
 
     places = get_places_to_search(city, type1, type2, all_places)
+    place_data = []
 
     # Write Search Object to DB
     current_time = datetime.utcnow()    
@@ -474,59 +491,59 @@ def search_populartimes(city, type1, type2, all_places):
     db.session.add(search)
     db.session.commit()  
 
-    try:
-        for place in places:
-            # Debug
-            # search_name = "Avli By Vouz"
-            # search_address = "Pantanassis 17-29"
-            # search_name = "Kynorodo"
-            # search_address = "Korinthou 167, Patra 262 23"    
-            search_name = place[1]
-            search_address = place[2]
-            data = populartimes.get_popular_times_by_crawl(name=search_name, address=search_address)            
+    # https://stackoverflow.com/a/61360215
+    # https://stackoverflow.com/a/30495317
+    # We can use a with statement to ensure threads are cleaned up promptly
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        # Start the load operations and mark each future with its URL
+        future_to_url = {executor.submit(main_search_threaded, place): place for place in places}
+        for future in concurrent.futures.as_completed(future_to_url, timeout=None):
+            try:
+                place_data.append(future.result())
+            except Exception as e:
+                return False, str(e)             
 
-            # Write Verification for Places to DB
-            if data["place_address"]:
-                data["types"] = [item for sublist in data["types"] for item in sublist]  # https://stackoverflow.com/a/952952
-                Place.query.filter_by(id=place[0]).update({"verification": "True", "name_verified": data["place_name"], "address_verified": data["place_address"], "latitude": float(data["latitude"]), "longtitude": float(data["longtitude"]), "type_verified": data["types"], "place_id": data["place_id"]})
+    for data in place_data:
+        # Write Verification for Places to DB
+        if data["place_address"]:
+            data["types"] = [item for sublist in data["types"] for item in sublist]  # https://stackoverflow.com/a/952952
+            Place.query.filter_by(id=data["id"]).update({"verification": "True"})
+            PlaceGlobal.query.filter_by(id=data["global_id"]).update({"name_verified": data["place_name"], "address_verified": data["place_address"], "latitude": float(data["latitude"]), "longtitude": float(data["longtitude"]), "type_verified": data["types"], "place_id": data["place_id"]})
 
-                if data["populartimes"]:
-                    usual_popularity = ("usual_popularity", data["populartimes"][current_time.weekday()]["data"][current_time.hour])
+            if data["populartimes"]:
+                usual_popularity = ("usual_popularity", data["populartimes"][current_time.weekday()]["data"][current_time.hour])
 
-                    if data["current_popularity"]:
-                        difference = ("difference", data["current_popularity"] - usual_popularity[1])
-                    else:
-                        difference = ("difference", None)
-
-                    if data["time_spent"]:
-                        time_spent = ("time_spent", '-'.join(map(str, data["time_spent"])))   
-                    else:
-                        time_spent = ("time_spent", None)
-
+                if data["current_popularity"]:
+                    difference = ("difference", data["current_popularity"] - usual_popularity[1])
                 else:
-                    usual_popularity = ("usual_popularity", None)
                     difference = ("difference", None)
+
+                if data["time_spent"]:
+                    time_spent = ("time_spent", '-'.join(map(str, data["time_spent"])))   
+                else:
                     time_spent = ("time_spent", None)
 
             else:
-                Place.query.filter_by(id=place[0]).update({"verification": "False"}) 
                 usual_popularity = ("usual_popularity", None)
                 difference = ("difference", None)
                 time_spent = ("time_spent", None)
 
-            # db.session.commit() 
+        else:
+            Place.query.filter_by(id=data["id"]).update({"verification": "False"}) 
+            usual_popularity = ("usual_popularity", None)
+            difference = ("difference", None)
+            time_spent = ("time_spent", None)
 
-            # if "time_wait" not in data:
-            #     data["time_wait"] = None
+        # db.session.commit() 
 
-            # Write Data to DB
-            insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), time_spent, user_id, ("search_id", search.id), ("name" , search_name), ("address" , search_address), ("live_popularity" , data["current_popularity"]), difference, ("global_id", place[3]), usual_popularity])
-            placeresult = PlaceResult(**insert_dict)
-            db.session.add(placeresult)
-            db.session.commit()
+        # if "time_wait" not in data:
+        #     data["time_wait"] = None
 
-    except Exception as e:
-        return False, str(e) 
+        # Write Data to DB
+        insert_dict = dict([("rating" , data["rating"]), ("rating_num" , data["rating_n"]), ("popular_times" , json.dumps(data["populartimes"])), time_spent, user_id, ("search_id", search.id), ("name" , data["search_name"]), ("address" , data["search_address"]), ("live_popularity" , data["current_popularity"]), difference, ("global_id", data["global_id"]), usual_popularity])
+        placeresult = PlaceResult(**insert_dict)
+        db.session.add(placeresult)
+        db.session.commit()
 
     return True, name[1]
 
