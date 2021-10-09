@@ -74,8 +74,8 @@
           $contact_me_button = $('#contactmebutton');   
           $progress_bar = $('#progressbar');
           $grid_view_button = $('#gridView');
-          $table_view_button = $('#tableView'); 
-          $helptooltip2 = $('#helptooltip2');                  
+          $table_view_button = $('#tableView');  
+          $map_toggle_button = $('#mapToggle');                          
           if ($login_button.length != 0) {
             $lastClass = $login_button.attr('class').split(' ').pop();
             $login_button.removeClass($lastClass);
@@ -160,12 +160,12 @@
             $firstClass = $table_view_button.attr('class').split(' ')[0];
             $table_view_button.removeClass($firstClass);
             $table_view_button.attr('class', 'btn-' + new_button_color + ' ' + $table_view_button.attr('class'));                  
-          }     
-          if ($helptooltip2.length != 0) {
-            $lastClass = $helptooltip2.attr('class').split(' ').pop();
-            $helptooltip2.removeClass($lastClass);
-            $helptooltip2.addClass('btn-' + new_button_color);                    
-          }                                 
+          } 
+          if ($map_toggle_button.length != 0) {
+            $firstClass = $map_toggle_button.attr('class').split(' ')[0];
+            $map_toggle_button.removeClass($firstClass);
+            $map_toggle_button.attr('class', 'btn-' + new_button_color + ' ' + $map_toggle_button.attr('class'));                  
+          }                                                
 
           $.ajax({
             type: 'POST',

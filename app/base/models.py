@@ -84,13 +84,7 @@ class Place(db.Model):
     verification = Column(String, index=True, server_default='N/A')  
     global_id = Column(Integer, ForeignKey('PlaceGlobal.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=False, index=True)  
     type_p2 = Column(String)
-    type_p3 = Column(String)          
-    name_verified = Column(String)           
-    address_verified = Column(String)
-    latitude = Column(Float(53))
-    longtitude = Column(Float(53))                  
-    type_verified = Column(String,)           
-    place_id = Column(String)          
+    type_p3 = Column(String)                   
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -119,6 +113,12 @@ class PlaceGlobal(db.Model):
     address = Column(String, server_default="")
     time = Column(DateTime, server_default=func.current_timestamp()) 
     city_id = Column(Integer, ForeignKey('City.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=False, index=True)
+    name_verified = Column(String)           
+    address_verified = Column(String)
+    latitude = Column(Float(53))
+    longtitude = Column(Float(53))                  
+    type_verified = Column(String)
+    place_id = Column(String)     
     UniqueConstraint(name)
 
     def __init__(self, **kwargs):

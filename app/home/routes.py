@@ -493,9 +493,9 @@ def search_populartimes(city, type1, type2, all_places):
 
     # https://stackoverflow.com/a/61360215
     # https://stackoverflow.com/a/30495317
+    # https://docs.python.org/3/library/concurrent.futures.html#threadpoolexecutor-example
     # We can use a with statement to ensure threads are cleaned up promptly
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
-        # Start the load operations and mark each future with its URL
         future_to_url = {executor.submit(main_search_threaded, place): place for place in places}
         for future in concurrent.futures.as_completed(future_to_url, timeout=None):
             try:
