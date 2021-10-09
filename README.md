@@ -225,6 +225,8 @@ Visit `http://localhost:5005` in your browser. The app should be up & running.
 ### [Heroku](https://www.heroku.com/)
 ---
 
+https://devcenter.heroku.com/articles/python-gunicorn
+
 Steps to deploy on **Heroku**
 
 - [Create a FREE account](https://signup.heroku.com/) on Heroku platform
