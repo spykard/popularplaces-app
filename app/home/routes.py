@@ -8,7 +8,7 @@ from jinja2 import TemplateNotFound
 from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAdvanced, AddPlaceForm
 from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal, CrowdInput
 from app.base.util import hash_pass
-from datetime import datetime
+from datetime import datetime, timedelta
 from random import randint
 import populartimes
 import json
@@ -368,7 +368,10 @@ def get_place_results():
                 decoded += ' '.join([str(int) for int in day["data"]])
                 decoded += (',')
 
-        data.append({'name': place_result[0].name, 'address': place_result[0].address, 'global_id': place_result[0].global_id, 'rating': str(converter(place_result[0].rating)) + " (" + str(converter(place_result[0].rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result[0].time_spent), 'usual_popularity': converter(place_result[0].usual_popularity), 'difference': converter(place_result[0].difference), 'live_popularity': converter(place_result[0].live_popularity), 'time': str(place_result[1].time)})        
+        # Extra Global Data
+        place_result_global = PlaceGlobal.query.filter_by(id=place_result[0].global_id).first()
+
+        data.append({'name': place_result[0].name, 'address': place_result[0].address, 'global_id': place_result[0].global_id, 'rating': str(converter(place_result[0].rating)) + " (" + str(converter(place_result[0].rating_num)) + ")", 'popular_times': decoded,  'time_spent': converter(place_result[0].time_spent), 'usual_popularity': converter(place_result[0].usual_popularity), 'difference': converter(place_result[0].difference), 'live_popularity': converter(place_result[0].live_popularity), 'time': str(place_result[1].time), 'latitude': converter(place_result_global.latitude), 'longtitude': converter(place_result_global.longtitude)})        
 
     return jsonify(data)
 
@@ -482,7 +485,7 @@ def search_populartimes(city, type1, type2, all_places):
     place_data = []
 
     # Write Search Object to DB
-    current_time = datetime.utcnow()    
+    current_time = datetime.utcnow() + timedelta(hours=3)  # For some weird reason the Original form of the PopularTimes library seems to be UTC+3
     user_id = ("user_id", current_user.id)
     if type2 == "Choose...": type2 = ""
     name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))

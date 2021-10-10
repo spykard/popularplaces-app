@@ -410,7 +410,7 @@
     </div>
     <div class="row">
       <div class="col">       
-        <button type="button" class="btn btn-sm btn-{{ current_user.ui_button }} popover-button float-left" onclick="$(this).closest('.popover').popover('hide'); location.href='/places?add=1'; return false;">
+        <button id="popover-button" type="button" class="btn btn-sm popover-button float-left btn-{{ current_user.ui_button }}" onclick="$(this).closest('.popover').popover('hide'); location.href='/places?add=1'; return false;">
           Add
         </button>
       </div>

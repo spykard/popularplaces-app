@@ -75,7 +75,8 @@
           $progress_bar = $('#progressbar');
           $grid_view_button = $('#gridView');
           $table_view_button = $('#tableView');  
-          $map_toggle_button = $('#mapToggle');                          
+          $map_toggle_button = $('#mapToggle');  
+          $popover_button = $('#popover-button');                                  
           if ($login_button.length != 0) {
             $lastClass = $login_button.attr('class').split(' ').pop();
             $login_button.removeClass($lastClass);
@@ -165,7 +166,12 @@
             $firstClass = $map_toggle_button.attr('class').split(' ')[0];
             $map_toggle_button.removeClass($firstClass);
             $map_toggle_button.attr('class', 'btn-' + new_button_color + ' ' + $map_toggle_button.attr('class'));                  
-          }                                                
+          }  
+          if ($popover_button.length != 0) {
+            $lastClass = $popover_button.attr('class').split(' ').pop();
+            $popover_button.removeClass($lastClass);
+            $popover_button.addClass('btn-' + new_button_color);                    
+          }                                                            
 
           $.ajax({
             type: 'POST',
