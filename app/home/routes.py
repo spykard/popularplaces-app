@@ -67,8 +67,20 @@ def search():
         if current_user.premium_enabled == False: current_user.free_runs_remaining -= 1
         db.session.commit()  
 
-        # Main
-        search_success, search_msg = search_populartimes(city, type1, type2, all_places)
+        # Write Search Object to DB
+        current_time = datetime.utcnow() + timedelta(hours=3)  # For some weird reason the Original form of the PopularTimes library seems to be UTC+3
+        user_id = ("user_id", current_user.id)
+        if type2 == "Choose...": type2 = ""
+        name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
+        insert_dict = dict([("city" , city), ("settings_type1" , type1), ("settings_type2" , type2), ("settings_all_places" , all_places), user_id, name, ("type" , 1)])
+        search = Search(**insert_dict)
+        db.session.add(search)
+        db.session.commit()         
+
+        # MAIN
+        places = get_places_to_search(city, type1, type2, all_places)
+
+        search_success, search_msg = search_populartimes(places, search, current_time, user_id, name)
 
         if search_success:
             message = json.dumps({"message": search_msg})    
@@ -462,7 +474,7 @@ def delete_place():
 
 @login_required
 # Helper - Run the populartimes Implementation using mode #2
-def search_populartimes(city, type1, type2, all_places):
+def search_populartimes(places, search, current_time, user_id, name):
     ''' Query Google's PopularTimes, using a crawler that takes name and address of a specific place as input '''
     # Perform the main Search in a Threaded fashion
     def main_search_threaded(place):
@@ -481,18 +493,7 @@ def search_populartimes(city, type1, type2, all_places):
 
         return output_dict            
 
-    places = get_places_to_search(city, type1, type2, all_places)
     place_data = []
-
-    # Write Search Object to DB
-    current_time = datetime.utcnow() + timedelta(hours=3)  # For some weird reason the Original form of the PopularTimes library seems to be UTC+3
-    user_id = ("user_id", current_user.id)
-    if type2 == "Choose...": type2 = ""
-    name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
-    insert_dict = dict([("city" , city), ("settings_type1" , type1), ("settings_type2" , type2), ("settings_all_places" , all_places), user_id, name, ("type" , 1)])
-    search = Search(**insert_dict)
-    db.session.add(search)
-    db.session.commit()  
 
     # https://stackoverflow.com/a/61360215
     # https://stackoverflow.com/a/30495317

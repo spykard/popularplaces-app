@@ -268,6 +268,7 @@ def send_email_register(email, username):
 # Helper - Send E-mail regarding Password Recover
 def send_email_recover(user, email):
     # Generate JWT Expirable Tokens
+    # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-x-email-support
     token = user.get_reset_password_token()
 
     email_template_recover_path = os.path.join(os.getcwd(),'app', 'base', 'static', 'assets', 'html', 'email-template-recover')

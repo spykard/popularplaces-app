@@ -3,109 +3,140 @@ from OSMPythonTools.nominatim import Nominatim
 from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
 
 # https://stackoverflow.com/q/52236655
-nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Example App', cacheDir='cache')  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
-data = nominatim.query("Ioannina", params={'limit': 10})
+nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Popular Places', cacheDir='cache')  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
+data = nominatim.query("Patras", params={'limit': 10})
 dataJSON = data.toJSON()
 
-# By convention the area id can be calculated from an existing OSM way by adding 2400000000 to its OSM id, or in case of a relation by adding 3600000000 respectively. 
+if not dataJSON:
+        print("RETURN FROM THE FUNCTION")
+
+# Areas: By convention the area id can be calculated from an existing OSM way by adding 2400000000 to its OSM id, or in case of a relation by adding 3600000000 respectively. 
 # Note that area creation is subject to some extraction rules, i.e. not all ways/relations have an area counterpart (notably those that are tagged with
 # area=no, and most multipolygons and that don’t have a defined name=* will not be part of areas).
 
+# If 'Relation' (could also use 'Way' if needed) in top 3, select that result
+final_selection = None
+count = 0
 for result in dataJSON:
-        print(result["display_name"])
-        print(result["lat"], result["lon"])
-        print("osm_type:", result["osm_type"])
-        print("class:", result["class"])
-        print("type:", result["type"])
-        print("importance:", result["importance"])
-        print()
+        if count < 3 and result["importance"] >= 0.25:
+                if result["osm_type"] == "relation":
+                        final_selection = result
+                        break
 
+                # Debug
+                # print(result["display_name"])
+                # print(result["lat"], result["lon"])
+                # print("osm_type:", result["osm_type"])
+                # print("class:", result["class"])
+                # print("type:", result["type"])
+                # print("importance:", result["importance"])
+                # print()
+        else:
+                break
+        count += 1
 
-id = dataJSON[0]["osm_id"]
-id2 = data.areaId()
+if final_selection != None:
+        osm_id = final_selection["osm_id"]
+        area_id = osm_id + 3600000000
+        lat = final_selection["lat"]
+        lon = final_selection["lon"]
 
-print(id)
-print(id2)
+# Else Recurse Upwards using the Overpass API
+else:
+        # Recurse Up: https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Recurse_up_.28.3C.29 or https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Recurse_.28n.2C_w.2C_r.2C_bn.2C_bw.2C_br.29
+        recurseFirstQuery =     '''  
+                                (node(%s);
+                                <;
+                                );
+                                out center;
+                                out body;
+                                ''' % dataJSON[0]["osm_id"]
 
-# Recurse Up: https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Recurse_up_.28.3C.29 or https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Recurse_.28n.2C_w.2C_r.2C_bn.2C_bw.2C_br.29
-recurseFirstQuery =     '''  
-                        (node(%s);
-                        <;
-                        );
+        overpass = Overpass(endpoint='http://overpass-api.de/api/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md
+        data = overpass.query(recurseFirstQuery, timeout=10)
 
-                        out body;
-                        ''' % id
+        # Debug
+        print("Total number of Found Elements:", len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
 
-overpass = Overpass(endpoint='http://overpass-api.de/api/', userAgent='Example App', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md
-data = overpass.query(recurseFirstQuery, timeout=10)
+        # admin_level information per Country: https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#admin_level.3D.2A_Country_specific_values
+        # we will utilize results in the range of 3-11, selecting the highest number
 
-print(len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
+        if not data.elements():
+                print("RETURN FROM THE FUNCTION")
 
-# admin_level information per Country: https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#admin_level.3D.2A_Country_specific_values
-# I WILL USE FROM 3 TO 11, looking for the highest number
+        max_level = 2
+        for result in data.elements():
+                if 'admin_level' in result.tags():
+                        current_level = int(result.tag('admin_level'))
+                        current_type = result.type()
+                        if current_level > max_level and current_type != 'node':
+                                final_selection = result
+                                max_level = current_level
 
-for result in data.elements():
-        print(result.tags())
-        print(result.type())
-        print(result.id())
-        print()
+                # Debug                
+                # print(result.tags())
+                # print(result.type())
+                # print(result.id())
+                # print(result.lat(), result.lon())
+                # print(result.centerLat(), result.centerLon())
+                # print()
+
+        print(final_selection.tags())
+        print(final_selection.type())
+        print(final_selection.id())
+        print(final_selection.lat(), final_selection.lon())
+        print(final_selection.centerLat(), final_selection.centerLon())
+        print()   
+
+        osm_id = final_selection.id()
+        if final_selection.type() == 'way':
+            area_id = osm_id + 2400000000
+        elif final_selection.type() == 'relation':
+            area_id = osm_id + 3600000000 
+        if final_selection.centerLat():
+                lat = final_selection.centerLat()
+                lon = final_selection.centerLon()
+        elif final_selection.lat():   
+                lat = final_selection.lat()
+                lon = final_selection.lon()
+        else:
+                lat = dataJSON[0]["lat"]                       
+                lon = dataJSON[0]["lon"]                       
+
+print(osm_id)
+print(area_id)
+print(lat)
 quit()
-
-
-#query = overpassQueryBuilder(elementType=['way', 'relation'], selector='"highway"="bus_stop"', out='body')  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md
-
-quit()
-area_id = int(data[0].raw.get("osm_id")) + 3600000000
-print(int(data[0].raw.get("osm_id")))
-
-
-
-
 
 
 # Patras bbox: (21.719416,38.238575,21.768314,38.278166)
+# Overpass API example:
 
-temp = 'area[name="Vienna"]->.searchArea;(node["tourism"="museum"](area.searchArea);way["tourism"="museum"](area.searchArea);relation["tourism"="museum"](area.searchArea););'
+# 'area[name="Vienna"]->.searchArea;(node["tourism"="museum"](area.searchArea);way["tourism"="museum"](area.searchArea);relation["tourism"="museum"](area.searchArea););'
 
-temp = '''(
-    node["amenity"="parking"](21.719416,38.238575,21.768314,38.278166);
-    way["amenity"="parking"](21.719416,38.238575,21.768314,38.278166);
-        );'''
+#   '''(
+#   node["amenity"="parking"](21.719416,38.238575,21.768314,38.278166);
+#   way["amenity"="parking"](21.719416,38.238575,21.768314,38.278166);
+#   );'''
 
-temp = '''
-area[name="London"][admin_level=6][boundary=administrative]->.londonarea;
-rel(pivot.londonarea);
-        '''
+#   '''
+#   area[name="London"][admin_level=6][boundary=administrative]->.londonarea;
+#   rel(pivot.londonarea);
+#   '''
 
-temp2 = ''' rel["name"="Noues de Sienne"](46.081,-5.438,50.121,0.439); '''  # This API Wrapper is unable to output certain types of resultsets such as rel/areas
+#   ''' rel["name"="Noues de Sienne"](46.081,-5.438,50.121,0.439); '''  # This API Wrapper is unable to output certain types of resultsets such as rel/areas
 
-temp = ''' node["name"="Berlin"]; '''
+#   ''' node["name"="Berlin"]; '''
 
-# temp2 = """
-#     area(%s)->.searchArea;
-#     (
-#       node["amenity"="bar"](area.searchArea);
-#     );
-#     out body;
-#     """ % area_id
+#    '''
+#    area(%s)->.searchArea;
+#    (
+#    node["amenity"="bar"](area.searchArea);
+#    );
+#    out body;
+#    ''' % area_id
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# -- NOMINATIM API - NOT THAT GOOD --
+# -- ALTERNATIVE NOMINATIM API - NOT THAT GOOD --
 # from geopy.geocoders import Nominatim
 # geolocator = Nominatim(timeout=10, domain='nominatim.openstreetmap.org', user_agent="testing-right-now")
 # data = geolocator.geocode("Patras", limit=10, exactly_one=False) 
