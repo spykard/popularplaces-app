@@ -208,6 +208,7 @@
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div id="dropdownmenu" class="dropdown-menu {% if current_user.ui_theme == 'dark' %}dropdown-black{% endif %}">
+            <a class="dropdown-item" href="/search-turbo">Turbo Search</a>            
             <a class="dropdown-item" href="/search">Basic Search</a>
           </div>
         </div>
@@ -380,8 +381,17 @@
 {% block javascripts %}
 
   <script>
-    $('#type1').val('{{ current_user.settings_type1 }}');
-    $('#type2').val('{{ current_user.settings_type2 }}');
+    {% if current_user.settings_type1 in [("Choose..."), ("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store"), ("Other")] %}   
+      $('#type1').val('{{ current_user.settings_type1 }}');
+    {% else %}
+      $('#type1').val('Choose...');
+    {% endif %} 
+
+    {% if current_user.settings_type2 in [("Choose..."), ("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store"), ("Other")] %}   
+      $('#type2').val('{{ current_user.settings_type2 }}');
+    {% else %}
+      $('#type2').val('Choose...');
+    {% endif %} 
 
     $(document).ready(function () {    
       $('.navbar-sidenav [data-toggle="tooltip"]').tooltip({

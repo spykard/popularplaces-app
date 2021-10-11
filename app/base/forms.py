@@ -37,7 +37,11 @@ class EditSettingsForm(FlaskForm):
     type1 = SelectField('Type 1'        , id='type1'           , validators=[DataRequired()], choices=[("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store"), ("Other")])
     type2 = SelectField('Type 2'        , id='type2'           , choices=[("Choose..."), ("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store"), ("Other")])
 
-class EditSettingsFormAdvanced(FlaskForm):
+class EditSettingsTurboForm(FlaskForm):
+    location = TextField('Location'     , id='location'        , validators=[DataRequired()])    
+    type = TextField('Type'           , id='type1'           , validators=[DataRequired()])
+
+class EditSettingsAdvancedForm(FlaskForm):
     api_key = TextField('API Key'         , id='api_key'       , validators=[DataRequired()]) 
     p1 = TextField('Location Point 1'     , id='p1'            , validators=[DataRequired(), Regexp("^([1-8]?\d(\.\d+)?|90(\.0+)?),\s*(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$")])
     p2 = TextField('Location Point 2'     , id='p2'            , validators=[DataRequired(), Regexp("^([1-8]?\d(\.\d+)?|90(\.0+)?),\s*(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$")])

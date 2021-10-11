@@ -13,7 +13,13 @@
         <ul class="nav">
         {% if current_user.is_authenticated %}
 
-          <li class="{% if 'search' in segment %} active {% endif %}">
+          <li class="{% if 'search-turbo' in segment %} active {% endif %}">
+            <a href="/search-turbo">
+              <i class="tim-icons icon-zoom-split"></i>
+              <p>Search Turbo &nbsp;<code>NEW</code></p>
+            </a>
+          </li>
+          <li class="{% if segment == 'search' %} active {% endif %}">
             <a href="/search">
               <i class="tim-icons icon-zoom-split"></i>
               <p>Search &nbsp;<code>NEW</code></p>

@@ -4,7 +4,7 @@ from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
 
 # https://stackoverflow.com/q/52236655
 nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Popular Places', cacheDir='cache')  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
-data = nominatim.query("Patras", params={'limit': 10})
+data = nominatim.query("Patras", onlyCached=False, shallow=False, params={'limit': 10})  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
 dataJSON = data.toJSON()
 
 if not dataJSON:
@@ -53,10 +53,10 @@ else:
                                 ''' % dataJSON[0]["osm_id"]
 
         overpass = Overpass(endpoint='http://overpass-api.de/api/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md
-        data = overpass.query(recurseFirstQuery, timeout=10)
+        data = overpass.query(recurseFirstQuery, timeout=10, onlyCached=False, shallow=False)
 
         # Debug
-        print("Total number of Found Elements:", len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
+        # print("Total number of Found Elements:", len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
 
         # admin_level information per Country: https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#admin_level.3D.2A_Country_specific_values
         # we will utilize results in the range of 3-11, selecting the highest number
@@ -81,12 +81,13 @@ else:
                 # print(result.centerLat(), result.centerLon())
                 # print()
 
-        print(final_selection.tags())
-        print(final_selection.type())
-        print(final_selection.id())
-        print(final_selection.lat(), final_selection.lon())
-        print(final_selection.centerLat(), final_selection.centerLon())
-        print()   
+        # Debug
+        # print(final_selection.tags())
+        # print(final_selection.type())
+        # print(final_selection.id())
+        # print(final_selection.lat(), final_selection.lon())
+        # print(final_selection.centerLat(), final_selection.centerLon())
+        # print()   
 
         osm_id = final_selection.id()
         if final_selection.type() == 'way':
@@ -106,9 +107,31 @@ else:
 print(osm_id)
 print(area_id)
 print(lat)
-quit()
 
+# Final Step
+finalQuery =   '''  
+                area(%s)->.searchArea;
+                (
+                node["amenity"="bar"](area.searchArea);
+                );
+                out body;
+                ''' % area_id
 
+data = overpass.query(finalQuery, timeout=10, onlyCached=False, shallow=False)
+
+# Debug
+print("Total number of Found Elements:", len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
+
+for result in data.elements():
+        # Debug                
+        print(result.tags())
+        print(result.type())
+        print(result.id())
+        print(result.lat(), result.lon())
+        print(result.centerLat(), result.centerLon())
+        print()
+
+# -- NOTES --
 # Patras bbox: (21.719416,38.238575,21.768314,38.278166)
 # Overpass API example:
 
@@ -135,6 +158,7 @@ quit()
 #    );
 #    out body;
 #    ''' % area_id
+# --
 
 # -- ALTERNATIVE NOMINATIM API - NOT THAT GOOD --
 # from geopy.geocoders import Nominatim

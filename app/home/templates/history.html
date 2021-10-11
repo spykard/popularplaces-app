@@ -1749,43 +1749,45 @@
                     }
 
                     //-- Update the Map --//
-                    mymap.removeLayer(layer_group_circle);
-                    mymap.removeLayer(clusterer);                    
-                    control_layer.remove(mymap);
+                    if (data.length > 0) {
+                      mymap.removeLayer(layer_group_circle);
+                      mymap.removeLayer(clusterer);                    
+                      control_layer.remove(mymap);
 
-                    bounds = new L.LatLngBounds(map_points);
-                    map_marker_array = new Array(data.length);
-                    map_circle_array = new Array(data.length);   
+                      bounds = new L.LatLngBounds(map_points);
+                      map_marker_array = new Array(data.length);
+                      map_circle_array = new Array(data.length);   
 
-                    mymap.flyToBounds(bounds, {padding: [25, 25], maxZoom: 14, duration: 3});
+                      mymap.flyToBounds(bounds, {padding: [25, 25], maxZoom: 14, duration: 3});
 
-                    for (i = 0; i < map_points.length; i++) {
-                      map_marker_array[i] = L.marker(map_points[i]).bindPopup(map_points_html[i]);
-                      map_circle_array[i] = L.circle(map_points[i], {
-                                                    color: 'red',
-                                                    fillColor: '#f03',
-                                                    fillOpacity: 0.35,
-                                                    radius: 1.75 * map_points_size[i]
-                                                  }).bindPopup(map_points_html[i]);                                   
-                    }   
-                
-                    layer_group_marker = L.layerGroup(map_marker_array);
-                    layer_group_circle = L.layerGroup(map_circle_array).addTo(mymap);
-                
-                    clusterer = L.markerClusterGroup({maxClusterRadius: 30});
-                    clusterer.addLayers(layer_group_marker);
-                    mymap.addLayer(clusterer);
+                      for (i = 0; i < map_points.length; i++) {
+                        map_marker_array[i] = L.marker(map_points[i]).bindPopup(map_points_html[i]);
+                        map_circle_array[i] = L.circle(map_points[i], {
+                                                      color: 'red',
+                                                      fillColor: '#f03',
+                                                      fillOpacity: 0.35,
+                                                      radius: 1.75 * map_points_size[i]
+                                                    }).bindPopup(map_points_html[i]);                                   
+                      }   
+                  
+                      layer_group_marker = L.layerGroup(map_marker_array);
+                      layer_group_circle = L.layerGroup(map_circle_array).addTo(mymap);
+                  
+                      clusterer = L.markerClusterGroup({maxClusterRadius: 30});
+                      clusterer.addLayers(layer_group_marker);
+                      mymap.addLayer(clusterer);
 
-                    baseMaps  = {
-                      '<span style="color: rgba(0, 0, 0, 1.0);">Base': base_layer
-                    };
-                
-                    overlayMaps = {
-                      '<span style="color: rgba(0, 0, 0, 1.0);">Markers': clusterer,
-                        '<span style="color: rgba(0, 0, 0, 1.0);">Circles': layer_group_circle
-                    };
-                
-                    control_layer = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+                      baseMaps  = {
+                        '<span style="color: rgba(0, 0, 0, 1.0);">Base': base_layer
+                      };
+                  
+                      overlayMaps = {
+                        '<span style="color: rgba(0, 0, 0, 1.0);">Markers': clusterer,
+                          '<span style="color: rgba(0, 0, 0, 1.0);">Circles': layer_group_circle
+                      };
+                  
+                      control_layer = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+                    }
 
                     // Correct the currently active Carousel Page
                     if (data.length) {

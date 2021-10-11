@@ -187,11 +187,16 @@ class Search(db.Model):
     settings_radius = Column(Integer)
     settings_type1 = Column(String, nullable=False)
     settings_type2 = Column(String, nullable=False)    
-    settings_all_places = Column(Integer, nullable=False)   
+    settings_all_places = Column(Integer)   
+    settings_save_places = Column(Boolean)   
     user_id = Column(Integer, ForeignKey('User.id', ondelete="SET NULL", onupdate="SET NULL"), index=True)
     name = Column(String, nullable=False, unique=True, index=True)
     city = Column(String, index=True) 
     type = Column(Integer, nullable=False)  
+    settings_osm_id = Column(Integer)  
+    settings_area_id = Column(Integer)
+    settings_lat = Column(String)
+    settings_lon = Column(String)
     UniqueConstraint(name)
 
     def __init__(self, **kwargs):
@@ -246,6 +251,7 @@ class User(db.Model, UserMixin):
     active = Column(Boolean, nullable=False, index=True, server_default='True') 
     last_login_ip = Column(String, server_default="")
     login_count = Column(Integer, server_default='0')
+    settings_save_places = Column(Boolean, server_default='False')    
     UniqueConstraint(username) 
     UniqueConstraint(email) 
 

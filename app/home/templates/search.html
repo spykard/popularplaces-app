@@ -244,12 +244,13 @@
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div id="dropdownmenu" class="dropdown-menu {% if current_user.ui_theme == 'dark' %}dropdown-black{% endif %}">
+            <a class="dropdown-item" href="/search-turbo">Turbo Search</a>
             <a class="dropdown-item" href="/search-advanced">Advanced Search</a>
           </div>
         </div>
 
         <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->
-        <button id="helptooltip2" class="btn btn-simple btn-simple-less-wide btn-{{ current_user.ui_button }}" onclick="location.href='/places?add=1'; return false;">
+        <button id="helptooltip2" class="btn btn-simple add-button-selector btn-simple-less-wide btn-{{ current_user.ui_button }}" onclick="location.href='/places?add=1'; return false;">
             <i class="tim-icons icon-simple-add"></i>
         </button>
       </div>
@@ -431,8 +432,17 @@
   <script>
     const container = document.querySelector('.main-panel');
 
-    $('#type1').val('{{ current_user.settings_type1 }}');
-    $('#type2').val('{{ current_user.settings_type2 }}');
+    {% if current_user.settings_type1 in [("Choose..."), ("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store"), ("Other")] %}   
+      $('#type1').val('{{ current_user.settings_type1 }}');
+    {% else %}
+      $('#type1').val('Choose...');
+    {% endif %} 
+
+    {% if current_user.settings_type2 in [("Choose..."), ("Bar"), ("Night Club"), ("Restaurant"), ("Cafe"), ("Bakery"), ("Food"), ("Subway Station"), ("Gas Station"), ("Bank"), ("Pharmacy"), ("Health"), ("Place of Worship"), ("Department Store"), ("Establishment"), ("University"), ("Library"), ("Book Store"), ("Gym"), ("Clothing Store"), ("Casino"), ("Liquor Store"), ("Other")] %}   
+      $('#type2').val('{{ current_user.settings_type2 }}');
+    {% else %}
+      $('#type2').val('Choose...');
+    {% endif %} 
 
     $(document).ready(function () {    
       $('.navbar-sidenav [data-toggle="tooltip"]').tooltip({

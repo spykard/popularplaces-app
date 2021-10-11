@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from app import db, login_manager
 from sqlalchemy import func, nullslast
 from jinja2 import TemplateNotFound
-from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsFormAdvanced, AddPlaceForm
+from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsTurboForm, EditSettingsAdvancedForm, AddPlaceForm
 from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal, CrowdInput
 from app.base.util import hash_pass
 from datetime import datetime, timedelta
@@ -32,6 +32,71 @@ def route_template(template):
     
     except:
         return render_template('errors/page-500.html'), 500
+
+@blueprint.route('/search-turbo', methods=['GET', 'POST'])
+@login_required
+def search_turbo():
+    settings_form = EditSettingsTurboForm(request.form)
+    if 'search' in request.form:
+        # Read form data
+        location = request.form['location'].title()
+        type1 = request.form['type'].title()
+
+        if request.form.get('save_places') == None:  # If checkboxed not checked, no POST data are sent
+            save_places = False
+        else:
+            save_places = True
+
+        # Validate Form Data
+        if not settings_form.validate():
+            return render_template( 'search-turbo.html', 
+                                    segment='search-turbo',
+                                    to_notify='true',
+                                    msg='Input does not follow the Appropriate Form',
+                                    error_dict=settings_form.errors,
+                                    success=False,
+                                    form=settings_form)
+
+        # Write to DB
+        current_user.settings_type1 = type1
+        current_user.settings_save_places = save_places
+        current_user.total_runs += 1
+        if current_user.premium_enabled == False: current_user.free_runs_remaining -= 1
+        db.session.commit()  
+
+        # Write Search Object to DB
+        current_time = datetime.utcnow() + timedelta(hours=3)  # For some weird reason the Original form of the PopularTimes library seems to be UTC+3
+        user_id = ("user_id", current_user.id)
+        name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
+        insert_dict = dict([("city" , location), ("settings_type1" , type1), ("settings_type2" , ""), ("settings_save_places" , save_places), user_id, name, ("type" , 3)])
+        search = Search(**insert_dict)
+        db.session.add(search)
+        db.session.commit()         
+
+        # MAIN
+        # places = get_places_to_search(city, type1, type2, all_places)
+
+        # search_success, search_msg = search_populartimes(places, search, current_time, user_id, name)
+
+        # if search_success:
+        #     message = json.dumps({"message": search_msg})    
+
+        #     return redirect(url_for('home_blueprint.history', messages=search_msg))
+        # else:
+        #     return render_template( 'search.html', 
+        #                     segment='search',
+        #                     msg='Search executed but returned the following Error: ' + search_msg, 
+        #                     error_dict={},
+        #                     success=False,
+        #                     form=settings_form,
+        #                     city=city,
+        #                     show_search_panel=True)                                        
+
+    return render_template( 'search-turbo.html', 
+                            segment='search-turbo',
+                            error_dict={},
+                            form=settings_form,
+                            to_notify_premium=notify_premium())
 
 @blueprint.route('/search', methods=['GET', 'POST'])
 @login_required
@@ -114,7 +179,7 @@ def search():
 @blueprint.route('/search-advanced', methods=['GET', 'POST'])
 @login_required
 def search_advanced():
-    settings_form = EditSettingsFormAdvanced(request.form)
+    settings_form = EditSettingsAdvancedForm(request.form)
     if 'search' in request.form:
         # Read form data
         api_key = request.form['api_key']
