@@ -197,6 +197,7 @@ class Search(db.Model):
     settings_area_id = Column(BigInteger)
     settings_lat = Column(String)
     settings_lon = Column(String)
+    settings_wkt = Column(String)
     UniqueConstraint(name)
 
     def __init__(self, **kwargs):

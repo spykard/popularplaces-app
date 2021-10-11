@@ -4,7 +4,7 @@ from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
 
 # https://stackoverflow.com/q/52236655
 nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Popular Places', cacheDir='cache')  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
-data = nominatim.query("Patras", onlyCached=False, shallow=False, params={'limit': 10})  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
+data = nominatim.query("Corfu", onlyCached=False, shallow=False, params={'limit': 10}, wkt=True)  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
 dataJSON = data.toJSON()
 
 if not dataJSON:
@@ -40,6 +40,7 @@ if final_selection != None:
         area_id = osm_id + 3600000000
         lat = final_selection["lat"]
         lon = final_selection["lon"]
+        print(data.wkt()[0:100])
 
 # Else Recurse Upwards using the Overpass API
 else:
