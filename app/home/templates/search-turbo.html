@@ -5,6 +5,12 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'/>
+
 <style>
   code {
     word-break: normal
@@ -134,10 +140,26 @@
         <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->    
       </div>
 
+      <div id="progressbar" class="progress" style="display: none; height: 7px;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-{{ current_user.ui_button }}" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+      </div> 
+
       </form>
       {% endif %}
       
     </div>
+  </div>
+</div>
+
+<div class="row">
+  <div id="mymapDiv" class="col-md-12">
+    <div class="card">
+      <div id="mymapWrapper" class="card-body" style="height:450px;">
+        <div id="mymap" style="position: absolute;">
+
+        </div>
+      </div>
+    </div>          
   </div>
 </div>
 
@@ -160,7 +182,25 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin="">
+  </script>
+
+  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+
+  <script src='/static/assets/js/plugins/wicket.min.js'></script>
+  <script src='/static/assets/js/plugins/wicket-leaflet.min.js'></script>  
+
   <script>
+    {% if current_user.ui_color == "blue" %}
+      const map_polygon_color = "#1d8cf8";
+    {% elif current_user.ui_color == "green" %}    
+      const map_polygon_color = "#00f2c3";
+    {% else %}  
+      const map_polygon_color = "#e14eca";
+    {% endif %}
+
     $('#type1').val('{{ current_user.settings_type1 }}');
     $('#type2').val('{{ current_user.settings_type2 }}');
 
@@ -170,6 +210,85 @@
       })
     
       $('[data-toggle="tooltip"]').tooltip()       
+    });
+
+    $('#search').click(function() { 
+      $('#progressbar').slideDown(); 
+    });
+
+    var map_point = [[40.76299881753538, -73.98088709849752]]; 
+    var map_polygon_geotext = "POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))";
+
+    const mymapDiv = document.getElementById("mymapWrapper");
+    var mymap = L.map('mymap');
+    mymap.addControl(new L.Control.Fullscreen());
+
+    var bounds = new L.LatLngBounds(map_point);
+    mymap.fitBounds(bounds, {padding: [25, 25], maxZoom: 7});
+
+    var base_layer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: '',
+      maxZoom: 21,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: 'pk.eyJ1Ijoic3B5c3B5IiwiYSI6ImNrdWlsYmdlYTBiMzIyb3J2cWE2OTFkeTcifQ.x57KR5oPClk_d8Npnwh75Q'
+    }).addTo(mymap);
+
+    const resizeObserver = new ResizeObserver(() => {
+      var parent_height = 420;  // 450 - 2*15px padding      
+      var parent_width = $("#mymap").closest('#mymapWrapper').width();
+      $("#mymap").height(parent_height);
+      $("#mymap").width(parent_width);
+      mymap.invalidateSize();
+    });
+    
+    resizeObserver.observe(mymapDiv);
+
+    // Map
+    $.ajax({
+      type: "POST",
+      data: { },
+      url: "/get-search-map"
+    }).done(function(data) {
+        if (data[0]["search_lat"]) {
+          console.log(data);
+          console.log(data[0]["search_lat"]);
+          console.log('success'); 
+          
+          map_point = [[parseFloat(data[0]["search_lat"]), parseFloat(data[0]["search_lon"])]];
+
+          console.log(map_point);
+
+          // https://gis.stackexchange.com/a/162858
+          var wicket  = new Wkt.Wkt();
+          wicket.read(data[0]["search_wkt"]);
+
+          var polygon = wicket.toObject({
+                                        color: map_polygon_color,
+                                        strokeColor: map_polygon_color,
+                                        strokeOpacity: 0.8,
+                                        strokeWeight: 2,
+                                        fillColor: map_polygon_color,
+                                        fillOpacity: 0.35
+                                      });
+          var marker = L.marker(map_point[0]).bindPopup("Test");
+
+
+          L.layerGroup([marker]).addTo(mymap);
+          L.layerGroup([polygon]).addTo(mymap);          
+          
+          bounds = new L.LatLngBounds(map_point);
+          mymap.getRenderer(mymap).options.padding = 100;  // Significantly affects Performance but forces the Renderer to instantly Render the Polygon when Panning Begins          
+          mymap.flyToBounds(bounds, {padding: [25, 25], maxZoom: 9, duration: 3});
+
+        }
+    }).fail(function() {
+    }).always(function() {
+        // Schedule the next request after this one completes,
+        // even after error
+        //console.log('Waiting ' + (storiesInterval / 1000) + ' seconds');
+        //setTimeout(fetchNews, storiesInterval);
     });
 
     helpers.showNotification('top','center', '{{ to_notify_premium }}', 'Your <b>Premium Subscription</b> has been Enabled!')

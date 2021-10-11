@@ -67,59 +67,58 @@ def search_turbo():
         db.session.commit()       
 
         # MAIN
-        places, search = get_places_to_search_geocode(location, type1.lower())
+        places, search = get_places_to_search_geocode(location, type1.lower(), save_places)
 
-        # Write Search Object to DB
-        current_time = datetime.utcnow() + timedelta(hours=3)  # For some weird reason the Original form of the PopularTimes library seems to be UTC+3
-        user_id = ("user_id", current_user.id)
-        name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
-        insert_dict = dict([("city" , location), ("settings_type1" , type1), ("settings_type2" , ""), ("settings_save_places" , save_places), user_id, name, ("type" , 3), ("settings_osm_id" , search[0]), ("settings_area_id" , search[1]), ("settings_lat" , search[2]), ("settings_lon" , search[3])])
-        search = Search(**insert_dict)
-        db.session.add(search)
-        db.session.commit() 
+        if search:
+            # Write Place Object to DB
+            city_to = City.query.filter_by(name=location).first()
+            if not city_to:
+                insert_dict = dict([("name" , location)])
+                city_to = City(**insert_dict)
+                db.session.add(city_to)
+                db.session.commit()     
 
-        # Write Place Object to DB
-        city_to = City.query.filter_by(name=location).first()
-        if not city_to:
-            insert_dict = dict([("name" , location)])
-            city_to = City(**insert_dict)
-            db.session.add(city_to)
-            db.session.commit()     
+            for place in places:
+                placeglobal_to = db.session.query(PlaceGlobal).filter((PlaceGlobal.name == place[1]) & (PlaceGlobal.city_id == city_to.id)).first()
+                if not placeglobal_to:
+                    insert_dict = dict([("name" , place[1]), ("address" , place[2]), ("city_id" , city_to.id)])
+                    placeglobal_to = PlaceGlobal(**insert_dict)
+                    db.session.add(placeglobal_to)
+                    db.session.commit()                  
+                place[3] = placeglobal_to.id
 
-        for place in places:
-            placeglobal_to = db.session.query(PlaceGlobal).filter((PlaceGlobal.name == place[1]) & (PlaceGlobal.city_id == city_to.id)).first()
-            if not placeglobal_to:
-                insert_dict = dict([("name" , place[1]), ("address" , place[2]), ("city_id" , city_to.id)])
-                placeglobal_to = PlaceGlobal(**insert_dict)
-                db.session.add(placeglobal_to)
-                db.session.commit()                  
-            place[3] = placeglobal_to.id
+                if save_places == True:
+                    place_to = db.session.query(Place).filter((Place.name == place[1]) & (Place.city_id == city_to.id)).first()
+                    if not place_to:                
+                        insert_dict = dict([("name" , place[1]), ("address" , place[2]), ("type_p" , type1), ("user_id" , current_user.id), ("city_id" , city_to.id), ("global_id" , placeglobal_to.id)])
+                        place_to = Place(**insert_dict)
+                        db.session.add(place_to)
+                        db.session.commit()  
+                    place[0] = place_to.id
+                else:
+                    place[0] = 0  # Place ID is completely in this case      
 
-            if save_places == True:
-                place_to = db.session.query(Place).filter((Place.name == place[1]) & (Place.city_id == city_to.id)).first()
-                if not place_to:                
-                    insert_dict = dict([("name" , place[1]), ("address" , place[2]), ("type_p" , type1), ("user_id" , current_user.id), ("city_id" , city_to.id), ("global_id" , placeglobal_to.id)])
-                    place_to = Place(**insert_dict)
-                    db.session.add(place_to)
-                    db.session.commit()  
-                place[0] = place_to.id
+            search_success, search_msg = search_populartimes(places, search["search"], search["current_time"], search["user_id"], search["name"])
+
+            if search_success:
+                message = json.dumps({"message": search_msg})    
+
+                return redirect(url_for('home_blueprint.history', messages=search_msg))
+
             else:
-                place[0] = 0  # Place ID is completely in this case      
-
-        search_success, search_msg = search_populartimes(places, search, current_time, user_id, name)
-
-        if search_success:
-            message = json.dumps({"message": search_msg})    
-
-            return redirect(url_for('home_blueprint.history', messages=search_msg))
-
+                return render_template( 'search-turbo.html', 
+                                segment='search-turbo',
+                                msg='Search executed but returned the following Error: ' + search_msg, 
+                                error_dict={},
+                                success=False,
+                                form=settings_form)   
         else:
             return render_template( 'search-turbo.html', 
-                            segment='search',
-                            msg='Search executed but returned the following Error: ' + search_msg, 
+                            segment='search-turbo',
+                            msg='No Location with given name Found', 
                             error_dict={},
                             success=False,
-                            form=settings_form)                                        
+                            form=settings_form)                                                  
 
     return render_template( 'search-turbo.html', 
                             segment='search-turbo',
@@ -531,6 +530,19 @@ def get_person_count():
     else:
         return jsonify([{'count': randint(13, 34)}])     
 
+@blueprint.route('/get-search-map', methods=['POST'])
+@login_required
+def get_search_map():
+    if current_user.is_authenticated:
+        attempt_to_find_search_instance = db.session.query(Search).filter((Search.user_id == current_user.id) & (Search.time >= datetime.utcnow() - timedelta(hours=6))).order_by(Search.time.desc()).first() 
+
+        if attempt_to_find_search_instance:
+            return jsonify([{'search_lat': attempt_to_find_search_instance.settings_lat, 'search_lon': attempt_to_find_search_instance.settings_lon, 'search_wkt': attempt_to_find_search_instance.settings_wkt}]) 
+        else:
+            return "false"
+    else:
+        return "false" 
+
 @blueprint.route('/delete-search', methods=['POST'])
 @login_required
 def delete_search():
@@ -604,8 +616,6 @@ def search_populartimes(places, search, current_time, user_id, name):
 
     for data in place_data:
         # Write Verification for Places to DB
-        print(data)
-        print()
         if data["place_address"]:
             if data["types"]:
                 data["types"] = [item for sublist in data["types"] for item in sublist]  # https://stackoverflow.com/a/952952
@@ -712,19 +722,33 @@ def get_places_to_search(city, type1, type2, all_places):
     return places_list
 
 # Helper - Geocode given the users Location and Type input and returns the details of all the matched places
-def get_places_to_search_geocode(location, type1):
+def get_places_to_search_geocode(location, type1, save_places):
+    ''' Perform the main Search in a Threaded fashion '''
+    # Write Search Object to DB
+    def write_search_object_to_DB(search_list, type1, save_places):        
+        current_time = datetime.utcnow() + timedelta(hours=3)  # For some weird reason the Original form of the PopularTimes library seems to be UTC+3
+        user_id = ("user_id", current_user.id)
+        name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
+        insert_dict = dict([("city" , location), ("settings_type1" , type1), ("settings_type2" , ""), ("settings_save_places" , save_places), user_id, name, ("type" , 3), ("settings_osm_id" , search_list[0]), ("settings_area_id" , search_list[1]), ("settings_lat" , search_list[2]), ("settings_lon" , search_list[3]), ("settings_wkt" , search_list[4])])
+        search = Search(**insert_dict)
+        db.session.add(search)
+        db.session.commit()
+
+        return {"current_time": current_time, "user_id": user_id, "name": name, "search": search}
+
     # https://stackoverflow.com/q/52236655
     nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
     overpass = Overpass(endpoint='http://overpass-api.de/api/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md
 
-    data = nominatim.query(location, onlyCached=False, shallow=False, params={'limit': 10})  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
+    data = nominatim.query(location, onlyCached=False, shallow=False, params={'limit': 10}, wkt=True)  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
     dataJSON = data.toJSON()
 
     places_list = {}
-    search_list = (0, 0, "", "")
+    search_list = (0, 0, "", "", "")
 
     if not dataJSON:
-        return places_list, search_list
+        search_dict = write_search_object_to_DB(search_list, type1.title(), save_places)
+        return places_list, None
 
     # Areas: By convention the area id can be calculated from an existing OSM way by adding 2400000000 to its OSM id, or in case of a relation by adding 3600000000 respectively. 
     # Note that area creation is subject to some extraction rules, i.e. not all ways/relations have an area counterpart (notably those that are tagged with
@@ -756,7 +780,8 @@ def get_places_to_search_geocode(location, type1):
             area_id = osm_id + 3600000000
             lat = final_selection["lat"]
             lon = final_selection["lon"]
-            search_list = (osm_id, area_id, lat, lon)
+            geotext = final_selection["geotext"]
+            search_list = (osm_id, area_id, lat, lon, geotext)
 
     # Else Recurse Upwards using the Overpass API
     else:
@@ -778,7 +803,8 @@ def get_places_to_search_geocode(location, type1):
         # we will utilize results in the range of 3-11, selecting the highest number
 
         if not data.elements():
-            return places_list, search_list
+            search_dict = write_search_object_to_DB(search_list, type1.title(), save_places)            
+            return places_list, None
 
         max_level = 2
         for result in data.elements():
@@ -789,14 +815,6 @@ def get_places_to_search_geocode(location, type1):
                     final_selection = result
                     max_level = current_level
 
-            # Debug                
-            # print(result.tags())
-            # print(result.type())
-            # print(result.id())
-            # print(result.lat(), result.lon())
-            # print(result.centerLat(), result.centerLon())
-            # print()
-
         # Debug
         # print(final_selection.tags())
         # print(final_selection.type())
@@ -805,21 +823,17 @@ def get_places_to_search_geocode(location, type1):
         # print(final_selection.centerLat(), final_selection.centerLon())
         # print()   
 
-        osm_id = final_selection.id()
-        if final_selection.type() == 'way':
-            area_id = osm_id + 2400000000
-        elif final_selection.type() == 'relation':
-            area_id = osm_id + 3600000000 
-        if final_selection.centerLat():
-            lat = final_selection.centerLat()
-            lon = final_selection.centerLon()
-        elif final_selection.lat():   
-            lat = final_selection.lat()
-            lon = final_selection.lon()
-        else:
-            lat = dataJSON[0]["lat"]                       
-            lon = dataJSON[0]["lon"]                       
-        search_list = (osm_id, area_id, lat, lon)
+        data = nominatim.query(final_selection.type() + "/" + str(final_selection.id()), onlyCached=False, shallow=False, lookup=True, wkt=True)  # Always loads from file if exists and there are also 2 additional
+        dataJSON = data.toJSON()
+
+        osm_id = dataJSON[0]["osm_id"]
+        area_id = data.areaId()
+        lat = dataJSON[0]["lat"]
+        lon = dataJSON[0]["lon"]
+        geotext = dataJSON[0]["geotext"]
+        search_list = (osm_id, area_id, lat, lon, geotext)
+
+    search_dict = write_search_object_to_DB(search_list, type1.title(), save_places)
 
     # Final Step
     finalQuery =   '''  
@@ -944,7 +958,7 @@ def get_places_to_search_geocode(location, type1):
     #         print()
     # --
    
-    return places_list, search_list
+    return places_list, search_dict
 
 # Helper - Maps a string we receive from a Form to a string that can be used as a parameter inside the code, e.g. "Night Club" -> "night_club"
 def type_mapper( type_p, mode ): 
