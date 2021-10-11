@@ -109,7 +109,7 @@ class PlaceGlobal(db.Model):
     __tablename__ = 'PlaceGlobal'
 
     id = Column(Integer, table_placeglobal_id_seq, nullable=False, primary_key=True, autoincrement=True, server_default=table_placeglobal_id_seq.next_value()) 
-    name = Column(String, nullable=False, unique=True, index=True, server_default="")       
+    name = Column(String, nullable=False, index=True, server_default="")       
     address = Column(String, server_default="")
     time = Column(DateTime, server_default=func.current_timestamp()) 
     city_id = Column(Integer, ForeignKey('City.id', ondelete="CASCADE", onupdate="CASCADE"), nullable=False, index=True)
@@ -119,7 +119,7 @@ class PlaceGlobal(db.Model):
     longtitude = Column(Float(53))                  
     type_verified = Column(String)
     place_id = Column(String)     
-    UniqueConstraint(name)
+    UniqueConstraint(name, city_id)
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

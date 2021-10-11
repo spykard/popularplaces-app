@@ -67,7 +67,7 @@ def search_turbo():
         db.session.commit()       
 
         # MAIN
-        places, search = get_places_to_search_geocode(location, type1.lower(), save_places)
+        places, search = get_places_to_search_geocode(location, type1, save_places)  # Convert type to snake_case String
 
         if search:
             # Write Place Object to DB
@@ -84,7 +84,7 @@ def search_turbo():
                     insert_dict = dict([("name" , place[1]), ("address" , place[2]), ("city_id" , city_to.id)])
                     placeglobal_to = PlaceGlobal(**insert_dict)
                     db.session.add(placeglobal_to)
-                    db.session.commit()                  
+                    db.session.commit()
                 place[3] = placeglobal_to.id
 
                 if save_places == True:
@@ -534,7 +534,7 @@ def get_person_count():
 @login_required
 def get_search_map():
     if current_user.is_authenticated:
-        attempt_to_find_search_instance = db.session.query(Search).filter((Search.user_id == current_user.id) & (Search.time >= datetime.utcnow() - timedelta(seconds=1))).order_by(Search.time.desc()).first() 
+        attempt_to_find_search_instance = db.session.query(Search).filter((Search.user_id == current_user.id) & (Search.time >= datetime.utcnow() - timedelta(seconds=1.5))).order_by(Search.time.desc()).first() 
 
         if attempt_to_find_search_instance:
             return jsonify([{'city': attempt_to_find_search_instance.city, 'search_lat': attempt_to_find_search_instance.settings_lat, 'search_lon': attempt_to_find_search_instance.settings_lon, 'search_wkt': attempt_to_find_search_instance.settings_wkt}]) 
@@ -743,6 +743,7 @@ def get_places_to_search_geocode(location, type1, save_places):
     data = nominatim.query(location, onlyCached=False, shallow=False, params={'limit': 10}, wkt=True)  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
     dataJSON = data.toJSON()
 
+    type_snake_case = "_".join(type1.lower().split())
     places_list = {}
     search_list = (0, 0, "", "", "")
 
@@ -790,9 +791,9 @@ def get_places_to_search_geocode(location, type1, save_places):
                                 (node(%s);
                                 <;
                                 );
-                                out center;
                                 out body;
                                 ''' % dataJSON[0]["osm_id"]
+                                # out center;
 
         data = overpass.query(recurseFirstQuery, timeout=10, onlyCached=False, shallow=False)
 
@@ -848,7 +849,7 @@ def get_places_to_search_geocode(location, type1, save_places):
                     );
                     out center;                    
                     out body;
-                    ''' % (area_id, type1, type1, type1, type1, type1, type1)
+                    ''' % (area_id, type_snake_case, type_snake_case, type_snake_case, type_snake_case, type_snake_case, type_snake_case)
 
     data = overpass.query(finalQuery, timeout=10, onlyCached=False, shallow=False)
 
