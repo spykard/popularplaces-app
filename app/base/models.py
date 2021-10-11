@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 from flask import current_app
 from flask_login import UserMixin
-from sqlalchemy import Binary, Boolean, Column, Integer, String, DateTime, ForeignKey, Float, Sequence, UniqueConstraint
+from sqlalchemy import Binary, Boolean, Column, Integer, BigInteger, String, DateTime, ForeignKey, Float, Sequence, UniqueConstraint
 from sqlalchemy.sql import func
 from datetime import datetime
 import jwt
@@ -193,8 +193,8 @@ class Search(db.Model):
     name = Column(String, nullable=False, unique=True, index=True)
     city = Column(String, index=True) 
     type = Column(Integer, nullable=False)  
-    settings_osm_id = Column(Integer)  
-    settings_area_id = Column(Integer)
+    settings_osm_id = Column(BigInteger)  
+    settings_area_id = Column(BigInteger)
     settings_lat = Column(String)
     settings_lon = Column(String)
     UniqueConstraint(name)

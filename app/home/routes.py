@@ -8,6 +8,8 @@ from jinja2 import TemplateNotFound
 from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsTurboForm, EditSettingsAdvancedForm, AddPlaceForm
 from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal, CrowdInput
 from app.base.util import hash_pass
+from OSMPythonTools.nominatim import Nominatim
+from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
 from datetime import datetime, timedelta
 from random import randint
 import populartimes
@@ -62,35 +64,62 @@ def search_turbo():
         current_user.settings_save_places = save_places
         current_user.total_runs += 1
         if current_user.premium_enabled == False: current_user.free_runs_remaining -= 1
-        db.session.commit()  
+        db.session.commit()       
+
+        # MAIN
+        places, search = get_places_to_search_geocode(location, type1.lower())
 
         # Write Search Object to DB
         current_time = datetime.utcnow() + timedelta(hours=3)  # For some weird reason the Original form of the PopularTimes library seems to be UTC+3
         user_id = ("user_id", current_user.id)
         name = ("name", current_time.strftime("%Y%m%d-%H%M%S.%f") + "-" + str(user_id[1]))
-        insert_dict = dict([("city" , location), ("settings_type1" , type1), ("settings_type2" , ""), ("settings_save_places" , save_places), user_id, name, ("type" , 3)])
+        insert_dict = dict([("city" , location), ("settings_type1" , type1), ("settings_type2" , ""), ("settings_save_places" , save_places), user_id, name, ("type" , 3), ("settings_osm_id" , search[0]), ("settings_area_id" , search[1]), ("settings_lat" , search[2]), ("settings_lon" , search[3])])
         search = Search(**insert_dict)
         db.session.add(search)
-        db.session.commit()         
+        db.session.commit() 
 
-        # MAIN
-        # places = get_places_to_search(city, type1, type2, all_places)
+        # Write Place Object to DB
+        city_to = City.query.filter_by(name=location).first()
+        if not city_to:
+            insert_dict = dict([("name" , location)])
+            city_to = City(**insert_dict)
+            db.session.add(city_to)
+            db.session.commit()     
 
-        # search_success, search_msg = search_populartimes(places, search, current_time, user_id, name)
+        for place in places:
+            placeglobal_to = db.session.query(PlaceGlobal).filter((PlaceGlobal.name == place[1]) & (PlaceGlobal.city_id == city_to.id)).first()
+            if not placeglobal_to:
+                insert_dict = dict([("name" , place[1]), ("address" , place[2]), ("city_id" , city_to.id)])
+                placeglobal_to = PlaceGlobal(**insert_dict)
+                db.session.add(placeglobal_to)
+                db.session.commit()                  
+            place[3] = placeglobal_to.id
 
-        # if search_success:
-        #     message = json.dumps({"message": search_msg})    
+            if save_places == True:
+                place_to = db.session.query(Place).filter((Place.name == place[1]) & (Place.city_id == city_to.id)).first()
+                if not place_to:                
+                    insert_dict = dict([("name" , place[1]), ("address" , place[2]), ("type_p" , type1), ("user_id" , current_user.id), ("city_id" , city_to.id), ("global_id" , placeglobal_to.id)])
+                    place_to = Place(**insert_dict)
+                    db.session.add(place_to)
+                    db.session.commit()  
+                place[0] = place_to.id
+            else:
+                place[0] = 0  # Place ID is completely in this case      
 
-        #     return redirect(url_for('home_blueprint.history', messages=search_msg))
-        # else:
-        #     return render_template( 'search.html', 
-        #                     segment='search',
-        #                     msg='Search executed but returned the following Error: ' + search_msg, 
-        #                     error_dict={},
-        #                     success=False,
-        #                     form=settings_form,
-        #                     city=city,
-        #                     show_search_panel=True)                                        
+        search_success, search_msg = search_populartimes(places, search, current_time, user_id, name)
+
+        if search_success:
+            message = json.dumps({"message": search_msg})    
+
+            return redirect(url_for('home_blueprint.history', messages=search_msg))
+
+        else:
+            return render_template( 'search-turbo.html', 
+                            segment='search',
+                            msg='Search executed but returned the following Error: ' + search_msg, 
+                            error_dict={},
+                            success=False,
+                            form=settings_form)                                        
 
     return render_template( 'search-turbo.html', 
                             segment='search-turbo',
@@ -151,6 +180,7 @@ def search():
             message = json.dumps({"message": search_msg})    
 
             return redirect(url_for('home_blueprint.history', messages=search_msg))
+
         else:
             return render_template( 'search.html', 
                             segment='search',
@@ -574,8 +604,11 @@ def search_populartimes(places, search, current_time, user_id, name):
 
     for data in place_data:
         # Write Verification for Places to DB
+        print(data)
+        print()
         if data["place_address"]:
-            data["types"] = [item for sublist in data["types"] for item in sublist]  # https://stackoverflow.com/a/952952
+            if data["types"]:
+                data["types"] = [item for sublist in data["types"] for item in sublist]  # https://stackoverflow.com/a/952952
             Place.query.filter_by(id=data["id"]).update({"verification": "True"})
             PlaceGlobal.query.filter_by(id=data["global_id"]).update({"name_verified": data["place_name"], "address_verified": data["place_address"], "latitude": float(data["latitude"]), "longtitude": float(data["longtitude"]), "type_verified": data["types"], "place_id": data["place_id"]})
 
@@ -677,6 +710,231 @@ def get_places_to_search(city, type1, type2, all_places):
         places_list.append((place.id, place.name, place.address, place.global_id))
     
     return places_list
+
+# Helper - Geocode given the users Location and Type input and returns the details of all the matched places
+def get_places_to_search_geocode(location, type1):
+    # https://stackoverflow.com/q/52236655
+    nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Popular Places', cacheDir='cache')  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
+    overpass = Overpass(endpoint='http://overpass-api.de/api/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md
+
+    data = nominatim.query(location, onlyCached=False, shallow=False, params={'limit': 10})  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
+    dataJSON = data.toJSON()
+
+    places_list = {}
+    search_list = (0, 0, "", "")
+
+    if not dataJSON:
+        return places_list, search_list
+
+    # Areas: By convention the area id can be calculated from an existing OSM way by adding 2400000000 to its OSM id, or in case of a relation by adding 3600000000 respectively. 
+    # Note that area creation is subject to some extraction rules, i.e. not all ways/relations have an area counterpart (notably those that are tagged with
+    # area=no, and most multipolygons and that don’t have a defined name=* will not be part of areas).
+
+    # If 'Relation' (could also use 'Way' if needed) in top 3, select that result
+    final_selection = None
+    count = 0
+    for result in dataJSON:
+        if count < 3 and result["importance"] >= 0.25:
+            if result["osm_type"] == "relation":
+                    final_selection = result
+                    break
+
+            # Debug
+            # print(result["display_name"])
+            # print(result["lat"], result["lon"])
+            # print("osm_type:", result["osm_type"])
+            # print("class:", result["class"])
+            # print("type:", result["type"])
+            # print("importance:", result["importance"])
+            # print()
+        else:
+            break
+        count += 1
+
+    if final_selection != None:
+            osm_id = final_selection["osm_id"]
+            area_id = osm_id + 3600000000
+            lat = final_selection["lat"]
+            lon = final_selection["lon"]
+            search_list = (osm_id, area_id, lat, lon)
+
+    # Else Recurse Upwards using the Overpass API
+    else:
+        # Recurse Up: https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Recurse_up_.28.3C.29 or https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL#Recurse_.28n.2C_w.2C_r.2C_bn.2C_bw.2C_br.29
+        recurseFirstQuery =     '''  
+                                (node(%s);
+                                <;
+                                );
+                                out center;
+                                out body;
+                                ''' % dataJSON[0]["osm_id"]
+
+        data = overpass.query(recurseFirstQuery, timeout=10, onlyCached=False, shallow=False)
+
+        # Debug
+        # print("Total number of Found Elements:", len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
+
+        # admin_level information per Country: https://wiki.openstreetmap.org/wiki/Tag:boundary%3Dadministrative#admin_level.3D.2A_Country_specific_values
+        # we will utilize results in the range of 3-11, selecting the highest number
+
+        if not data.elements():
+            return places_list, search_list
+
+        max_level = 2
+        for result in data.elements():
+            if 'admin_level' in result.tags():
+                current_level = int(result.tag('admin_level'))
+                current_type = result.type()
+                if current_level > max_level and current_type != 'node':
+                    final_selection = result
+                    max_level = current_level
+
+            # Debug                
+            # print(result.tags())
+            # print(result.type())
+            # print(result.id())
+            # print(result.lat(), result.lon())
+            # print(result.centerLat(), result.centerLon())
+            # print()
+
+        # Debug
+        # print(final_selection.tags())
+        # print(final_selection.type())
+        # print(final_selection.id())
+        # print(final_selection.lat(), final_selection.lon())
+        # print(final_selection.centerLat(), final_selection.centerLon())
+        # print()   
+
+        osm_id = final_selection.id()
+        if final_selection.type() == 'way':
+            area_id = osm_id + 2400000000
+        elif final_selection.type() == 'relation':
+            area_id = osm_id + 3600000000 
+        if final_selection.centerLat():
+                lat = final_selection.centerLat()
+                lon = final_selection.centerLon()
+        elif final_selection.lat():   
+                lat = final_selection.lat()
+                lon = final_selection.lon()
+        else:
+                lat = dataJSON[0]["lat"]                       
+                lon = dataJSON[0]["lon"]                       
+        search_list = (osm_id, area_id, lat, lon)
+
+    # Final Step
+    finalQuery =   '''  
+                    area(%s)->.searchArea;
+                    (
+                    node["amenity"="%s"](area.searchArea);
+                    way["amenity"="%s"](area.searchArea);
+                    node["natural"="%s"](area.searchArea);
+                    way["natural"="%s"](area.searchArea);
+                    node["service"="%s"](area.searchArea);
+                    way["service"="%s"](area.searchArea);
+                    );
+                    out body;
+                    ''' % (area_id, type1, type1, type1, type1, type1, type1)
+
+    data = overpass.query(finalQuery, timeout=10, onlyCached=False, shallow=False)
+
+    # Debug
+    # print("Total number of Found Elements:", len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
+
+    for result in data.elements():
+        reverse_geocode = nominatim.query(result.lat(), result.lon(), reverse=True, zoom=18)
+        reverse_geo_address = reverse_geocode.address()
+        detect_nominatim_name = list(reverse_geo_address.keys())[0]
+
+        if detect_nominatim_name not in ['road', 'house_number']:
+            name = reverse_geo_address[detect_nominatim_name]          
+            address = ""
+            if 'road' in reverse_geo_address:
+                address += reverse_geo_address['road']
+            if 'house_number' in reverse_geo_address:
+                address +=  " " + reverse_geo_address['house_number'] 
+
+            if address != "":
+                address += ", "
+                
+            address += location
+
+            if 'postcode' in reverse_geo_address:            
+                address +=  " " + reverse_geo_address['postcode'][:3] + " " + reverse_geo_address['postcode'][3:]
+
+            places_list[name] = ["id_placeholder", name, address, "global_id_placeholder"]
+
+        # Debug
+        # print(result.tags())
+        # print(result.type())
+        # print(result.id())
+        # print(result.lat(), result.lon())
+        # print(reverse_geocode.displayName())
+        # print(reverse_geocode.address())
+        # print()
+
+    places_list = list(places_list.values())
+
+    # -- NOTES --
+    # Patras bbox: (21.719416,38.238575,21.768314,38.278166)
+    # Overpass API example:
+
+    # 'area[name="Vienna"]->.searchArea;(node["tourism"="museum"](area.searchArea);way["tourism"="museum"](area.searchArea);relation["tourism"="museum"](area.searchArea););'
+
+    #   '''(
+    #   node["amenity"="parking"](21.719416,38.238575,21.768314,38.278166);
+    #   way["amenity"="parking"](21.719416,38.238575,21.768314,38.278166);
+    #   );'''
+
+    #   '''
+    #   area[name="London"][admin_level=6][boundary=administrative]->.londonarea;
+    #   rel(pivot.londonarea);
+    #   '''
+
+    #   ''' rel["name"="Noues de Sienne"](46.081,-5.438,50.121,0.439); '''  # This API Wrapper is unable to output certain types of resultsets such as rel/areas
+
+    #   ''' node["name"="Berlin"]; '''
+
+    #    '''
+    #    area(%s)->.searchArea;
+    #    (
+    #    node["amenity"="bar"](area.searchArea);
+    #    );
+    #    out body;
+    #    ''' % area_id
+    # --
+
+    # -- ALTERNATIVE NOMINATIM API - NOT THAT GOOD --
+    # from geopy.geocoders import Nominatim
+    # geolocator = Nominatim(timeout=10, domain='nominatim.openstreetmap.org', user_agent="testing-right-now")
+    # data = geolocator.geocode("Patras", limit=10, exactly_one=False) 
+
+    # for location in data:
+    #         print(location.address)
+    #         print(location.latitude, location.longitude)
+    #         print("osm:", location.raw.get("osm_type"))
+    #         print("class:", location.raw.get("class"))
+    #         print("type:", location.raw.get("type"))
+    #         print("importance:", location.raw.get("importance"))
+    #         print(location.raw)
+    #         print()
+    # --
+
+    # -- OVERPASS API #2 - SEMI-BROKEN --
+    # import overpass
+    # api = overpass.API(endpoint='https://overpass.openstreetmap.ru/api/interpreter', timeout=25)
+
+    # response = api.get(temp, verbosity='body')
+    # store = response["features"]
+
+    # print(len(store))
+    # for result in store:
+    #         print(result["id"])
+    #         print(result["geometry"])        
+    #         print(result["properties"])
+    #         print()
+    # --
+   
+    return places_list, search_list
 
 # Helper - Maps a string we receive from a Form to a string that can be used as a parameter inside the code, e.g. "Night Club" -> "night_club"
 def type_mapper( type_p, mode ): 

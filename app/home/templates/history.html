@@ -1683,9 +1683,9 @@
 
                     gridSelector.children().remove();  // Wipe
 
-                    var map_points_html = new Array(data.length); // Map Related
-                    var map_points = new Array(data.length); // Map Related
-                    var map_points_size = new Array(data.length); // Map Related
+                    var map_points_html = new Array(); // Map Related
+                    var map_points = new Array(); // Map Related
+                    var map_points_size = new Array(); // Map Related
                     
                     for (i = 0; i < data.length; i++) {  // Rebuild
                       // Convert Timezones
@@ -1699,25 +1699,27 @@
                         if (data[i].usual_popularity > 89) {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-day="' + converted_timestamp + '" data-live="' + data[i].live_popularity + '" data-spent="' + data[i].time_spent + '" data-id="' + data[i].global_id + '" data-populartimes="' + data[i].popular_times + '"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
                         else {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-day="' + converted_timestamp + '" data-live="' + data[i].live_popularity + '" data-spent="' + data[i].time_spent + '" data-id="' + data[i].global_id + '" data-populartimes="' + data[i].popular_times + '"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
 
-                        map_points_html[i] = '<div ' + content.slice(21, -90) + data[i].name + '</div>';  // Map Related
+                        if (data[i].latitude !== "") {
+                          map_points_html.push('<div ' + content.slice(21, -90) + data[i].name + '</div>');  // Map Related
+                          map_points_size.push(data[i].usual_popularity);  // Map Related
+                        }
 
                         // Step 2
                         if (data[i].usual_popularity === "") {content += '<div class="col-4"> <div class="place-number text-center" data-from="0" data-to="0" data-time="400"><p class="text-muted">N/A</p></div></div>';}                      
                         else {content += '<div class="col-4"> <div class="count-up place-number text-center" data-from="0" data-to=\"' + data[i].usual_popularity + '\" data-time="400"> 0 </div></div>';}
-
-                        map_points_size[i] = data[i].usual_popularity;  // Map Related
                       }
                       else {
                         // Step 1                        
                         if (data[i].live_popularity > 89) {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-day="' + converted_timestamp + '" data-live="' + data[i].live_popularity + '" data-spent="' + data[i].time_spent + '" data-id="' + data[i].global_id + '" data-populartimes="' + data[i].popular_times + '"> <div class="card trending"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
                         else {var content = '<div class="col box" data-toggle="modal" data-target="#gridModal" data-name="' + data[i].name + '" data-day="' + converted_timestamp + '" data-live="' + data[i].live_popularity + '" data-spent="' + data[i].time_spent + '" data-id="' + data[i].global_id + '" data-populartimes="' + data[i].popular_times + '"> <div class="card"> <div class="card-header"> <div class="row"> <div class="col-4"> </div>';}
 
-                        map_points_html[i] = '<div ' + content.slice(21, -90) + data[i].name + '</div>';  // Map Related
+                        if (data[i].latitude !== "") {
+                          map_points_html.push('<div ' + content.slice(21, -90) + data[i].name + '</div>');  // Map Related
+                          map_points_size.push(data[i].usual_popularity);  // Map Related
+                        }
 
                         // Step 2                     
                         content += '<div class="col-4"> <div class="count-up place-number text-center" data-from="0" data-to=\"' + data[i].live_popularity + '\" data-time="400"> 0 </div></div>';
-
-                        map_points_size[i] = data[i].live_popularity;  // Map Related
                       }
 
                       // Step 3
@@ -1745,7 +1747,7 @@
 
                       runCounter();
 
-                      map_points[i] = [data[i].latitude, data[i].longtitude];  // Map Related
+                      if (data[i].latitude !== "") map_points.push([data[i].latitude, data[i].longtitude]);  // Map Related
                     }
 
                     //-- Update the Map --//
@@ -1755,8 +1757,8 @@
                       control_layer.remove(mymap);
 
                       bounds = new L.LatLngBounds(map_points);
-                      map_marker_array = new Array(data.length);
-                      map_circle_array = new Array(data.length);   
+                      map_marker_array = new Array(map_points.length);
+                      map_circle_array = new Array(map_points.length);   
 
                       mymap.flyToBounds(bounds, {padding: [25, 25], maxZoom: 14, duration: 3});
 
@@ -1769,10 +1771,8 @@
                                                       radius: 1.75 * map_points_size[i]
                                                     }).bindPopup(map_points_html[i]);                                   
                       }   
-                  
                       layer_group_marker = L.layerGroup(map_marker_array);
                       layer_group_circle = L.layerGroup(map_circle_array).addTo(mymap);
-                  
                       clusterer = L.markerClusterGroup({maxClusterRadius: 30});
                       clusterer.addLayers(layer_group_marker);
                       mymap.addLayer(clusterer);
