@@ -714,7 +714,7 @@ def get_places_to_search(city, type1, type2, all_places):
 # Helper - Geocode given the users Location and Type input and returns the details of all the matched places
 def get_places_to_search_geocode(location, type1):
     # https://stackoverflow.com/q/52236655
-    nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Popular Places', cacheDir='cache')  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
+    nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
     overpass = Overpass(endpoint='http://overpass-api.de/api/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md
 
     data = nominatim.query(location, onlyCached=False, shallow=False, params={'limit': 10})  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
@@ -811,14 +811,14 @@ def get_places_to_search_geocode(location, type1):
         elif final_selection.type() == 'relation':
             area_id = osm_id + 3600000000 
         if final_selection.centerLat():
-                lat = final_selection.centerLat()
-                lon = final_selection.centerLon()
+            lat = final_selection.centerLat()
+            lon = final_selection.centerLon()
         elif final_selection.lat():   
-                lat = final_selection.lat()
-                lon = final_selection.lon()
+            lat = final_selection.lat()
+            lon = final_selection.lon()
         else:
-                lat = dataJSON[0]["lat"]                       
-                lon = dataJSON[0]["lon"]                       
+            lat = dataJSON[0]["lat"]                       
+            lon = dataJSON[0]["lon"]                       
         search_list = (osm_id, area_id, lat, lon)
 
     # Final Step
@@ -832,6 +832,7 @@ def get_places_to_search_geocode(location, type1):
                     node["service"="%s"](area.searchArea);
                     way["service"="%s"](area.searchArea);
                     );
+                    out center;                    
                     out body;
                     ''' % (area_id, type1, type1, type1, type1, type1, type1)
 
@@ -841,7 +842,16 @@ def get_places_to_search_geocode(location, type1):
     # print("Total number of Found Elements:", len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
 
     for result in data.elements():
-        reverse_geocode = nominatim.query(result.lat(), result.lon(), reverse=True, zoom=18)
+        if result.centerLat():
+            lat = result.centerLat()
+            lon = result.centerLon()
+        elif result.lat():  
+            lat = result.lat()
+            lon = result.lon()
+        else:
+            continue
+
+        reverse_geocode = nominatim.query(lat, lon, reverse=True, zoom=18, onlyCached=False, shallow=False)
         reverse_geo_address = reverse_geocode.address()
         detect_nominatim_name = list(reverse_geo_address.keys())[0]
 
@@ -855,7 +865,7 @@ def get_places_to_search_geocode(location, type1):
 
             if address != "":
                 address += ", "
-                
+
             address += location
 
             if 'postcode' in reverse_geo_address:            
