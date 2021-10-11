@@ -152,7 +152,7 @@
 </div>
 
 <div class="row">
-  <div id="mymapDiv" class="col-md-12">
+  <div id="mymapDiv" class="col-md-12" style="display: none;">
     <div class="card">
       <div id="mymapWrapper" class="card-body" style="height:450px;">
         <div id="mymap" style="position: absolute;">
@@ -212,19 +212,14 @@
       $('[data-toggle="tooltip"]').tooltip()       
     });
 
-    $('#search').click(function() { 
-      $('#progressbar').slideDown(); 
-    });
-
-    var map_point = [[40.76299881753538, -73.98088709849752]]; 
-    var map_polygon_geotext = "POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))";
-
+    // Map Initialize
+    var map_point = [[48.65332666235514, 15.557382155299692]]; 
     const mymapDiv = document.getElementById("mymapWrapper");
     var mymap = L.map('mymap');
     mymap.addControl(new L.Control.Fullscreen());
 
     var bounds = new L.LatLngBounds(map_point);
-    mymap.fitBounds(bounds, {padding: [25, 25], maxZoom: 7});
+    mymap.fitBounds(bounds, {padding: [25, 25], maxZoom: 4});
 
     var base_layer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: '',
@@ -245,50 +240,54 @@
     
     resizeObserver.observe(mymapDiv);
 
-    // Map
-    $.ajax({
-      type: "POST",
-      data: { },
-      url: "/get-search-map"
-    }).done(function(data) {
-        if (data[0]["search_lat"]) {
-          console.log(data);
-          console.log(data[0]["search_lat"]);
-          console.log('success'); 
-          
-          map_point = [[parseFloat(data[0]["search_lat"]), parseFloat(data[0]["search_lon"])]];
+    $('#search').click(function() { 
+      $('#progressbar').slideDown(); 
+      $('#mymapDiv').slideDown();
+    
+      // Map Main
+      var getInterval = 1 * 1000;
+      var get_search_map = function() {
+        $.ajax({
+          type: "POST",
+          data: { },
+          url: "/get-search-map"
+        }).done(function(data) {
+          if (data !== 'false') {
+            if (data[0]["search_lat"]) {
+              map_point = [[parseFloat(data[0]["search_lat"]), parseFloat(data[0]["search_lon"])]];
 
-          console.log(map_point);
+              // https://gis.stackexchange.com/a/162858
+              var wicket  = new Wkt.Wkt();
+              wicket.read(data[0]["search_wkt"]);
 
-          // https://gis.stackexchange.com/a/162858
-          var wicket  = new Wkt.Wkt();
-          wicket.read(data[0]["search_wkt"]);
+              var marker = L.marker(map_point[0]).bindPopup(data[0]["city"]);
+              var polygon = wicket.toObject({
+                                            color: map_polygon_color,
+                                            strokeColor: map_polygon_color,
+                                            strokeOpacity: 0.8,
+                                            strokeWeight: 2,
+                                            fillColor: map_polygon_color,
+                                            fillOpacity: 0.35
+                                          });
 
-          var polygon = wicket.toObject({
-                                        color: map_polygon_color,
-                                        strokeColor: map_polygon_color,
-                                        strokeOpacity: 0.8,
-                                        strokeWeight: 2,
-                                        fillColor: map_polygon_color,
-                                        fillOpacity: 0.35
-                                      });
-          var marker = L.marker(map_point[0]).bindPopup("Test");
+              L.layerGroup([marker, polygon]).addTo(mymap);        
+              
+              bounds = new L.LatLngBounds(map_point);
+              mymap.getRenderer(mymap).options.padding = 100;  // Significantly affects Performance but forces the Renderer to instantly Render the Polygon when Panning Begins          
+              mymap.flyToBounds(bounds, {padding: [25, 25], maxZoom: 9, duration: 2});              
+            }
+          }
+          else {
+            // Debug
+            // console.log('Waiting ' + (getInterval / 1000) + ' seconds');
+            setTimeout(get_search_map, getInterval);
+          }
+        }).fail(function() {
+        }).always(function() {
+        });
+      };
 
-
-          L.layerGroup([marker]).addTo(mymap);
-          L.layerGroup([polygon]).addTo(mymap);          
-          
-          bounds = new L.LatLngBounds(map_point);
-          mymap.getRenderer(mymap).options.padding = 100;  // Significantly affects Performance but forces the Renderer to instantly Render the Polygon when Panning Begins          
-          mymap.flyToBounds(bounds, {padding: [25, 25], maxZoom: 9, duration: 3});
-
-        }
-    }).fail(function() {
-    }).always(function() {
-        // Schedule the next request after this one completes,
-        // even after error
-        //console.log('Waiting ' + (storiesInterval / 1000) + ' seconds');
-        //setTimeout(fetchNews, storiesInterval);
+      get_search_map();
     });
 
     helpers.showNotification('top','center', '{{ to_notify_premium }}', 'Your <b>Premium Subscription</b> has been Enabled!')

@@ -534,10 +534,10 @@ def get_person_count():
 @login_required
 def get_search_map():
     if current_user.is_authenticated:
-        attempt_to_find_search_instance = db.session.query(Search).filter((Search.user_id == current_user.id) & (Search.time >= datetime.utcnow() - timedelta(hours=6))).order_by(Search.time.desc()).first() 
+        attempt_to_find_search_instance = db.session.query(Search).filter((Search.user_id == current_user.id) & (Search.time >= datetime.utcnow() - timedelta(seconds=1))).order_by(Search.time.desc()).first() 
 
         if attempt_to_find_search_instance:
-            return jsonify([{'search_lat': attempt_to_find_search_instance.settings_lat, 'search_lon': attempt_to_find_search_instance.settings_lon, 'search_wkt': attempt_to_find_search_instance.settings_wkt}]) 
+            return jsonify([{'city': attempt_to_find_search_instance.city, 'search_lat': attempt_to_find_search_instance.settings_lat, 'search_lon': attempt_to_find_search_instance.settings_lon, 'search_wkt': attempt_to_find_search_instance.settings_wkt}]) 
         else:
             return "false"
     else:
