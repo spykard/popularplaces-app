@@ -74,6 +74,8 @@
             {% else %} 
             <span class="text-danger">{{ msg | safe }}</span>
             {% endif %} 
+          {% else %}  
+            <p class="category">Please Select Your Desired Settings</p>          
           {% endif %}  
         </h6>      
       </div>
@@ -132,13 +134,14 @@
         <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->    
       </div>
 
-    </form>
+      </form>
       {% endif %}
       
     </div>
   </div>
 </div>
 
+{% if current_user.premium_enabled == True or current_user.free_runs_remaining > 0 %}
 <div class="row justify-content-center">
   <div class="col-12 col-md-8 col-sm-10">     
     <div class="card card-nav-tabs">
@@ -149,7 +152,8 @@
       </div>
     </div>
   </div> 
-</div>   
+</div>  
+{% endif %} 
 
 {% endblock content %}
 
