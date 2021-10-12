@@ -9,7 +9,7 @@ from app.base.forms import EditProfileForm, EditSettingsForm, EditSettingsTurboF
 from app.base.models import User, Place, Search, City, PlaceResult, PlaceGlobal, CrowdInput
 from app.base.util import hash_pass
 from OSMPythonTools.nominatim import Nominatim
-from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
+from OSMPythonTools.overpass import Overpass
 from datetime import datetime, timedelta
 from random import randint
 import populartimes
