@@ -189,20 +189,36 @@
 <script>
   $(window).on('load', function() {
         $('#notificationModal').modal('show');
-    });
+  });
 
-    $('[name="enterAppButton"]').click(function() {
-      $.ajax({
-          type: 'POST',
-          data: {
-          },                
-          url: "/hide-intro",
-          success: function(data){ 
-                      },
-          error: function(data){
-                      },
-      });
-    });      
+  $('[name="enterAppButton"]').click(function() {
+    $.ajax({
+        type: 'POST',
+        data: {
+        },                
+        url: "/hide-intro",
+        success: function(data){ 
+                    },
+        error: function(data){
+                    },
+    });
+  });  
+    
+  $('#introsidebartext').hover(function() {
+    var eastereggSelector = $(this).find("#easteregg");
+    var flag = eastereggSelector.attr("val");
+    eastereggSelector.fadeOut(400, function () {
+      setTimeout(() => {
+        if (flag == "off") {
+          eastereggSelector.html("(not so)<br>Malicious Means.");
+          eastereggSelector.attr("val", "on");}
+        else {
+          eastereggSelector.html("Live Crowd and<br>Traffic Data.");
+          eastereggSelector.attr("val", "off");}
+        eastereggSelector.fadeIn();
+      }, 200);
+    });    
+  });
 </script>
 
 {% endblock javascripts %}
