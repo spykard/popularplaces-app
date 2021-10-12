@@ -740,11 +740,11 @@ def get_places_to_search_geocode(location, type1, save_places):
     nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md
     overpass = Overpass(endpoint='http://overpass-api.de/api/', userAgent='Popular Places', cacheDir='cache', waitBetweenQueries=1)  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md
 
-    data = nominatim.query(location, onlyCached=False, shallow=False, params={'limit': 10}, wkt=True)  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCachced' and 'shallow'
+    data = nominatim.query(location, onlyCached=False, shallow=False, params={'limit': 10}, wkt=True)  # Always loads from file if exists and there are also 2 additional parameters, 'onlyCached' and 'shallow'
     dataJSON = data.toJSON()
 
     type_snake_case = "_".join(type1.lower().split())
-    places_list = {}
+    places_list = []
     search_list = (0, 0, "", "", "")
 
     if not dataJSON:
@@ -850,58 +850,66 @@ def get_places_to_search_geocode(location, type1, save_places):
                     way["natural"="%s"](area.searchArea);
                     node["service"="%s"](area.searchArea);
                     way["service"="%s"](area.searchArea);
-                    );
-                    out center;                    
+                    );                  
                     out body;
                     ''' % (area_id, type_snake_case, type_snake_case, type_snake_case, type_snake_case, type_snake_case, type_snake_case)
+                    # out center;                    
 
     data = overpass.query(finalQuery, timeout=10, onlyCached=False, shallow=False)
 
     # Debug
     # print("Total number of Found Elements:", len(data.elements()))  # https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md
 
+    # The reasoning behind calling Nominatim again, is to get the addresses, which is not possible with Overpass
+    # as described here https://help.openstreetmap.org/questions/53455/find-all-amenities-with-name-and-address-around-a-given-location/53460
+    # Even though this is more accurate, it is significantly heavier and slower with each Nominatim query requiring 0.4 seconds
+
     for result in data.elements():
-        if result.centerLat():
-            lat = result.centerLat()
-            lon = result.centerLon()
-        elif result.lat():  
-            lat = result.lat()
-            lon = result.lon()
-        else:
-            continue
+        if "name" in result.tags():
+            places_list.append(["id_placeholder", result.tag("name"), location, "global_id_placeholder"])
 
-        reverse_geocode = nominatim.query(lat, lon, reverse=True, zoom=18, onlyCached=False, shallow=False)
-        reverse_geo_address = reverse_geocode.address()
-        detect_nominatim_name = list(reverse_geo_address.keys())[0]
+    # for result in data.elements():
+    #     if result.centerLat():
+    #         lat = result.centerLat()
+    #         lon = result.centerLon()
+    #     elif result.lat():  
+    #         lat = result.lat()
+    #         lon = result.lon()
+    #     else:
+    #         continue
 
-        if detect_nominatim_name not in ['road', 'house_number']:
-            name = reverse_geo_address[detect_nominatim_name]          
-            address = ""
-            if 'road' in reverse_geo_address:
-                address += reverse_geo_address['road']
-            if 'house_number' in reverse_geo_address:
-                address +=  " " + reverse_geo_address['house_number'] 
+    #     reverse_geocode = nominatim.query(lat, lon, reverse=True, zoom=18, onlyCached=False, shallow=False)
+    #     reverse_geo_address = reverse_geocode.address()
+    #     detect_nominatim_name = list(reverse_geo_address.keys())[0]
 
-            if address != "":
-                address += ", "
+    #     if detect_nominatim_name not in ['road', 'house_number']:
+    #         name = reverse_geo_address[detect_nominatim_name]          
+    #         address = ""
+    #         if 'road' in reverse_geo_address:
+    #             address += reverse_geo_address['road']
+    #         if 'house_number' in reverse_geo_address:
+    #             address +=  " " + reverse_geo_address['house_number'] 
 
-            address += location
+    #         if address != "":
+    #             address += ", "
 
-            if 'postcode' in reverse_geo_address:            
-                address +=  " " + reverse_geo_address['postcode'][:3] + " " + reverse_geo_address['postcode'][3:]
+    #         address += location
 
-            places_list[name] = ["id_placeholder", name, address, "global_id_placeholder"]
+    #         if 'postcode' in reverse_geo_address:            
+    #             address +=  " " + reverse_geo_address['postcode'][:3] + " " + reverse_geo_address['postcode'][3:]
 
-        # Debug
-        # print(result.tags())
-        # print(result.type())
-        # print(result.id())
-        # print(result.lat(), result.lon())
-        # print(reverse_geocode.displayName())
-        # print(reverse_geocode.address())
-        # print()
+    #         places_list[name] = ["id_placeholder", name, address, "global_id_placeholder"]
 
-    places_list = list(places_list.values())
+    #     # Debug
+    #     # print(result.tags())
+    #     # print(result.type())
+    #     # print(result.id())
+    #     # print(result.lat(), result.lon())
+    #     # print(reverse_geocode.displayName())
+    #     # print(reverse_geocode.address())
+    #     # print()
+
+    # places_list = list(places_list.values())
 
     # -- NOTES --
     # Patras bbox: (21.719416,38.238575,21.768314,38.278166)
