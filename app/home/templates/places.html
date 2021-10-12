@@ -57,7 +57,7 @@
                                         <td class="text-center"><p class="{% if place['verification'] == 'True' %}text-success{% elif place['verification'] == 'False' %}text-danger{% else %}text-muted{% endif %}">{{ place['verification'] }}</p></td>                                                                       
                                         <td class="text-center">{{ place['time'] }}</td>
                                         <td class="td-actions text-right">
-                                            <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open('https://maps.google.com/?q=' + '{{ place["name"] }}' + ' ' + '{{ place["address"] }}');">
+                                            <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open('https://maps.google.com/?q=' + '{{ place["name"].replace("'",	"%27") }}' + ' ' + '{{ place["address"].replace("'", "%27") }}');">
                                                 <i class="tim-icons icon-square-pin"></i>
                                             </button>
                                             <button type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm" data-toggle="modal" data-target="#removePlaceModal" data-value="{{ place['id'] }}">
