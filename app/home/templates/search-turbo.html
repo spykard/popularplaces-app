@@ -36,7 +36,7 @@
   }  
 
   .modal-fix-position {
-  top: -30.7vh;
+  top: -21.7vh;
   }    
 </style>
 
@@ -85,6 +85,9 @@
           {% endif %}  
         </h6>      
       </div>
+
+      <div id="helptooltip1"></div>
+
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 pr-md-1">
@@ -137,7 +140,7 @@
           </div>
         </div>
 
-        <button id="help" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->    
+        <button id="helptooltip2" name="help" class="btn btn-simple btn-{{ current_user.ui_button }}" onclick="return false;" data-toggle="modal" data-target=".bd-example-modal-lg">Help</button>  <!-- Button trigger modal -->    
       </div>
 
       <div id="progressbar" class="progress" style="display: none; height: 7px;">
@@ -177,6 +180,121 @@
 </div>  
 {% endif %} 
 
+<!-- Modal 1 -->        
+<div class="modal {% if current_user.ui_theme == 'dark' %}modal-black{% endif %} fade bd-example-modal-lg" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-fix-position modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header justify-content-center">
+        <h5 class="modal-title title title-up" id="modalLongTitle">Help</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>This application gives you the ability to search Google's <a target="_blank" href="https://support.google.com/business/answer/6263531">popular times</a> information, particularly <b>popularity</b> and <b>crowd traffic</b> information. Any type of place can be used including shops, establishments and prominent points of interest. Get Creative! <i>Sky is the Limit.</i></p>
+        <hr>
+        <div class="card card-plain">
+          <div class="card-header">
+            <h4 class="card-title"> Search Parameters</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table tablesorter " id="">
+                <thead class=" text-primary">
+                  <tr>
+                    <th>
+                      Parameter
+                    </th>
+                    <th>
+                      Type
+                    </th>
+                    <th>
+                      Explanation
+                    </th>
+                    <th class="text-center">
+                      Suggested Value
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      Location
+                    </td>
+                    <td>
+                      <code>string</code>
+                    </td>
+                    <td>
+                      The main selection for which Location's Places to search for. Searches for every location humanly possible with a preference towards City-level and Region-level locations.
+                    </td>
+                    <td class="text-center">
+                      <code>City Names</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Type
+                    </td>
+                    <td>
+                      <code>string</code>
+                    </td>
+                    <td>
+                      Simply put, the type of Place the User wants to Search for, whether that is a <span class="text-primary">Bar</span>, a <span class="text-primary">Nightclub</span>, a <span class="text-primary">Beach</span> or merely <span class="text-primary">Ice Cream</span> is up to you...
+                    </td>
+                    <td class="text-center">
+                      <code>Bar <br> Nightclub <br> Beach <br> Cafe <br> Pharmacy <br> Ice Cream</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Save Places
+                    </td>
+                    <td>
+                      <code>boolean</code>
+                    </td>
+                    <td>
+                      An option to Save all Found Places from a given Search to <a href="/places">My Places</a>, where the User can manually add missing places and perform a new Search.
+                    </td>
+                    <td class="text-center">
+                      <code>Off</code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hint 1 --> 
+<div id="popover-content1" style="display: none;">
+  <div class="container-row-margin">
+    <div class="row">
+      <div class="col">
+        <div class="popover-like-tooltip">
+          Select Where and What to Search For
+          <br/>
+          <small>If a Place is Missing, Revert to Manual Searches</small>
+        </div>                    
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto">                       
+        <button id="popover-content1-close" type="button" class="btn btn-sm btn-default popover-button" onclick="$(this).closest('.popover').popover('hide'); return false;" >
+          Got it!
+        </button>
+      </div>
+    </div>
+  </div>             
+</div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
@@ -193,6 +311,8 @@
   <script src='/static/assets/js/plugins/wicket-leaflet.min.js'></script>  
 
   <script>
+    const container = document.querySelector('.main-panel');
+
     {% if current_user.ui_color == "blue" %}
       const map_polygon_color = "#1d8cf8";
     {% elif current_user.ui_color == "green" %}    
@@ -210,6 +330,38 @@
       })
     
       $('[data-toggle="tooltip"]').tooltip()       
+
+      var template = '<div class="tooltip {% if current_user.ui_theme == 'light' %}bs-tooltip-top-white{% endif %}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner {% if current_user.ui_theme == 'light' %}tooltip-inner-white{% endif %}"></div></div>';        
+      $('#searchdiv'); 
+
+      // Hints
+      {% if current_user.total_runs < 2 and not msg %}
+        // Hints using 'tooltip'
+        {# // $('#helptooltip1').tooltip({trigger: 'manual', template: template, title: "Select Existing or Add Your Own"}).tooltip('show'); #}
+        $('#helptooltip2').tooltip({trigger: 'manual', placement: 'bottom', template: template, title: "Get Assistance"}).tooltip('show');
+
+        // Hints using 'popover'
+        $("#helptooltip1").popover({
+            trigger: 'manual', 
+            placement: 'top',
+            container: $("#helptooltip1"),
+            html: true, 
+            sanitize: false,
+            content: function() {
+                return $('#popover-content1').html();
+            }
+        }).popover('show');      
+
+        container.addEventListener('ps-scroll-down', function() {
+          //$('#helptooltip1').tooltip('hide');
+          $('#helptooltip2').tooltip('hide');
+        }, { once: true });  // Call only once, then remove itself
+
+        {# container.addEventListener('click', function() {
+          //$('#helptooltip1').tooltip('hide');
+          //$('#helptooltip2').tooltip('hide');
+        }, { once: true });  // Call only once, then remove itself #}      
+      {% endif %}      
     });
 
     // Map Initialize

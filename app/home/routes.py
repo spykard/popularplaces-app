@@ -824,6 +824,10 @@ def get_places_to_search_geocode(location, type1, save_places):
         # print(final_selection.centerLat(), final_selection.centerLon())
         # print()   
 
+        if not final_selection:
+            search_dict = write_search_object_to_DB(search_list, type1.title(), save_places)
+            return places_list, None
+
         data = nominatim.query(final_selection.type() + "/" + str(final_selection.id()), onlyCached=False, shallow=False, lookup=True, wkt=True)  # Always loads from file if exists and there are also 2 additional
         dataJSON = data.toJSON()
 
