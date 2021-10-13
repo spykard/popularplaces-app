@@ -345,10 +345,8 @@ Visit `http://localhost:8001` in your browser. The app should be up & running.
 
 ## Credits
 
-- [Spyridon Kardakis](https://www.linkedin.com/in/kardakis/)
-- [Flask Framework](https://www.palletsprojects.com/p/flask/)
-- [Creative Tim](https://bit.ly/3fKQZaL)
-- [AppSeed](https://github.com/app-generator/boilerplate-code)
-- [m-wrzr](https://github.com/m-wrzr)
-
-<br />
+* [Spyridon Kardakis](https://www.linkedin.com/in/kardakis/)
+* [Flask Framework](https://www.palletsprojects.com/p/flask/)
+* [Creative Tim](https://bit.ly/3fKQZaL)
+* [AppSeed](https://github.com/app-generator/boilerplate-code)
+* [m-wrzr](https://github.com/m-wrzr)
