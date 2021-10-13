@@ -1751,11 +1751,11 @@
                     }
 
                     //-- Update the Map --//
-                    if (data.length > 0) {
-                      mymap.removeLayer(layer_group_circle);
-                      mymap.removeLayer(clusterer);                    
-                      control_layer.remove(mymap);
+                    mymap.removeLayer(layer_group_circle);
+                    mymap.removeLayer(clusterer);                    
+                    control_layer.remove(mymap);                    
 
+                    if (data.length > 0) {
                       bounds = new L.LatLngBounds(map_points);
                       map_marker_array = new Array(map_points.length);
                       map_circle_array = new Array(map_points.length);   
@@ -1787,6 +1787,10 @@
                       };
                   
                       control_layer = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+                    }
+                    else {
+                      bounds_empty = new L.LatLng(40.76299881753538, -73.98088709849752);
+                      mymap.setView(bounds_empty, zoom=2);
                     }
 
                     // Correct the currently active Carousel Page
@@ -1826,7 +1830,7 @@
                       else {content += "<td class='text-center'><p>" + data[i].difference + "</p></td>";}
 
                       // Step 5
-                      content += '<td class="td-actions text-right"> <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(\'https://maps.google.com/?q=' + data[i].name.replace("'", "%27") + ' ' + data[i].replace("'", "%27") + '\');"> <i class="tim-icons icon-square-pin"></i> </button> </td>';
+                      content += '<td class="td-actions text-right"> <button name="openmapsbutton" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm" onclick="window.open(\'https://maps.google.com/?q=' + data[i].name + ' ' + data[i] + '\');"> <i class="tim-icons icon-square-pin"></i> </button> </td>';
 
                       content += "</tr>";
 
