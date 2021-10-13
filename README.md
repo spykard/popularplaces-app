@@ -4,12 +4,11 @@ A Powerful Tool for Live Crowd and Traffic Data.
 
 This application gives you the ability to search Google's [popular times](https://support.google.com/business/answer/6263531) information, particularly popularity and crowd traffic information. Any type of place can be used including shops, establishments and prominent points of interest.
 
-
-
+[<img src="media/documentation.gif" width=32% alt="Google's Popular Times">](media/documentation.gif)
 
 It utilizes a set of Geocoder APIs in order to perform the search, while being able to provide both place and time-based live crowd data. Example: Find out how busy your favorite bars are...
 
-![Ensemble](https://github.com/spykard/Classification-HMMs/blob/master/Documentation%20Images/Ensemble.png?raw=true "Overview of the proposed ranked weighted vote Ensemble")
+[<img src="media/history_main.png" width=100% alt="Example - History Tab">](media/history_main.png)
 
 
 ## Getting Started
