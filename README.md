@@ -348,7 +348,7 @@ Visit `http://localhost:8001` in your browser. The app should be up & running.
 Deployment:
 
 * [Digger](https://digger.dev/)
-* [amazon web services - AWS - What are the exact differences between EC2, Beanstalk and LightSail- - Stack Overflow](https://stackoverflow.com/questions/54981074/aws-what-are-the-exact-differences-between-ec2-beanstalk-and-lightsail)
+* [amazon web services - AWS - What are the exact differences between EC2, Beanstalk and LightSail - Stack Overflow](https://stackoverflow.com/questions/54981074/aws-what-are-the-exact-differences-between-ec2-beanstalk-and-lightsail)
 * [Affordable Heroku Alternative - node](https://www.reddit.com/r/node/comments/5a4939/affordable_heroku_alternative/d9dlwhh/)
 * [AWS Copilot CLI - AWS Copilot CLI](https://aws.github.io/copilot-cli/)
 * [Google Cloud Free Program](https://cloud.google.com/free/docs/gcp-free-tier/#compute)
