@@ -12,4 +12,4 @@ jinja2==2.11.3
 psycopg2==2.9.1
 pyjwt==2.1.0
 OSMPythonTools==0.3.2
--e git+https://github.com/spykard/populartimes.git@master
+-e git+https://github.com/spykard/populartimes.git@master#egg=populartimes
