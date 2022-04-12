@@ -30,6 +30,3 @@ package-lock.json
 
 # photoshop
 *psd
-
-# node
-/node_modules
