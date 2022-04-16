@@ -4,6 +4,7 @@ services:
     restart: always
     env_file: .env
     build: .
+    image: "spykard/popularplaces-app:latest" # goes to local registry
     ports:
       - "5005:5005"
     networks:
