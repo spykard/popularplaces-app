@@ -254,6 +254,16 @@ The *Home* blueprint handles UI Kit pages for authenticated users. This is the p
 
 The app is provided with a basic configuration to be executed in [Docker](https://www.docker.com/), [Heroku](https://www.heroku.com/), [Gunicorn](https://gunicorn.org/), and [Waitress](https://docs.pylonsproject.org/projects/waitress/en/stable/).
 
+### [Development inside Docker](https://www.docker.com/)
+
+Feel free to perform development inside a Docker container instead of the host machine.
+
+> Using multiple compose files
+
+```bash
+$ sudo docker-compose build && sudo docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
+```
+
 ### [Docker](https://www.docker.com/)
 
 The application can be easily executed in a docker container. The steps:
