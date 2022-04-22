@@ -51,15 +51,22 @@ https://github.com/spykard
 <body class="{% if current_user.ui_theme == 'light' %}white-content{% endif %}">
   <div class="wrapper">
 
-    {% include 'includes/sidebar.html' %}
+    {% if current_user.is_authenticated %}
+      {% include 'includes/sidebar.html' %}
+    {% endif %} 
 
     <div class="main-panel" data="{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
 
       {% include 'includes/navigation.html' %}
 
-      <div class="content">
-
-        {% block content %}{% endblock content %}
+      {% if current_user.is_authenticated %}
+        <div class="content">
+      {% else %}
+        <div class="content" style="padding-left: 45px;">   
+      {% endif %}
+    
+    
+      {% block content %}{% endblock content %}
 
       </div>
 

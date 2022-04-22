@@ -111,7 +111,7 @@
                             <i class="fas fa-user"></i>
                         </div>      
                       </div>  
-                      <input type="text" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="username" name="username" required="" value="{{ form.username.data }}">                         
+                      <input type="text" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="username" name="username" required="" value="{% if form.username.data != None %}{{ form.username.data }}{% endif %}">                         
                     </div>
                   </div>
                 </div>
@@ -157,21 +157,25 @@
     <div class="modal-dialog modal-fix-position" role="document">
     <div class="modal-content">
         <div class="modal-header justify-content-center">
-        <h5 class="modal-title title title-up" id="removePlaceTitle" style="text-align: center;">
-          <p class="intro-text">Searches for popular places and times<br>presenting you <span class="intro-text-highlight">live</span> traffic data</p>
-          <br>
-          <p class="intro-text">Example: Find out how busy your favorite bars are...</p>
-        </h5>
+          <h5 class="modal-title title title-up" id="removePlaceTitle" style="text-align: center;">
+            <p class="intro-text">Popular Places · A Live Traffic Geocoder</p>
+          </h5>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
             <i class="tim-icons icon-simple-remove"></i>
         </button>
         </div>
         <div class="modal-body">
-            <div class="photo text-center">
-              <div class="container adjust-image">
+          <h5 class="modal-title title title-up" id="removePlaceTitle" style="text-align: center; padding-bottom: 22px;">
+            <p class="intro-text">Powerful Tool for Live Crowd and<br>Traffic Data built on top of<br><span class="intro-text-highlight">Google's</span> Data and <span class="intro-text-highlight">OSM's</span> Geocoders</p>
+            <p class="intro-text">Searches for popular places and times<br>presenting you <span class="intro-text-highlight">live</span> traffic data</p>
+          </h5> 
+          <div class="photo text-center">
+            <div class="container adjust-image">
+              <a href="https://support.google.com/business/answer/6263531" target="_blank">
                 <img src="/static/assets/img/populartimes.gif" class="intro-image" alt="Popular Times">
-              </div>
+              </a>
             </div>
+          </div>
         </div>
         <div class="modal-footer justify-content-center">
         <button name="enterAppButton" type="button" class="btn btn-secondary" data-dismiss="modal">Enter Application</button>
