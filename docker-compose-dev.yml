@@ -1,6 +1,7 @@
 version: '3'
 services:
   spykard-app:
+    env_file: .env-dev
     volumes:
       - ./app:/app      
 
