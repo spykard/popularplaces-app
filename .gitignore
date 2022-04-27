@@ -15,6 +15,7 @@ __pycache__/
 env
 venv
 .env*
+!.env-template
 
 # other
 .DS_Store
