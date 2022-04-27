@@ -1,0 +1,228 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Home {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<style>
+  /* all values found manually */
+  @media (max-height: 480px) {
+    .modal-fix-position {
+      top: -33.7vh;
+    }
+  }
+
+  @media (min-height: 480px) {
+    .modal-fix-position {
+      top: -26.4vh;
+    }
+  }  
+
+  @media (min-height: 600px) {
+    .modal-fix-position {
+      top: -20.3vh;
+    }
+  }
+
+  @media (min-height: 760px) {
+    .modal-fix-position {
+      top: -15.0vh;
+    }
+  }
+
+  @media (min-height: 1000px) {
+    .modal-fix-position {
+      top: -13.9vh;
+    }
+  }
+
+  .intro-image {
+    {# overflow: hidden;
+    border-radius: 2.85rem;#}  /* to scale with viewport try 5.5vmin */    
+    max-width: 60%;
+  }
+
+  .forgot-button {  
+    line-height: 1.0;
+    font-size: 0.68rem;
+  }  
+
+  /* all values found manually */
+  @media (max-width: 480px) {
+    .intro-image {
+      border-radius: 1.2rem;
+    }
+  }
+
+  @media (min-width: 480px) {
+    .intro-image {
+      border-radius: 2.20rem;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .intro-image {
+      border-radius: 2.60rem;
+    }
+  }
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+
+        <form role="form" method="post" action="">
+        
+          {{ form.hidden_tag() }} 
+
+          <div class="card-header">
+            <h4 class="title">Login</h4>
+
+            <h6 class="card-category">
+                {% if msg %}
+                  {% if success %}
+                  <span class="text-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">{{ msg | safe }}</span>
+                  {% else %} 
+                  <span class="text-danger">{{ msg | safe }}</span>
+                  {% endif %} 
+                {% else %}  
+                <!-- <span>
+                  Add your credentials
+                </span> -->
+                {% endif %}  
+            </h6>
+          </div>
+
+          <div class="card-body">
+
+              <div class="row">
+
+                <div class="col-md-5 px-md-1">
+                  <div class="form-group">
+                    <label>&nbsp;Username</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
+                            <i class="fas fa-user"></i>
+                        </div>      
+                      </div>  
+                      <input type="text" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="username" name="username" required="" value="{% if form.username.data != None %}{{ form.username.data }}{% endif %}">                         
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              
+              <div class="row">
+
+                <div class="col-md-5 px-md-1">
+                  <div class="form-group">
+                    <label>&nbsp;Password</label>
+                    <div class="input-group" style="margin-bottom: 4px;">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}">
+                            <i class="fas fa-key"></i>
+                        </div>      
+                      </div>  
+                      <input type="password" class="form-control form-{% if current_user.is_authenticated %}{{current_user.ui_color}}{% else %}blue{% endif %}" id="password" name="password" required="" value="">
+                    </div>
+                    <a href="{{ url_for('base_blueprint.forgot_password') }}" id="forgotlink" class="forgot-button text-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">&nbsp;&nbsp;Forgot Password</a>
+                  </div>
+                </div>
+
+              </div>
+              
+          </div>
+          
+          <div class="card-footer">
+            <button type="submit" id="login" name="login" class="btn btn-fill btn-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Login</button>
+            &nbsp; &nbsp;
+            Don't have an account? <a href="{{ url_for('base_blueprint.register') }}" id="pagelink" class="text-{% if current_user.is_authenticated %}{{current_user.ui_button}}{% else %}info{% endif %}">Create</a>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+{% if session['intro'] %}
+<!-- Modal -->        
+<div class="modal modal-black fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="removePlaceTitle" aria-hidden="true">
+    <div class="modal-dialog modal-fix-position" role="document">
+    <div class="modal-content">
+        <div class="modal-header justify-content-center">
+          <h5 class="modal-title title title-up" id="removePlaceTitle" style="text-align: center;">
+            <p class="intro-text">Popular Places · A Live Traffic Geocoder</p>
+          </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        </div>
+        <div class="modal-body">
+          <h5 class="modal-title title title-up" id="removePlaceTitle" style="text-align: center; padding-bottom: 22px;">
+            <p class="intro-text">A Powerful Tool for Live Crowd and<br>Traffic Data built on top of<br><span class="intro-text-highlight">Google's</span> Data and <span class="intro-text-highlight">OSM's</span> Geocoders</p>
+            <p class="intro-text">Searches for popular places and times<br>presenting you <span class="intro-text-highlight">live</span> traffic data</p>
+          </h5> 
+          <div class="photo text-center">
+            <div class="container adjust-image">
+              <a href="https://support.google.com/business/answer/6263531" target="_blank">
+                <img src="/static/assets/img/populartimes.gif" class="intro-image" alt="Popular Times">
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+        <button name="enterAppButton" type="button" class="btn btn-secondary" data-dismiss="modal">Enter Application</button>
+        </div>
+    </div>
+    </div>
+</div> 
+{% endif %}
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+  $(window).on('load', function() {
+        $('#notificationModal').modal('show');
+  });
+
+  $('[name="enterAppButton"]').click(function() {
+    $.ajax({
+        type: 'POST',
+        data: {
+        },                
+        url: "/hide-intro",
+        success: function(data){ 
+                    },
+        error: function(data){
+                    },
+    });
+  });  
+    
+  $('#introsidebartext').hover(function() {
+    var eastereggSelector = $(this).find("#easteregg");
+    var flag = eastereggSelector.attr("val");
+    eastereggSelector.fadeOut(400, function () {
+      setTimeout(() => {
+        if (flag == "off") {
+          eastereggSelector.html("(not so)<br>Malicious Means.");
+          eastereggSelector.attr("val", "on");}
+        else {
+          eastereggSelector.html("Live Crowd and<br>Traffic Data.");
+          eastereggSelector.attr("val", "off");}
+        eastereggSelector.fadeIn();
+      }, 200);
+    });    
+  });
+</script>
+
+{% endblock javascripts %}

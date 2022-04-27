@@ -19,9 +19,49 @@ from app.base.util import verify_pass
 
 @blueprint.route('/', methods=['GET', 'POST'])
 def route_default():
-    session['colors'] = True 
-    session['intro'] = True         
-    return redirect(url_for('base_blueprint.login'))
+    if "intro" not in session:
+        session['colors'] = True 
+        session['intro'] = True             
+       
+    login_form = LoginForm(request.form)
+    if 'login' in request.form:
+        
+        # Read form data
+        username = request.form['username']
+        password = request.form['password']
+
+        # Validate form data
+        if not login_form.validate():
+            return render_template( 'layouts/index-login.html', 
+                                    msg='Input does not follow the Appropriate Form',
+                                    success=False,
+                                    form=login_form)
+
+        # Locate user
+        user = User.query.filter_by(username=username).first()
+        
+        # Check the password
+        if user and verify_pass( password, user.password):
+
+            login_user(user)
+            current_user.last_login = datetime.utcnow()
+            current_user.last_login_ip = request.remote_addr
+            current_user.login_count += 1
+            db.session.commit()
+            
+            return redirect(url_for('base_blueprint.route_default'))
+        else:
+            # Something (user or pass) is not ok
+            logout_user()  # Bug Fix: current_user.is_authenticated turns True
+            return render_template( 'accounts/login.html', 
+                                    msg='Wrong user or password', 
+                                    success=False,
+                                    form=login_form)
+
+    if not current_user.is_authenticated:
+        return render_template( 'layouts/index-login.html', form=login_form)
+    else:
+        return redirect(url_for('home_blueprint.search_turbo'))
 
 @blueprint.route('/hide-colors', methods=['POST'])
 def hide_colors():
@@ -61,7 +101,11 @@ def update_ui_theme_preferences():
 
 ## Login & Registration
 @blueprint.route('/login', methods=['GET', 'POST'])
-def login():          
+def login():   
+    if "intro" not in session:
+        session['colors'] = True 
+        session['intro'] = True
+
     login_form = LoginForm(request.form)
     if 'login' in request.form:
         
