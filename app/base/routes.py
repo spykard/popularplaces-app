@@ -17,7 +17,7 @@ import os
 
 from app.base.util import verify_pass
 
-@blueprint.route('/')
+@blueprint.route('/', methods=['GET', 'POST'])
 def route_default():
     session['colors'] = True 
     session['intro'] = True         
