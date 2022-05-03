@@ -5,5 +5,5 @@ services:
   - docker
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t spykard/popularplaces-app:latest
+  - docker build -t spykard/popularplaces-app:latest .
   - docker push 
