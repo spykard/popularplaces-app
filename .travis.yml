@@ -1,0 +1,9 @@
+language: python
+python:
+  - "3.6"
+services:
+  - docker
+before_install:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t spykard/popularplaces-app:latest
+  - docker push
